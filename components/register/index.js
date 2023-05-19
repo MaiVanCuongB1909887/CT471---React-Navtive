@@ -2,11 +2,13 @@ import { ScrollView,Text, View,SafeAreaView, TextInput,TouchableOpacity } from '
 import React from 'react'
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import Submit from './submit';
 
-const Register = (props) => {
+
+const Register = ({navigation}) => {
+  
      return ( 
+
     <ScrollView>
       <View style={styles.task}>
       <View style={styles.header} >
@@ -19,20 +21,47 @@ const Register = (props) => {
       <View style={styles.body}>
       <SafeAreaView>
         <View style={styles.bodyInput}>
-      <View style={styles.inputS}>
-      <IonIcon name='mail' size={20} color={'#CC0000'} />
+          <Text style={styles.textBody}>
+            Already have ac account?
+          </Text>
+          <TouchableOpacity>
+          <View style={styles.accoutBody}>
 
-       </View>
+          <Text 
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+  
+          style={{ color:'white', fontSize:20, }}>Use an existing account</Text>
+          </View>
+          </TouchableOpacity>
+        <View style={styles.registerWith}>
+          <Text style={{ fontSize:15, flex:1,color:'black'}}
+          >Or register with:</Text>
+          <TouchableOpacity>
+          <View style={styles.bodyIcon}>
+           <Icon name='linkedin-square' size={50} color={'#2052f7'}  />
+           </View>
+           </TouchableOpacity>
+           <TouchableOpacity>
+           <View style={styles.bodyIcon}> 
+           <Icon name='google-plus-square' size={50} color={'#000000'} />
+           </View>
+           </TouchableOpacity>
+           <TouchableOpacity>
+           <View style={styles.bodyIcon}>
+           <Icon name='windows' size={50} color={'#000000'}  />
+           </View>
+           </TouchableOpacity>
+          </View>
+
+          <Text style={styles.textBody
+          }>if you don't have an account, you can register below</Text>
      </View>
     </SafeAreaView>
-    <View style={{margin:30,
-    justifyContent:'center',
-    alignItems:'center',
-    }}>
-
-    </View>
     <View>
     <Submit/>
+    
     </View>
 
       </View>

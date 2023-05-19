@@ -26,20 +26,51 @@ const styles = StyleSheet.create({
         marginVertical:50,
     
       },
+      textBody:{
+        fontSize:20,
+        color:'black',
+      },
+      accoutBody:{
+        height:45,
+        width:300,
+        backgroundColor:'#35a5f0',
+        borderRadius:20,
+        justifyContent:'center',
+        alignItems:'center',
+        borderWidth:5,
+        borderColor:'#C9FFFE'
+      },
       bodyInput:{
         padding:10,
-        
+
       },
-      inputS:{
-        
+      selectDropdown:{
+        flexDirection:'row',
       },
-      
+      registerWith:{
+        flexDirection:'row',
+        margin:10,
+        justifyContent:'center',
+        alignItems:'center',
+      },
+      inputV:{
+        marginTop:10,
+        justifyContent:'center',
+        alignItems:'center',
+      },
+      iconVector:{
+        flexDirection:'row',
+      },
       input: {
+        flex:1,
         height: 40,
         margin: 12,
         padding: 10,
         borderBottomColor:'grey',
         borderBottomWidth:1,
+      },
+      bodyIcon:{
+      margin:5,
       },
       
       register:{
