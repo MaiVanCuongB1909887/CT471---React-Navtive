@@ -3,11 +3,13 @@ import React ,{ useState } from 'react'
 import styles from './style';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import {isValidEmail, isValidPassword} from '../../utilies/Validations'
 const Submit = ({props}) => {
 
     const [Email,setEmail] = useState('');
+    const [errorEmail, setErrorEmail] =useState('');
     const [Password,setPassword] = useState('');
+    const [errorPassword, setErrorPassword] =useState('')
     const handleAddTask = () =>{
       if(Email.length ===0){
         alert('Vui long nhap Email')
@@ -17,32 +19,55 @@ const Submit = ({props}) => {
         alert('Vui long nhap Password')
         return false;
       }
+      if(errorEmail.length!==0){
+        alert('Email chưa đúng định dạng vui lòng nhập lại')
+        return false;
+      }
+      if(errorPassword.length!==0){
+        alert('Password chưa đúng định dạng vui lòng nhập lại')
+        return false;
+      }
       alert([Email,Password,]);
     }
   return (
     <View style={styles.addTask}>
+      
+      <View>
       <View>
         <View style={styles.iconVector}>
         <View style={styles.inputV}>
+          
       <IonIcon name='mail' size={20} color={'#000000'} />
        </View>
-        <TextInput 
+       
+        <TextInput  
         value={Email}
-        onChangeText={(text) => setEmail(text)}
-        placeholder='Email' 
-        style={styles.input} 
+        onChangeText={(text) => {
+          setErrorEmail(isValidEmail(text) == true ?
+          '' : 'Email chưa đúng định dạng vui lòng nhập lại')
+          setEmail(text)}}
+        placeholder='Email'
+        style={styles.input}
         />
         </View>
+        <Text style={{color:'red',}}>{errorEmail}</Text>
+        </View>
+        <View>
         <View style={styles.iconVector}>
         <View style={styles.inputV}>
       <IonIcon name='ios-lock-closed' size={20} color={'#000000'} />
        </View>
-        <TextInput 
+       <TextInput  
         value={Password}
-        onChangeText={(text) => setPassword(text)}
-        placeholder='Password' 
-        style={styles.input} 
+        onChangeText={(text) => {
+          setErrorPassword(isValidPassword(text) == true ?
+          '' : 'Password chưa đúng định dạng vui lòng nhập lại')
+          setPassword(text)}}
+        placeholder='Password'
+        style={styles.input}
         />
+        </View>
+        <Text style={{color:'red',}}>{errorPassword}</Text>
         </View>
         </View>
         <Text 

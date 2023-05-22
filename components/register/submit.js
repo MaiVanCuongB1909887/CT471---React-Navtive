@@ -41,7 +41,14 @@ const Submit = (props) => {
         alert('pass khong trung vui long nhap lai')
         return false;
       }
-      
+      if(errorEmail.length!==0){
+        alert('Email chưa đúng định dạng vui lòng nhập lại')
+        return false;
+      }
+      if(errorPassword.length!==0){
+        alert('Password chưa đúng định dạng vui lòng nhập lại')
+        return false;
+      }
       alert([Email,firstname,Lastname,Password,RetypePassword]);
     }
   return (
@@ -58,14 +65,15 @@ const Submit = (props) => {
         value={Email}
         onChangeText={(text) => {
           setErrorEmail(isValidEmail(text) == true ?
-          'email dung' : 'Email chưa đúng định dạng vui lòng nhập lại')
+          '' : 'Email chưa đúng định dạng vui lòng nhập lại')
           setEmail(text)}}
         placeholder='Email'
-        style={styles.input} 
+        style={styles.input}
         />
         </View>
-        <Text style={{color:'red',fontSize:15,marginBottom:10}}>{errorEmail}</Text>
+        <Text style={{color:'red',}}>{errorEmail}</Text>
         </View>
+        <View>
         <View style={styles.iconVector}>
        <View style={styles.inputV}>
       <Icon name='user-circle-o' size={20} color={'#000000'} />
@@ -77,6 +85,9 @@ const Submit = (props) => {
         style={styles.input} 
         />
         </View>
+        <Text></Text>
+        </View>
+        <View>
         <View style={styles.iconVector}>
          <View style={styles.inputV}>
       <Icon name='user-circle-o' size={20} color={'#000000'} />
@@ -88,19 +99,27 @@ const Submit = (props) => {
         style={styles.input} 
         />
         </View>
+        <Text></Text>
+        </View>
+        <View>
         <View style={styles.iconVector}>
         <View style={styles.inputV}>
       <IonIcon name='ios-lock-closed' size={20} color={'#000000'} />
        </View>
-        <TextInput 
+       <TextInput  
         value={Password}
         onChangeText={(text) => {
-          setErrorPassword(isValidPassword(text) == true ? '': 'Password chưa đúng định dạng vui lòng nhập lại !')
+          setErrorPassword(isValidPassword(text) == true ?
+          // alert('dung') : alert(isValidPassword(text)))
+          '' : 'Password chưa đúng định dạng vui lòng nhập lại')
           setPassword(text)}}
-        placeholder='Password' 
-        style={styles.input} 
+        placeholder='Password'
+        style={styles.input}
         />
         </View>
+        <Text style={{color:'red',}}>{errorPassword}</Text>
+        </View>
+        <View>
         <View style={styles.iconVector}>
         <View style={styles.inputV}>
       <IonIcon name='ios-lock-closed' size={20} color={'#000000'} />
@@ -111,6 +130,8 @@ const Submit = (props) => {
         placeholder='Retype Password' 
         style={styles.input} 
         />
+        </View>
+        <Text></Text>
         </View>
         </View>
         <View style={styles.selectDropdown}>
@@ -133,12 +154,7 @@ const Submit = (props) => {
 </View>
 </View>
       <TouchableOpacity
-      //onPress={handleAddTask}
-      onPress={()=>{
-        alert(`Email=${Email}`)
-      }
-
-      }
+      onPress={handleAddTask}
       >
         <View style={styles.register}>
         <Text style={styles.registerText}>Submit</Text>
