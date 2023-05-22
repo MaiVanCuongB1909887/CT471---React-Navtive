@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
       
       register:{
         height:45,
-        width:360,
+        width:'80%',
         backgroundColor:'#35a5f0',
         justifyContent:'center',
         alignItems:'center',

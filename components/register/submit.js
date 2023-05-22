@@ -3,21 +3,26 @@ import React ,{ useState } from 'react'
 import styles from './style';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import SelectDropdown from 'react-native-select-dropdown'
+import SelectDropdown from 'react-native-select-dropdown';
+import {isValidEmail, isValidPassword} from '../../utilies/Validations'
+
+
 const Submit = (props) => {
     const countries = ["Buisness Vertical", "AI", "Automotive", "Computer","Education","Entertainment","Iot","Mobile","Robotics","Telecommunication","Orders"]
     const [Email,setEmail] = useState('');
-    const [Fistname,setFistname] = useState('');
+    const [errorEmail, setErrorEmail] =useState('')
+    const [firstname,setFirstname] = useState('');
     const [Lastname,setLastname] = useState('');
     const [Password,setPassword] = useState('');
+    const [errorPassword, setErrorPassword] =useState('')
     const [RetypePassword,setRetypePassword] = useState('');
     const handleAddTask = () =>{
       if(Email.length ===0){
         alert('Vui long nhap Email')
         return false;
       }
-      if(Fistname.length ===0){
-        alert('Vui long nhap Fistname')
+      if(firstname.length ===0){
+        alert('Vui long nhap firstname')
         return false;
       }
       if(Lastname.length ===0){
@@ -37,30 +42,38 @@ const Submit = (props) => {
         return false;
       }
       
-      alert([Email,Fistname,Lastname,Password,RetypePassword]);
+      alert([Email,firstname,Lastname,Password,RetypePassword]);
     }
   return (
     <View style={styles.addTask}>
       <View>
+        <View>
         <View style={styles.iconVector}>
         <View style={styles.inputV}>
+          
       <IonIcon name='mail' size={20} color={'#000000'} />
        </View>
-        <TextInput 
+       
+        <TextInput  
         value={Email}
-        onChangeText={(text) => setEmail(text)}
-        placeholder='Email' 
+        onChangeText={(text) => {
+          setErrorEmail(isValidEmail(text) == true ?
+          'email dung' : 'Email chưa đúng định dạng vui lòng nhập lại')
+          setEmail(text)}}
+        placeholder='Email'
         style={styles.input} 
         />
+        </View>
+        <Text style={{color:'red',fontSize:15,marginBottom:10}}>{errorEmail}</Text>
         </View>
         <View style={styles.iconVector}>
        <View style={styles.inputV}>
       <Icon name='user-circle-o' size={20} color={'#000000'} />
        </View>
         <TextInput 
-        value={Fistname}
-        onChangeText={(text) => setFistname(text)}
-        placeholder='Fist name' 
+        value={firstname}
+        onChangeText={(text) => setFirstname(text)}
+        placeholder='First name' 
         style={styles.input} 
         />
         </View>
@@ -81,7 +94,9 @@ const Submit = (props) => {
        </View>
         <TextInput 
         value={Password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={(text) => {
+          setErrorPassword(isValidPassword(text) == true ? '': 'Password chưa đúng định dạng vui lòng nhập lại !')
+          setPassword(text)}}
         placeholder='Password' 
         style={styles.input} 
         />
@@ -118,7 +133,12 @@ const Submit = (props) => {
 </View>
 </View>
       <TouchableOpacity
-      onPress={handleAddTask}
+      //onPress={handleAddTask}
+      onPress={()=>{
+        alert(`Email=${Email}`)
+      }
+
+      }
       >
         <View style={styles.register}>
         <Text style={styles.registerText}>Submit</Text>
