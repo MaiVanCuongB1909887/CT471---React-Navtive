@@ -3,11 +3,13 @@ import { StyleSheet } from 'react-native';
 const style = StyleSheet.create({
   
       footer:{
-        padding:10,
-        backgroundColor:'#1F2024',
-        justifyContent:'center',
-        alignItems:'center',
-        
+        position: 'absolute',
+        bottom: 0,
+        left:0,
+        right: 0,
+        backgroundColor: '#1F2024',
+        justifyContent: 'center',
+        alignItems: 'center'
       },
       logos:{
         padding:10,
@@ -28,7 +30,6 @@ const style = StyleSheet.create({
       icon:{
       },
       footerText:{
-        
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
