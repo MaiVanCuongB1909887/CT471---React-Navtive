@@ -1,11 +1,11 @@
 import { View, Text,TouchableOpacity,ScrollView } from 'react-native'
 import React from 'react'
-import styles from '../register/style'
+import style from './style'
 
 const Home = ({navigation}) => {
   return (
     <ScrollView>
-    <View>
+    <View style={style.container}>
       <TouchableOpacity>
       <Text>
         Home
@@ -14,7 +14,7 @@ const Home = ({navigation}) => {
     </View>
     <View>
       <TouchableOpacity>
-          <View style={styles.accoutBody}>
+          <View style={style.accoutBody}>
     
           <Text 
           onPress={() => {
