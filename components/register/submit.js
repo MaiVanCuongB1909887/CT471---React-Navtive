@@ -4,10 +4,10 @@ import styles from './style';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SelectDropdown from 'react-native-select-dropdown';
-import {isValidEmail, isValidPassword} from '../../utilies/Validations'
+import {isValidEmail, isValidPassword , isValidRetypePassword} from '../../utilies/Validations'
 
 
-const Submit = (props) => {
+const Submit = (navigation) => {
     const countries = ["Buisness Vertical", "AI", "Automotive", "Computer","Education","Entertainment","Iot","Mobile","Robotics","Telecommunication","Orders"]
     const [Email,setEmail] = useState('');
     const [errorEmail, setErrorEmail] =useState('')
@@ -16,6 +16,11 @@ const Submit = (props) => {
     const [Password,setPassword] = useState('');
     const [errorPassword, setErrorPassword] =useState('')
     const [RetypePassword,setRetypePassword] = useState('');
+    const [errorRetypePassword, setErrorRetypePassword] =useState('')
+    const [visible,setVisible] = useState(false)
+    const [repeatVisible,setRepeatVisible] = useState(false)
+
+
     const handleAddTask = () =>{
       if(Email.length ===0){
         alert('Vui long nhap Email')
@@ -46,6 +51,10 @@ const Submit = (props) => {
         return false;
       }
       if(errorPassword.length!==0){
+        alert('Password chưa đúng định dạng vui lòng nhập lại')
+        return false;
+      }
+      if(errorRetypePassword.length!==0){
         alert('Password chưa đúng định dạng vui lòng nhập lại')
         return false;
       }
@@ -115,7 +124,19 @@ const Submit = (props) => {
           setPassword(text)}}
         placeholder='Password'
         style={styles.input}
+        secureTextEntry={visible? false : true}
         />
+         <TouchableOpacity
+          onPress={()=>{
+            setVisible(!visible)
+          }}
+          >
+          { visible ?
+          <IonIcon style={{marginTop:20}} name='eye-off' size={30} color={'#303133'} />
+          :
+          <IonIcon style={{marginTop:20}} name='eye' size={30} color={'#303133'} />
+          }
+          </TouchableOpacity>
         </View>
         <Text style={{color:'red',}}>{errorPassword}</Text>
         </View>
@@ -126,12 +147,28 @@ const Submit = (props) => {
        </View>
          <TextInput 
         value={RetypePassword}
-        onChangeText={(text) => setRetypePassword(text)}
-        placeholder='Retype Password' 
-        style={styles.input} 
+        onChangeText={(text) => {
+          setErrorRetypePassword(isValidRetypePassword(text) == true ?
+          // alert('dung') : alert(isValidRetypePassword(text)))
+          '' : 'Retype Password chưa đúng định dạng vui lòng nhập lại')
+          setRetypePassword(text)}}
+        placeholder='RetypePassword'
+        style={styles.input}
+        secureTextEntry={repeatVisible? false : true}
         />
+         <TouchableOpacity
+          onPress={()=>{
+            setRepeatVisible(!repeatVisible)
+          }}
+          >
+          { repeatVisible ?
+          <IonIcon style={{marginTop:20}} name='eye-off' size={30} color={'#303133'} />
+          :
+          <IonIcon style={{marginTop:20}} name='eye' size={30} color={'#303133'} />
+          }
+          </TouchableOpacity>
         </View>
-        <Text></Text>
+        <Text style={{color:'red',}}>{errorRetypePassword}</Text>
         </View>
         </View>
         <View style={styles.selectDropdown}>

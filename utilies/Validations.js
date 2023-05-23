@@ -6,3 +6,6 @@ export const isValidEmail = (stringEmail) => {
 export const isValidPassword = (stringPassword) => {
     return (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(stringPassword))
 }
+export const isValidRetypePassword = (stringRetypePassword) => {
+    return (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(stringRetypePassword))
+}

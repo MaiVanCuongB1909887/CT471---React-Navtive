@@ -1,4 +1,4 @@
-import { ScrollView,Text, View,SafeAreaView, TextInput,TouchableOpacity } from 'react-native'
+import { ScrollView,Text, View,SafeAreaView,TouchableOpacity } from 'react-native'
 import React from 'react'
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -29,9 +29,8 @@ const Register = ({navigation}) => {
 
           <Text 
           onPress={() => {
-            navigation.navigate("Login");
+            navigation.navigate('Login')
           }}
-  
           style={{ color:'white', fontSize:20, }}>Use an existing account</Text>
           </View>
           </TouchableOpacity>
@@ -39,7 +38,8 @@ const Register = ({navigation}) => {
           <Text style={{ fontSize:15, flex:1,color:'black'}}
           >Or register with:</Text>
           <TouchableOpacity>
-          <View style={styles.bodyIcon}>
+          <View
+          style={styles.bodyIcon}>
            <Icon name='linkedin-square' size={50} color={'#2052f7'}  />
            </View>
            </TouchableOpacity>
