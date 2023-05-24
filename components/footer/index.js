@@ -2,9 +2,11 @@ import { Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import style from './style';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 
-const Footer = () => {
-    return (
+function Footer() {
+
+  return (
         <View style={style.footer}>
             <View>
                 <View style={style.footerText}>

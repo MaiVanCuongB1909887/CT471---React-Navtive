@@ -1,28 +1,22 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+
+import { View, ScrollView } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 
-import Register from'../register';
-import Login from'../login';
-import Home from'../home';
-import Footer from '../footer/Footer';
+import Footer from '../footer';
+import UIHome from '../navigation/UIHome';
+import styles from './styles'
+import RightDrawerScreen from '../header/drawerMenu';
 
-const Stack = createStackNavigator();
 
 const HeaderFooterLayout = () => {
   return (
     <NavigationContainer>
-      {/* <Header /> */}
-      
-      {/* screenOptions={{headerShown:false,}} */}
-      <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-      </Stack.Navigator>
 
-      <Footer />
+      <UIHome />
+
     </NavigationContainer>
+
   );
 };
 

@@ -1,8 +1,8 @@
-import { View, Text,TouchableOpacity,ScrollView } from 'react-native'
+import { View, Text,TouchableOpacity,ScrollView, Button } from 'react-native'
 import React from 'react'
 import style from './style'
 
-const Home = ({navigation}) => {
+const Home = () => {
   return (
     <ScrollView>
     <View style={style.container}>
@@ -16,11 +16,7 @@ const Home = ({navigation}) => {
       <TouchableOpacity>
           <View style={style.accoutBody}>
     
-          <Text 
-          onPress={() => {
-            navigation.navigate('Login')
-          }}
-          style={{ color:'white', fontSize:20, }}>Login</Text>
+          <Text>This is flat list</Text>
           </View>
           </TouchableOpacity> 
     </View>
