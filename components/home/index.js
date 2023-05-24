@@ -2,7 +2,7 @@ import { View, Text,TouchableOpacity,ScrollView, Button } from 'react-native'
 import React from 'react'
 import style from './style'
 
-const Home = ({navigation}) => {
+const Home = () => {
   return (
     <ScrollView>
     <View style={style.container}>

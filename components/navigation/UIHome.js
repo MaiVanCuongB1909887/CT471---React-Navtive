@@ -9,7 +9,7 @@ import Footer from '../footer';
 
 const Stack = createStackNavigator();
 
-const UIHome = ({props}) => {
+const UIHome = () => {
   return (
         <Stack.Navigator initialRouteName='Home'>
           <Stack.Screen name="Home" component={Home} options={{header: props => <Header {...props} title="Home" />}} />
