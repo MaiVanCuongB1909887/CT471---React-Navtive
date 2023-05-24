@@ -7,7 +7,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { DrawerActions } from '@react-navigation/native';
 
 class Header extends React.Component {
   render() {
@@ -15,7 +14,7 @@ class Header extends React.Component {
       <View>
         <View style={styles.nav}>
           <View style={styles.navContent}>
-            <View style={styles.buttonContainer} onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
+            <View style={styles.buttonContainer} >
               <TouchableOpacity style={styles.menuButton} >
                 <Text style={styles.menuButtonText}>
                   <Icon name='bars' size={20} color={'#2052f7'} />
