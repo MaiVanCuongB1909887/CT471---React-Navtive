@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import SearchScreen from '../../screens/SearchScreen';
 
 const LeftDrawer = createDrawerNavigator();
 
@@ -7,8 +8,7 @@ const LeftDrawerScreen = () => {
   return (
     <LeftDrawer.Navigator
       useLegacyImplementation
-      screenOptions={{ drawerPosition: 'left' }}
-    >
+      screenOptions={{drawerPosition: 'left'}}>
       <LeftDrawer.Screen name="Home" component={HomeScreen} />
     </LeftDrawer.Navigator>
   );
@@ -20,10 +20,9 @@ const RightDrawerScreen = () => {
   return (
     <RightDrawer.Navigator
       useLegacyImplementation
-      screenOptions={{ drawerPosition: 'right', headerShown: false }}
-    >
+      screenOptions={{drawerPosition: 'right', headerShown: false}}>
       <RightDrawer.Screen name="HomeDrawer" component={LeftDrawerScreen} />
     </RightDrawer.Navigator>
   );
 };
-export default RightDrawerScreen
+export default RightDrawerScreen;
