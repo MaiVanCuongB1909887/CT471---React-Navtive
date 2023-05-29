@@ -12,7 +12,11 @@ const Submit = ({navigation}) => {
     const [password,setPassword] = useState('');
     const [errorPassword, setErrorPassword] =useState('')
     const [visible,setvisible] = useState(false)
+<<<<<<< HEAD
     const [userList, setUserList] = useState('');
+=======
+    const [userList, setUserList] = useState();
+>>>>>>> origin
 
 
 
@@ -41,12 +45,20 @@ const Submit = ({navigation}) => {
                 password,
               }
             );
+<<<<<<< HEAD
           console.log({list});
+=======
+          console.log('Đăng nhập thành công !');
+>>>>>>> origin
             setUserList(list.data);
         };
         postUser();
     } catch (error) {
+<<<<<<< HEAD
         console.log({error});
+=======
+        console.log('Đăng nhập thất bại ! ', error);
+>>>>>>> origin
     }
  [];
     }
