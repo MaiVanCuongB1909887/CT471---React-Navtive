@@ -7,13 +7,14 @@ import HeaderFooterLayout from './components/layouts/HeaderFooterLayout';
 import Register from './components/register';
 import Login from './components/login';
 import Home from './components/home';
-import Header from './components/header';
 import Footer from './components/footer';
+import MenuDrawer from './components/drawer/MenuDrawer';
+import HomeStack from './components/navigation/StackNavigator';
+import SubStack from './components/navigation/StackNavigator';
 
 
 export default function App() {
-
   return (
       <HeaderFooterLayout />
   )
-}
+};

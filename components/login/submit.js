@@ -4,36 +4,51 @@ import styles from './style';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {isValidEmail, isValidPassword} from '../../utilies/Validations'
-
+import userAPI from '../../services/userAPI'
 
 const Submit = ({navigation}) => {
-    const [Email,setEmail] = useState('');
+    const [email,setEmail] = useState('');
     const [errorEmail, setErrorEmail] =useState('');
-    const [Password,setPassword] = useState('');
+    const [password,setPassword] = useState('');
     const [errorPassword, setErrorPassword] =useState('')
     const [visible,setvisible] = useState(false)
+    const [userList, setUserList] = useState('');
 
 
 
-
-    const handleAddTask = () =>{
-      if(Email.length ===0){
-        alert('Vui long nhap Email')
+    const handleAddTask = () => {
+      if(email.length ===0){
+        alert('Vui long nhap email')
         return false;
       }
-      if(Password.length ===0){
-        alert('Vui long nhap Password')
+      if(password.length ===0){
+        alert('Vui long nhap password')
         return false;
       }
       if(errorEmail.length!==0){
-        alert('Email chưa đúng định dạng vui lòng nhập lại')
+        alert('email chưa đúng định dạng vui lòng nhập lại')
         return false;
       }
       if(errorPassword.length!==0){
-        alert('Password chưa đúng định dạng vui lòng nhập lại')
+        alert('password chưa đúng định dạng vui lòng nhập lại')
         return false;
       }
-      alert([Email,Password,]);
+      try {
+        const postUser = async () => {
+            const list = await userAPI.post(
+              {
+                email,
+                password,
+              }
+            );
+          console.log({list});
+            setUserList(list.data);
+        };
+        postUser();
+    } catch (error) {
+        console.log({error});
+    }
+ [];
     }
   return (
     <View style={styles.addTask}>
@@ -47,12 +62,12 @@ const Submit = ({navigation}) => {
        </View>
        
         <TextInput  
-        value={Email}
+        value={email}
         onChangeText={(text) => {
           setErrorEmail(isValidEmail(text) == true ?
-          '' : 'Email chưa đúng định dạng vui lòng nhập lại')
+          '' : 'email chưa đúng định dạng vui lòng nhập lại')
           setEmail(text)}}
-        placeholder='Email'
+        placeholder='email'
         style={styles.input}
         />
         </View>
@@ -64,12 +79,12 @@ const Submit = ({navigation}) => {
       <IonIcon name='ios-lock-closed' size={20} color={'#000000'} />
        </View>
        <TextInput  
-        value={Password}
+        value={password}
         onChangeText={(text) => {
           setErrorPassword(isValidPassword(text) == true ?
-          '' : 'Password chưa đúng định dạng vui lòng nhập lại')
+          '' : 'password chưa đúng định dạng vui lòng nhập lại')
           setPassword(text)}}
-        placeholder='Password'
+        placeholder='password'
         style={styles.input}
         secureTextEntry={visible? false : true}
         />

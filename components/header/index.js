@@ -1,54 +1,57 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {DrawerActions} from '@react-navigation/native';
-import {SearchBar} from 'react-native-screens';
-import SearchScreen from '../../screens/SearchScreen';
+import {SearchBar} from 'react-native-elements';
 
-class Header extends React.Component {
-  render() {
-    return (
-      <View>
-        <View style={styles.nav}>
-          <View style={styles.navContent}>
-            <View
-              style={styles.buttonContainer}
-              onPress={() =>
-                this.props.navigation.dispatch(DrawerActions.openDrawer())
-              }>
-              <TouchableOpacity style={styles.menuButton}>
-                <Text style={styles.menuButtonText}>
-                  <Icon name="bars" size={20} color={'#2052f7'} />
-                </Text>
-              </TouchableOpacity>
-            </View>
+const Header = ({navigation}) => {
+  return (
+    <View>
+      <View style={styles.nav}>
+        <View style={styles.navContent}>
+          <View style={styles.buttonContainer}>
             <TouchableOpacity
-              style={styles.logoContainer}
-              onPress={() => this.props.navigation.navigate('Home')}>
-              <Image
-                source={require('../../assets/logo.jpg')}
-                style={styles.logo}
-              />
-              <Text style={styles.logoText}>Your company</Text>
+              style={styles.menuButton}
+              onPress={() => navigation.openDrawer()}>
+              <Text style={styles.menuButtonText}>
+                <Icon name="bars" size={20} color={'#2052f7'} />
+              </Text>
             </TouchableOpacity>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.loginButton}>
-                <Text
-                  style={styles.loginButtonText}
-                  onPress={() => this.props.navigation.navigate('Login')}>
-                  Log in
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.findButton}>
-                <Icon name="search" size={20} color={'#2052f7'} />
-              </TouchableOpacity>
-            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.logoContainer}
+            onPress={() => {
+              navigation.navigate('Home');
+            }}>
+            <Image
+              source={require('../../assets/logo.jpg')}
+              style={styles.logo}
+            />
+            <Text style={styles.logoText}>Your company</Text>
+          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.loginButtonText}>Log in</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.findButton}
+              onPress={() => navigation.navigate('Cart')}>
+              <Icon name="shopping-cart" size={20} color={'#2052f7'} />
+            </TouchableOpacity>
           </View>
         </View>
+        <SearchBar
+          placeholder="Type Here..."
+          lightTheme = "true"
+          containerInputStyle={styles.search}
+          inputStyle={styles.input}
+          buttonStyle = {styles.button}
+        />
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   nav: {
@@ -129,6 +132,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'black',
   },
+  search: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },
+  input: {
+    color: '#ccc',
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    borderRadius: 3,
+  },
+  button: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    color: '#fff',
+  }
 });
 
 export default Header;

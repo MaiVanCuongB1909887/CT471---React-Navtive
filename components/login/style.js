@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
       flexDirection:'row',
     },
     input: {
+      color: '#000000',
       flex:1,
       height: 40,
       margin: 12,
