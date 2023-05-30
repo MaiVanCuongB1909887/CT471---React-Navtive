@@ -1,11 +1,7 @@
 import axios from "axios";
 
 const getUserToken = async () => {
-<<<<<<< HEAD
   // return token ;
-=======
-  // return user token here
->>>>>>> origin
 };
 
 const axiosClient = axios.create({

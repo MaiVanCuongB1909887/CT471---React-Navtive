@@ -1,9 +1,32 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  TextInput,
+  Button,
+  FlatList,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SearchBar} from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Header = ({navigation}) => {
+  const [search, setSearch] = useState('');
+
+  const [token, settoken] = useState(false);
+
+  const [user, setuser] = useState(async () => {
+    return JSON.parse(await AsyncStorage.getItem('user'));
+  });
+  useEffect(() => {
+    async function a() {
+      settoken((await AsyncStorage.getItem('sessionToken')) ? true : false);
+    }
+    a();
+  }, []);
   return (
     <View>
       <View style={styles.nav}>
@@ -29,11 +52,18 @@ const Header = ({navigation}) => {
             <Text style={styles.logoText}>Your company</Text>
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.loginButtonText}>Log in</Text>
-            </TouchableOpacity>
+            {!token && (
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.loginButtonText}>Log in</Text>
+              </TouchableOpacity>
+            )}
+            {token && (
+              <TouchableOpacity style={styles.avatar}>
+                <Text style={styles.loginButtonText}>{user._j.firstname}</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               style={styles.findButton}
               onPress={() => navigation.navigate('Cart')}>
@@ -42,12 +72,23 @@ const Header = ({navigation}) => {
           </View>
         </View>
         <SearchBar
-          placeholder="Type Here..."
-          lightTheme = "true"
-          containerInputStyle={styles.search}
-          inputStyle={styles.input}
-          buttonStyle = {styles.button}
+          round
+          searchIcon={{size: 16}}
+          lightTheme="true"
+          containerStyle={styles.search}
+          inputContainerStyle={styles.searchInputContainer}
+          inputStyle={styles.searchInput}
+          // onChangeText={text => searchFilterFunction(text)}
+          // onClear={text => searchFilterFunction('')}
+          placeholder="Tim kiem"
+          // value={search}
         />
+        {/* <FlatList
+          data={filteredDataSource}
+          keyExtractor={(item, index) => index.toString()}
+          ItemSeparatorComponent={ItemSeparatorView}
+          renderItem={ItemView}
+        /> */}
       </View>
     </View>
   );
@@ -60,6 +101,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
     paddingVertical: 10,
     paddingHorizontal: 20,
+    minHeight: 90,
   },
   navContent: {
     flexDirection: 'row',
@@ -132,22 +174,37 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'black',
   },
+  itemStyle: {
+    padding: 10,
+  },
   search: {
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: '#fff',
-  },
-  input: {
-    color: '#ccc',
-    borderWidth: 0,
-    backgroundColor: 'transparent',
-    borderRadius: 3,
-  },
-  button: {
+    height: 35,
+    marginTop: 5,
+    marginBottom: 0,
     paddingVertical: 0,
-    paddingHorizontal: 0,
-    color: '#fff',
-  }
+    padding: 0,
+    backgroundColor: '#ffffff',
+  },
+  searchInputContainer: {
+    height: 33,
+    margin: 0,
+    padding: 0,
+    backgroundColor: '#ffffff',
+  },
+  searchInput: {
+    height: 1,
+    paddingBottom: 8,
+  },
+  avatar: {
+    backgroundColor: '#aaaaaa',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginLeft: 15,
+    marginRight: 5,
+  },
 });
 
 export default Header;
