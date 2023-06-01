@@ -14,22 +14,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {isValidEmail, isValidPassword} from '../../utilies/Validations';
 import styles from './style';
+
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [visible, setvisible] = useState(false);
-
-  const checkLoginStatus = async () => {
-    const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
-    setIsLoggedIn(!!isLoggedIn);
-  };
-  const handleLogout = async () => {
-    // Đăng xuất xử lý ở đây
-    await AsyncStorage.removeItem('isLoggedIn');
-    setIsLoggedIn(false);
-  };
 
   const handleAddTask = async () => {
     if (email.length === 0) {
@@ -49,20 +40,19 @@ const Login = ({navigation}) => {
       return false;
     }
     try {
-      const response = await userAPI.post({
+      const response = await userAPI.postLogin({
         email: email,
         password: password,
       });
       if (!!response) {
+        await AsyncStorage.setItem('sessionToken', response.token);
+        await AsyncStorage.setItem(
+          'user',
+          JSON.stringify(response.customer_info),
+        );
         alert('Dang nhap thanh cong');
         navigation.navigate('Home');
       }
-
-      await AsyncStorage.setItem('sessionToken', response.token);
-      await AsyncStorage.setItem(
-        'user',
-        JSON.stringify(response.customer_info),
-      );
     } catch (error) {
       return alert(error.response.data.message);
     }

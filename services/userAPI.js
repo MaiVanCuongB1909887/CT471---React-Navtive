@@ -1,21 +1,28 @@
-import axiosClient from "./axiosClient";
+import axiosClient from './axiosClient';
 
 const userAPI = {
-
-  post(data){
-    const url = "/account/login";
+  search(data) {
+    const url = `/product/list/name/${data}`;
+    return axiosClient.get(url);
+  },
+  postRegister(data) {
+    const url = '/account/register';
+    return axiosClient.post(url, data);
+  },
+  postLogin(data) {
+    const url = '/account/login';
     return axiosClient.post(url, data);
   },
   getAll(params) {
-    const url = "/user/all";
-    return axiosClient.get(url, { params }); // chỉ định thêm object config
+    const url = '/user/all';
+    return axiosClient.get(url, {params}); // chỉ định thêm object config
   },
   get(id) {
     const url = `/user/${id}`;
     return axiosClient.get(url);
   },
   add(data) {
-    const url = "/user/create";
+    const url = '/user/create';
     return axiosClient.post(url, data); // post(url,data,objectconfig)
   },
   update(data) {

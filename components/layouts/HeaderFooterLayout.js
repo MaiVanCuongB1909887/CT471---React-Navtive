@@ -7,7 +7,9 @@ import Footer from '../footer';
 
 import styles from './styles'
 import HomeStack from '../navigation/StackNavigator';
+import CartDrawer from '../drawer/MenuDrawer';
 import MenuDrawer from '../drawer/MenuDrawer';
+
 
 
 const HeaderFooterLayout = () => {
@@ -15,7 +17,8 @@ const HeaderFooterLayout = () => {
 
     <NavigationContainer>
       
-      <MenuDrawer />
+      {/* <MenuDrawer /> */}
+      <CartDrawer />
 
     </NavigationContainer>
 

@@ -14,19 +14,26 @@ import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Header = ({navigation}) => {
-  const [search, setSearch] = useState('');
+  const [token, setToken] = useState(false);
+  const [user, setUser] = useState({});
+  const [isLogin, setIsLogin] = useState({});
 
-  const [token, settoken] = useState(false);
-
-  const [user, setuser] = useState(async () => {
-    return JSON.parse(await AsyncStorage.getItem('user'));
+  // Luu tru token de check trang thai cua token
+  AsyncStorage.getItem('sessionToken').then(res => {
+    return setIsLogin(res);
   });
+
+  //Luu tru trang thai cua token de check Login va User
+  async function checkLogin() {
+    setUser(JSON.parse(await AsyncStorage.getItem('user')));
+    setToken((await AsyncStorage.getItem('sessionToken')) ? true : false);
+  }
+
+  //useEffect tranh checkLogin() loop bang trang thai isLogin cua token
   useEffect(() => {
-    async function a() {
-      settoken((await AsyncStorage.getItem('sessionToken')) ? true : false);
-    }
-    a();
-  }, []);
+    checkLogin();
+  }, [isLogin]);
+
   return (
     <View>
       <View style={styles.nav}>
@@ -52,6 +59,12 @@ const Header = ({navigation}) => {
             <Text style={styles.logoText}>Your company</Text>
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.cartButton}
+              onPress={() => navigation.getParent().openDrawer()}>
+              <Icon name="shopping-cart" size={20} color={'#2052f7'} />
+            </TouchableOpacity>
+
             {!token && (
               <TouchableOpacity
                 style={styles.loginButton}
@@ -59,16 +72,12 @@ const Header = ({navigation}) => {
                 <Text style={styles.loginButtonText}>Log in</Text>
               </TouchableOpacity>
             )}
+
             {token && (
-              <TouchableOpacity style={styles.avatar}>
-                <Text style={styles.loginButtonText}>{user._j.firstname}</Text>
+              <TouchableOpacity style={styles.loginButton}>
+                <Text style={styles.loginButtonText}>{user?.firstname}</Text>
               </TouchableOpacity>
             )}
-            <TouchableOpacity
-              style={styles.findButton}
-              onPress={() => navigation.navigate('Cart')}>
-              <Icon name="shopping-cart" size={20} color={'#2052f7'} />
-            </TouchableOpacity>
           </View>
         </View>
         <SearchBar
@@ -144,7 +153,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'black',
   },
-  findButton: {
+  cartButton: {
     backgroundColor: 'white',
     borderRadius: 20,
     paddingVertical: 5,

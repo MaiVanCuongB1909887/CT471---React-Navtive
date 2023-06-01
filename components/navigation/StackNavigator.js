@@ -3,6 +3,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Home from '../home';
 import Login from '../login';
 import Register from '../register';
+import Product from '../product/Product';
+import ProductDetails from '../product/ProductDetails';
 
 const Stack = createStackNavigator();
 
@@ -24,8 +26,16 @@ const HomeStack = () => {
         component={Login}
         options={{headerShown: false}}
       />
-      
-      
+      <Stack.Screen
+        name="Product"
+        component={Product}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProductDetails"
+        component={ProductDetails}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

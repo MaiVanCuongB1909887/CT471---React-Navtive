@@ -3,33 +3,44 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import Register from '../register';
 import Login from '../login';
 import HomeStack from '../navigation/StackNavigator';
+import Product from '../product/Product';
 import ContentDrawer from './ContentDrawer';
 import Header from '../header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Home from '../home';
 
+const LeftDrawer = createDrawerNavigator();
+const RightDrawer = createDrawerNavigator();
+const Stack = createDrawerNavigator();
 
-// const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-const handleLogout = async () => {
-  await AsyncStorage.removeItem('isLoggedIn');
+const CartDrawer = () => {
+  return(
+  <RightDrawer.Navigator screenOptions={{drawerPosition: 'right', headerShown: false}}>
+    <RightDrawer.Screen
+      name="Giỏ hàng"
+      component={MenuDrawer}
+    />
+  </RightDrawer.Navigator>
+  );
 };
 
-
-const Drawer = createDrawerNavigator();
-const Stack = createDrawerNavigator();
-// const isLoggedIn = AsyncStorage.getItem('isLoggedIn');
 const MenuDrawer = () => {
   return (
-      <Drawer.Navigator
+    <LeftDrawer.Navigator
       drawerContent={props => (
         <ContentDrawer {...props} screenOptions={{drawerPosition: 'left'}} />
       )}>
-      <Drawer.Screen
-        name="Page"
+      <LeftDrawer.Screen
+        name="Trang chủ"
         component={HomeStack}
         options={{header: props => <Header {...props} title="Home" />}}
       />
-    </Drawer.Navigator>
-  )
-}
-export default MenuDrawer
+      <LeftDrawer.Screen
+        name="Sản phẩm"
+        component={Product}
+        options={{header: props => <Header {...props} title="Home" />}}
+      />
+    </LeftDrawer.Navigator>
+  );
+};
+export default CartDrawer;
