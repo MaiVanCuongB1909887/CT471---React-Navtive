@@ -126,15 +126,15 @@ const Submit = (navigation) => {
         style={styles.input}
         secureTextEntry={visible? false : true}
         />
-         <TouchableOpacity
+         <TouchableOpacity style={styles.eye}
           onPress={()=>{
             setVisible(!visible)
           }}
           >
           { visible ?
-          <IonIcon style={{marginTop:20}} name='eye-off' size={30} color={'#303133'} />
+          <IonIcon name='eye-off' size={30} color={'#303133'} />
           :
-          <IonIcon style={{marginTop:20}} name='eye' size={30} color={'#303133'} />
+          <IonIcon name='eye' size={30} color={'#303133'} />
           }
           </TouchableOpacity>
         </View>
@@ -156,15 +156,15 @@ const Submit = (navigation) => {
         style={styles.input}
         secureTextEntry={repeatVisible? false : true}
         />
-         <TouchableOpacity
+         <TouchableOpacity style={styles.eye}
           onPress={()=>{
             setRepeatVisible(!repeatVisible)
           }}
           >
           { repeatVisible ?
-          <IonIcon style={{marginTop:20}} name='eye-off' size={30} color={'#303133'} />
+          <IonIcon  name='eye-off' size={30} color={'#303133'} />
           :
-          <IonIcon style={{marginTop:20}} name='eye' size={30} color={'#303133'} />
+          <IonIcon  name='eye' size={30} color={'#303133'} />
           }
           </TouchableOpacity>
         </View>

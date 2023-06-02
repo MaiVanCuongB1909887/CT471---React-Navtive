@@ -1,7 +1,10 @@
 import axiosClient from "./axiosClient";
 
 const userAPI = {
-
+  search(data) {
+    const url = `/product/list/name/${data}`;
+    return axiosClient.get(url);
+  },
   post(data){
     const url = "/account/login";
     return axiosClient.post(url, data);

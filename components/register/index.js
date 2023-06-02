@@ -3,12 +3,11 @@ import React from 'react'
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Submit from './submit';
-
+import Footer from '../footer';
 
 const Register = ({ navigation }) => {
 
   return (
-
     <ScrollView>
       <View style={styles.task}>
         <View style={styles.header} >
@@ -62,8 +61,10 @@ const Register = ({ navigation }) => {
           <View>
             <Submit />
           </View>
+          
         </View>
       </View>
+      <Footer/>
     </ScrollView>
   )
 }

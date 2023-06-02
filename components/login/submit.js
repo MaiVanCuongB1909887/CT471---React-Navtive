@@ -12,7 +12,10 @@ const Submit = ({navigation}) => {
     const [password,setPassword] = useState('');
     const [errorPassword, setErrorPassword] =useState('')
     const [visible,setvisible] = useState(false)
-    const [userList, setUserList] = useState();
+
+    const [userList, setUserList] = useState('');
+
+
 
 
 
@@ -41,12 +44,20 @@ const Submit = ({navigation}) => {
                 password,
               }
             );
+
+          console.log({list});
+
           console.log('Đăng nhập thành công !');
+n
             setUserList(list.data);
         };
         postUser();
     } catch (error) {
+
+        console.log({error});
+
         console.log('Đăng nhập thất bại ! ', error);
+
     }
  [];
     }
@@ -88,15 +99,15 @@ const Submit = ({navigation}) => {
         style={styles.input}
         secureTextEntry={visible? false : true}
         />
-          <TouchableOpacity
-          onPress={()=>{
+          <TouchableOpacity style={styles.eye}
+          onPress={()=>{ 
             setvisible(!visible)
           }}
           >
            { visible ?
-          <IonIcon style={{marginTop:20}} name='eye-off' size={30} color={'#303133'} />
+          <IonIcon name='eye-off' size={30} color={'#303133'} />
           :
-          <IonIcon style={{marginTop:20}} name='eye' size={30} color={'#303133'} />
+          <IonIcon name='eye' size={30} color={'#303133'} />
           }
           </TouchableOpacity>
         </View>

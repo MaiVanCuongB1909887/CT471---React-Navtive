@@ -3,7 +3,7 @@ import React from 'react'
 import styles from './style'
 import Submit from './submit'
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import Footer from '../footer';
 const Login = ({ navigation }) => {
   return (
     <ScrollView>
@@ -50,6 +50,7 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+      <Footer/>
     </ScrollView>
   )
 }

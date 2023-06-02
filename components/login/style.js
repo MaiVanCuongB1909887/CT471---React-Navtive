@@ -62,10 +62,16 @@ const styles = StyleSheet.create({
       flexDirection:'row',
     },
     input: {
+      color: '#000000',
       flex:1,
       height: 40,
-      margin: 12,
+      marginVertical: 12,
       padding: 10,
+      borderBottomColor:'grey',
+      borderBottomWidth:1,
+    },
+    eye:{
+      marginVertical:12,
       borderBottomColor:'grey',
       borderBottomWidth:1,
     },

@@ -1,47 +1,86 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { DrawerActions } from '@react-navigation/native';
+import { TextInput } from 'react-native-gesture-handler';
+import Search from './search';
 
-class Header extends React.Component {
-  render() {
-    return (
-      <View>
-        <View style={styles.nav}>
-          <View style={styles.navContent}>
-            <View style={styles.buttonContainer} onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
-              <TouchableOpacity style={styles.menuButton} >
-                <Text style={styles.menuButtonText}>
-                  <Icon name='bars' size={20} color={'#2052f7'} />
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity style={styles.logoContainer} onPress={() => this.props.navigation.navigate('Home')}>
-              <Image source={require('../../assets/logo.jpg')} style={styles.logo} />
-              <Text style={styles.logoText}>Your company</Text>
+const Header = ({navigation}) => {
+  return (
+    <View>
+      <View style={styles.nav}>
+        <View style={styles.navContent}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => navigation.openDrawer()}>
+              <Text style={styles.menuButtonText}>
+                <Icon name="bars" size={20} color={'#2052f7'} />
+              </Text>
             </TouchableOpacity>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.loginButton}>
-                <Text style={styles.loginButtonText} onPress={() => this.props.navigation.navigate('Login')}>Log in</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.findButton}>
-                <Icon name='search' size={20} color={'#2052f7'} />
-              </TouchableOpacity>
-            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.logoContainer}
+            onPress={() => {
+              navigation.navigate('Home');
+            }}>
+            <Image
+              source={require('../../assets/logo.jpg')}
+              style={styles.logo}
+            />
+            <Text style={styles.logoText}>Your company</Text>
+          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.loginButtonText}>Log in</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.findButton}
+              onPress={() => navigation.navigate('Cart')}>
+              <Icon name="shopping-cart" size={20} color={'#2052f7'} />
+            </TouchableOpacity>
           </View>
         </View>
+     
+        {/* <View style={{ flexDirection: 'row',}}>
+          
+       <IonIcon 
+       style={{
+        padding:3,
+        marginLeft:10,
+       }}
+       name='search' size={25} color={'#000000'} />
+      
+      
+       <TextInput
+        style={
+          { 
+            width:'80%',
+            height:35,
+            marginHorizontal:'10%',
+            borderRadius:20,
+            backgroundColor:'#fcfcfc',
+            borderWidth:1,
+
+          }
+        }
+       
+       />
+  
+       </View> */}
+
+        <Search navigation={navigation} />
+
+
       </View>
-    );
-  }
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
+
   nav: {
     backgroundColor: 'white',
     borderBottomWidth: 1,
@@ -84,22 +123,22 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     marginLeft: 15,
-    marginRight: 5
+    marginRight: 5,
   },
   loginButtonText: {
     fontSize: 14,
-    color: 'black'
+    color: 'black',
   },
   findButton: {
     backgroundColor: 'white',
     borderRadius: 20,
     paddingVertical: 5,
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
   },
   menuButton: {
     backgroundColor: 'white',
     borderRadius: 20,
-    paddingVertical: 5
+    paddingVertical: 5,
   },
   menuButtonText: {
     fontSize: 14,
@@ -120,6 +159,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'black',
   },
+  search: {
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },
+  input: {
+    color: '#ccc',
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    borderRadius: 3,
+  },
+  button: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    color: '#fff',
+  },
+  
 });
 
-export default Header
+export default Header;

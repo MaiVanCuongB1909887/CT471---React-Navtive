@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
 
       
       header:{
-    
+        
       },
       headerText:{    
         marginHorizontal:20,
@@ -64,11 +64,17 @@ const styles = StyleSheet.create({
       input: {
         flex:1,
         height: 40,
-        margin: 12,
+        marginVertical: 12,
         padding: 10,
         borderBottomColor:'grey',
         borderBottomWidth:1,
       },
+      eye:{
+        marginVertical:12,
+        borderBottomColor:'grey',
+        borderBottomWidth:1,
+      },
+
       bodyIcon:{
       margin:5,
       },

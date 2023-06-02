@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
 function Footer() {
-
   return (
         <View style={style.footer}>
             <View>
