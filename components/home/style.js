@@ -167,5 +167,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
   },
+
+  Scroll:{
+    margin:10,
+    backgroundColor:'#E2E2E2'
+  },
 });
 export default styles;

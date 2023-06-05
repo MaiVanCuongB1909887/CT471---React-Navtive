@@ -7,9 +7,12 @@ import {
   ImageBackground,
   Image,
 } from 'react-native';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import React from 'react';
 import style from './style';
 import Footer from '../footer';
+import styles from './style';
 const Home = () => {
   return (
     <ScrollView>
@@ -34,6 +37,38 @@ const Home = () => {
           </View>
         </ImageBackground>
       </View>
+      <View style={{height:110, flex:1,backgroundColor:'#E2E2E2'}}>
+    <ScrollView 
+     contentContainerStyle={{ flexGrow: 1 }}
+     contentOffset={{ x: 0, y: 0 }}
+     contentInset={{ top: 0, left: 0, bottom: 0, right: 0 }}
+     horizontal={true}
+     style={style.Scroll}
+    >
+      <View style={{borderRadius:5,height:90,width:200,backgroundColor:'#B180B7', marginHorizontal:10, justifyContent:'center',alignItems:'center'}}>
+      <IonIcon name='md-search-circle-outline' size={60} color={'white'} />
+      <Text>Dễ Dàng Tìm kiếm</Text>
+      </View>
+      <View style={{borderRadius:5,height:90,width:200,backgroundColor:'#8353FA', marginHorizontal:10, justifyContent:'center',alignItems:'center'}}>
+      <IonIcon name='wallet-outline' size={60} color={'white'} />
+      <Text>Dễ Dàng Tìm kiếm</Text>
+      </View>
+      <View style={{borderRadius:5,height:90,width:200,backgroundColor:'#FF727D', marginHorizontal:10, justifyContent:'center',alignItems:'center'}}>
+      <IonIcon name='chatbubbles-outline' size={60} color={'white'} />
+      <Text>Dễ Dàng Tìm kiếm</Text>
+      </View>
+      <View style={{borderRadius:5,height:90,width:200,backgroundColor:'#58B1FF', marginHorizontal:10, justifyContent:'center',alignItems:'center'}}>
+      <IonIcon name='car-outline' size={60} color={'white'} />
+      <Text>Dễ Dàng Tìm kiếm</Text>
+      </View>
+      <View style={{borderRadius:5,height:90,width:200,backgroundColor:'#FC950B', marginHorizontal:10, justifyContent:'center',alignItems:'center'}}>
+      <IonIcon name='calendar-outline' size={60} color={'white'} />
+      <Text>Dễ Dàng Tìm kiếm</Text>
+      </View>
+    
+    </ScrollView>
+    </View>
+
       <Text style={style.h1}>Programs</Text>
       <Text style={style.h4}>
         Here are a few of the developer programs that we support. To see all
@@ -84,6 +119,16 @@ const Home = () => {
           </Text>
         </TouchableOpacity>
       </View>
+      
+      <ScrollView
+       
+       contentOffset={{ x: 0, y: 0 }}
+       contentInset={{ top: 0, left: 0, bottom: 0, right: 0 }}
+       horizontal={false}
+       style={style.Scroll}
+      >
+      </ScrollView>
+      
       <Footer/>
       </View>
     </ScrollView>

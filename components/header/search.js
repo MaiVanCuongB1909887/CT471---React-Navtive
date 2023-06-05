@@ -35,7 +35,6 @@ export default function Search({product, navigation}) {
 );
   const checkSearchText = searchText === ""?false:true;
   const check = checkSearchText&!loading ?false:true;
-  console.log(checkSearchText);
   return (
      
     <View>
