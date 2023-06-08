@@ -9,31 +9,35 @@ import {
   Button,
   FlatList,
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Header = ({navigation}) => {
-  const [token, setToken] = useState(false);
+  const [token, setToken] = useState({});
   const [user, setUser] = useState({});
-  const [isLogin, setIsLogin] = useState({});
+  const [isLogin, setIsLogin] = useState(false);
 
   // Luu tru token de check trang thai cua token
   AsyncStorage.getItem('sessionToken').then(res => {
-    return setIsLogin(res);
+    return setToken(res);
   });
 
   //Luu tru trang thai cua token de check Login va User
   async function checkLogin() {
     setUser(JSON.parse(await AsyncStorage.getItem('user')));
-    setToken((await AsyncStorage.getItem('sessionToken')) ? true : false);
+    setIsLogin((await AsyncStorage.getItem('sessionToken')) ? true : false);
   }
 
   //useEffect tranh checkLogin() loop bang trang thai isLogin cua token
   useEffect(() => {
     checkLogin();
-  }, [isLogin]);
+  }, [token]);
 
+  const thongbao = () => {
+    alert('Dang nhap di roi lam gi lam');
+  };
   return (
     <View>
       <View style={styles.nav}>
@@ -59,24 +63,45 @@ const Header = ({navigation}) => {
             <Text style={styles.logoText}>Your company</Text>
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.cartButton}
-              onPress={() => navigation.getParent().openDrawer()}>
-              <Icon name="shopping-cart" size={20} color={'#2052f7'} />
-            </TouchableOpacity>
+            {!isLogin && (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.cartButton}
+                  onPress={() => thongbao()}>
+                  <Icon name="shopping-cart" size={20} color={'#2052f7'} />
+                </TouchableOpacity>
 
-            {!token && (
-              <TouchableOpacity
-                style={styles.loginButton}
-                onPress={() => navigation.navigate('Login')}>
-                <Text style={styles.loginButtonText}>Log in</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.loginButton}
+                  onPress={() => navigation.navigate('Login')}>
+                  <Text style={styles.loginButtonText}>Log in</Text>
+                </TouchableOpacity>
+                {/* <Picker
+                  selectedValue={selectedValue}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedValue(itemValue)
+                  }
+                  mode="dropdown"
+                  
+                  style={{color: '#000'}}>
+                  <Picker.Item label="Option 1" value="option1" />
+                  <Picker.Item label="Option 2" value="option2" />
+                  <Picker.Item label="Option 3" value="option3" />
+                </Picker> */}
+              </View>
             )}
 
-            {token && (
-              <TouchableOpacity style={styles.loginButton}>
-                <Text style={styles.loginButtonText}>{user?.firstname}</Text>
-              </TouchableOpacity>
+            {isLogin && (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.cartButton}
+                  onPress={() => navigation.getParent().openDrawer()}>
+                  <Icon name="shopping-cart" size={20} color={'#2052f7'} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.loginButton}>
+                  <Text style={styles.loginButtonText}>{user?.firstname}</Text>
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         </View>
@@ -87,17 +112,8 @@ const Header = ({navigation}) => {
           containerStyle={styles.search}
           inputContainerStyle={styles.searchInputContainer}
           inputStyle={styles.searchInput}
-          // onChangeText={text => searchFilterFunction(text)}
-          // onClear={text => searchFilterFunction('')}
           placeholder="Tim kiem"
-          // value={search}
         />
-        {/* <FlatList
-          data={filteredDataSource}
-          keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorView}
-          renderItem={ItemView}
-        /> */}
       </View>
     </View>
   );

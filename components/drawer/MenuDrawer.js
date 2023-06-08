@@ -4,7 +4,8 @@ import Register from '../register';
 import Login from '../login';
 import HomeStack from '../navigation/StackNavigator';
 import Product from '../product/Product';
-import ContentDrawer from './ContentDrawer';
+import ContentMenuDrawer from './ContentMenuDrawer';
+import ContentCartDrawer from './ContentCartDrawer';
 import Header from '../header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Home from '../home';
@@ -14,22 +15,20 @@ const RightDrawer = createDrawerNavigator();
 const Stack = createDrawerNavigator();
 
 const CartDrawer = () => {
-  return(
-  <RightDrawer.Navigator screenOptions={{drawerPosition: 'right', headerShown: false}}>
-    <RightDrawer.Screen
-      name="Giỏ hàng"
-      component={MenuDrawer}
-    />
-  </RightDrawer.Navigator>
+  return (
+    <RightDrawer.Navigator
+      screenOptions={{drawerPosition: 'right', headerShown: false}}
+      drawerContent={props => <ContentCartDrawer {...props} />}>
+      <RightDrawer.Screen name="Giỏ hàng" component={MenuDrawer} />
+    </RightDrawer.Navigator>
   );
 };
 
 const MenuDrawer = () => {
   return (
     <LeftDrawer.Navigator
-      drawerContent={props => (
-        <ContentDrawer {...props} screenOptions={{drawerPosition: 'left'}} />
-      )}>
+      screenOptions={{drawerPosition: 'left'}}
+      drawerContent={props => <ContentMenuDrawer {...props} />}>
       <LeftDrawer.Screen
         name="Trang chủ"
         component={HomeStack}

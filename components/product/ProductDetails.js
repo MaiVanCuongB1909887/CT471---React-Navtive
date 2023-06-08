@@ -16,7 +16,6 @@ export default function ProductDetails({route}) {
       .then(response => {
         const productData = response.data;
         setProduct(productData);
-        // console.log(productData);
       })
       .catch(error => {
         console.log(error);
@@ -46,7 +45,7 @@ export default function ProductDetails({route}) {
               currency: 'VND',
             })}
           </Text>
-          <Text>{product.product.tier_prices[0].qty} sản phẩm có sẵn</Text>
+          <Text>{product.product.qty} sản phẩm có sẵn</Text>
           <Text style={styles.status}>
             Tình trạng: {product.product.status == 1 ? 'Còn hàng' : 'Hết hàng'}
           </Text>

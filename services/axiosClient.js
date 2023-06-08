@@ -1,31 +1,31 @@
-import axios from "axios";
+import axios from 'axios';
 
 const getUserToken = async () => {
-  // return token ;
+  // return token;
 };
 
 const axiosClient = axios.create({
-  baseURL: "http://192.168.1.9:5000/",
+  baseURL: 'http://192.168.1.9:5000/',
 });
 
 axiosClient.interceptors.request.use(
-  async (config) => {
+  async config => {
     const token = await getUserToken();
     if (token) {
       config.headers = {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       };
     } else {
       config.headers = {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       };
     }
     return config;
   },
-  (error) => {
+  error => {
     Promise.reject(error);
-  }
+  },
 );
 
 axiosClient.interceptors.response.use(
@@ -34,7 +34,7 @@ axiosClient.interceptors.response.use(
   },
   function (error) {
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosClient;
