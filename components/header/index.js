@@ -1,11 +1,34 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { TextInput } from 'react-native-gesture-handler';
 import Search from './search';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Header = ({navigation}) => {
+  const [token, setToken] = useState(false);
+  const [user, setUser] = useState({});
+  const [isLogin, setIsLogin] = useState({});
+  // Luu tru token de check trang thai cua token
+  AsyncStorage.getItem('sessionToken').then(res => {
+    return setIsLogin(res);
+  });
+
+  //Luu tru trang thai cua token de check Login va User
+  async function checkLogin() {
+    setUser(JSON.parse(await AsyncStorage.getItem('user')));
+    setToken((await AsyncStorage.getItem('sessionToken')) ? true : false);
+  }
+
+  //useEffect tranh checkLogin() loop bang trang thai isLogin cua token
+  useEffect(() => {
+    checkLogin();
+  }, [isLogin]);
+
+
+
+
+
   return (
     <View>
       <View style={styles.nav}>
@@ -31,11 +54,21 @@ const Header = ({navigation}) => {
             <Text style={styles.logoText}>Your company</Text>
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.loginButtonText}>Log in</Text>
-            </TouchableOpacity>
+           
+           {!token && (
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.loginButtonText}>Log in</Text>
+              </TouchableOpacity>
+            )}
+
+            {token && (
+              <TouchableOpacity style={styles.loginButton}>
+                <Text style={styles.loginButtonText}>{user?.firstname}</Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               style={styles.findButton}
               onPress={() => navigation.navigate('Cart')}>
@@ -70,6 +103,7 @@ const Header = ({navigation}) => {
        />
   
        </View> */}
+       
 
         <Search navigation={navigation} />
 

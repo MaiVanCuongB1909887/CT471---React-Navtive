@@ -1,10 +1,11 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import userAPI from '../../services/userAPI';
 
 export default function ProductDetails({route}) {
   const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const sku = route.params.productId;
   const checkProduct = product ? true : false;
 
@@ -16,12 +17,22 @@ export default function ProductDetails({route}) {
       .then(response => {
         const productData = response.data;
         setProduct(productData);
-        // console.log(productData);
+        setIsLoading(false);
+        // console.log(productData)
+
       })
       .catch(error => {
         console.log(error);
       });
   }, []);
+
+  if (isLoading || !product) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

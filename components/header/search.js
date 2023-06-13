@@ -2,7 +2,7 @@
 import {StyleSheet,FlatList, Text, View, Image,ScrollView,TouchableOpacity,TextInput} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-
+import IonIcon from 'react-native-vector-icons/Ionicons';
 export default function Search({product, navigation}) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,9 +19,9 @@ export default function Search({product, navigation}) {
         },
       })
       .then(response => {
-        console.log(
-          img + response.data.product.items[0].custom_attributes[0].value,
-        );
+        // console.log(
+        //   img + response.data.product.items[0].custom_attributes[0].value,
+        // );
         setLoading(false);
         setProducts(response.data.product.items);
       })
@@ -37,7 +37,8 @@ export default function Search({product, navigation}) {
   const check = checkSearchText&!loading ?false:true;
   return (
      
-    <View>
+    <View style={{margin:10,flexDirection:'row',borderWidth:1,borderColor:'#c4c7cc',borderRadius:30,alignItems: 'center',justifyContent:'center'}}>
+     
       <TextInput
         style={styles.searchInput}
         placeholder="Tìm kiếm sản phẩm"
@@ -92,6 +93,16 @@ export default function Search({product, navigation}) {
         </View>
 
       )}
+      
+      <View style={{marginLeft:'30%',backgroundColor:'#29B1B0',height:35,width:80,
+      borderRadius:20,
+      alignItems: 'center',
+      justifyContent:'center'
+      }}>
+      <IonIcon name="search" size={20} color={'#000000'}/>
+      
+    </View>
+  
     </View>
    
       

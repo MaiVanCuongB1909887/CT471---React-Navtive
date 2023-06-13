@@ -4,7 +4,7 @@ export const isValidEmail = (stringEmail) => {
 }
 //validate password
 export const isValidPassword = (stringPassword) => {
-    return (/^(?=.*\d)(?=.*[a-z]).{6,20}$/.test(stringPassword))
+    return (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(stringPassword))
 }
 export const isValidRetypePassword = (stringRetypePassword) => {
     return (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(stringRetypePassword))
