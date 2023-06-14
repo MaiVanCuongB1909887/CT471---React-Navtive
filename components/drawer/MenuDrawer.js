@@ -9,10 +9,10 @@ import ContentCartDrawer from './ContentCartDrawer';
 import Header from '../header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Home from '../home';
+import Admin from '../admin/Admin';
 
 const LeftDrawer = createDrawerNavigator();
 const RightDrawer = createDrawerNavigator();
-const Stack = createDrawerNavigator();
 
 const CartDrawer = () => {
   return (
@@ -39,6 +39,7 @@ const MenuDrawer = () => {
         component={Product}
         options={{header: props => <Header {...props} title="Home" />}}
       />
+      <LeftDrawer.Screen name="Admin" component={Admin} />
     </LeftDrawer.Navigator>
   );
 };

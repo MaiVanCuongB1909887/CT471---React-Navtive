@@ -9,31 +9,25 @@ import {
   Button,
   FlatList,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSelector} from 'react-redux';
+import {get} from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const Header = ({navigation}) => {
-  const [token, setToken] = useState({});
-  const [user, setUser] = useState({});
-  const [isLogin, setIsLogin] = useState(false);
+  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
 
-  // Luu tru token de check trang thai cua token
-  AsyncStorage.getItem('sessionToken').then(res => {
-    return setToken(res);
-  });
-
-  //Luu tru trang thai cua token de check Login va User
-  async function checkLogin() {
-    setUser(JSON.parse(await AsyncStorage.getItem('user')));
-    setIsLogin((await AsyncStorage.getItem('sessionToken')) ? true : false);
+  async function getUsername() {
+    return (username = JSON.parse(
+      await AsyncStorage.getItem('user'),
+    ).firstname);
   }
 
-  //useEffect tranh checkLogin() loop bang trang thai isLogin cua token
   useEffect(() => {
-    checkLogin();
-  }, [token]);
+    getUsername();
+  }, []);
 
   const thongbao = () => {
     alert('Dang nhap di roi lam gi lam');
@@ -63,7 +57,7 @@ const Header = ({navigation}) => {
             <Text style={styles.logoText}>Your company</Text>
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
-            {!isLogin && (
+            {!isLoggedIn && (
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.cartButton}
@@ -91,7 +85,7 @@ const Header = ({navigation}) => {
               </View>
             )}
 
-            {isLogin && (
+            {isLoggedIn && (
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.cartButton}
@@ -99,7 +93,7 @@ const Header = ({navigation}) => {
                   <Icon name="shopping-cart" size={20} color={'#2052f7'} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.loginButton}>
-                  <Text style={styles.loginButtonText}>{user?.firstname}</Text>
+                  <Text style={styles.loginButtonText}>{username}</Text>
                 </TouchableOpacity>
               </View>
             )}

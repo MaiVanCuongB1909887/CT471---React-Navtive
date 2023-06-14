@@ -25,7 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 
 function ContentCartDrawer({navigation}) {
-  const cart = useSelector(state => state.cart.cart);
+  const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,11 +57,6 @@ function ContentCartDrawer({navigation}) {
   useEffect(() => {
     cartProducts();
   }, [cart]);
-
-  const test = async () => {
-    // console.log(console.log(await AsyncStorage.getItem('cart_products')));
-    console.log(console.log(products));
-  };
 
   const totalPrice = () => {
     let totalPrice = 0;
@@ -107,10 +102,7 @@ function ContentCartDrawer({navigation}) {
                 currency: 'VND',
               })}
             </Text>
-            <Text style={{color: '#000'}}>
-              <Icon name="cube" />
-              {item.qty} sản phẩm có sẵn
-            </Text>
+
             {/* Thêm các thuộc tính khác của sản phẩm tại đây */}
           </View>
         </View>

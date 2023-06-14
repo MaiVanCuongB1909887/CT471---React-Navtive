@@ -10,30 +10,20 @@ import {
 import {ListItem} from '@rneui/themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import style from '../footer/style';
+import {useSelector} from 'react-redux';
+import {dispatch} from 'redux';
+import {logoutThunk} from '../../store/auth/UserThunk';
 
 export default function ContentMenuDrawer(props) {
-  const [token, setToken] = useState(false);
-  const [isLogout, setIsLogout] = useState({});
+  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
   const [expanded, setExpanded] = useState(false);
-
-  AsyncStorage.getItem('sessionToken').then(res => {
-    return setIsLogout(res);
-  });
-
-  async function checkLogout() {
-    setToken((await AsyncStorage.getItem('sessionToken')) ? true : false);
-  }
-
-  useEffect(() => {
-    checkLogout();
-  }, [isLogout]);
 
   const handle = () => {
     props.navigation.navigate('Login');
   };
+
   const logout = async () => {
-    await AsyncStorage.removeItem('sessionToken');
-    await AsyncStorage.removeItem('user');
+    dispatch(logoutThunk());
     props.navigation.navigate('Login');
   };
 
@@ -88,7 +78,7 @@ export default function ContentMenuDrawer(props) {
       </View>
 
       <DrawerItem label="Tiếng Hàn sẻng" />
-      {token && <DrawerItem label="Logout" onPress={logout}></DrawerItem>}
+      {isLoggedIn && <DrawerItem label="Logout" onPress={logout}></DrawerItem>}
     </DrawerContentScrollView>
   );
 }

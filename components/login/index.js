@@ -14,15 +14,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {isValidEmail, isValidPassword} from '../../utilies/Validations';
 import styles from './style';
+import {loginThunk} from '../../store/auth/UserThunk';
+import {useDispatch, useSelector} from 'react-redux';
 
 const Login = ({navigation}) => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+
   const [email, setEmail] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [visible, setvisible] = useState(false);
 
-  const handleAddTask = async () => {
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigation.navigate('Home');
+    }
+  }, [isLoggedIn]);
+
+  const handleAddTask = () => {
     if (email.length === 0) {
       alert('Vui long nhap email');
       return false;
@@ -39,23 +50,7 @@ const Login = ({navigation}) => {
       alert('password chưa đúng định dạng vui lòng nhập lại');
       return false;
     }
-    try {
-      const response = await userAPI.postLogin({
-        email: email,
-        password: password,
-      });
-      if (!!response) {
-        await AsyncStorage.setItem('sessionToken', response.token);
-        await AsyncStorage.setItem(
-          'user',
-          JSON.stringify(response.customer_info),
-        );
-        alert('Dang nhap thanh cong');
-        navigation.navigate('Home');
-      }
-    } catch (error) {
-      return alert(error.response.data.message);
-    }
+    dispatch(loginThunk(email, password));
   };
   return (
     <ScrollView>
