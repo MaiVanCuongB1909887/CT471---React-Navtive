@@ -7,9 +7,13 @@ import Product from '../product/Product';
 import ContentMenuDrawer from './ContentMenuDrawer';
 import ContentCartDrawer from './ContentCartDrawer';
 import Header from '../header';
+<<<<<<< HEAD:components/drawer/MenuDrawer.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Home from '../home';
 import Admin from '../admin/Admin';
+=======
+import Search from '../search/search';
+>>>>>>> a42a981 (updated):src/components/drawer/MenuDrawer.js
 
 const LeftDrawer = createDrawerNavigator();
 const RightDrawer = createDrawerNavigator();
@@ -39,7 +43,15 @@ const MenuDrawer = () => {
         component={Product}
         options={{header: props => <Header {...props} title="Home" />}}
       />
+<<<<<<< HEAD:components/drawer/MenuDrawer.js
       <LeftDrawer.Screen name="Admin" component={Admin} />
+=======
+      {/* <LeftDrawer.Screen
+        name="Search"
+        component={Search}
+        options={{header: props => <Header {...props} title="Home" />}}
+      /> */}
+>>>>>>> a42a981 (updated):src/components/drawer/MenuDrawer.js
     </LeftDrawer.Navigator>
   );
 };

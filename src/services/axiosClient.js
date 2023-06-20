@@ -1,4 +1,7 @@
+<<<<<<< HEAD:services/axiosClient.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
+=======
+>>>>>>> a42a981 (updated):src/services/axiosClient.js
 import axios from 'axios';
 
 const getUserToken = async () => {
@@ -7,7 +10,11 @@ const getUserToken = async () => {
 };
 
 const axiosClient = axios.create({
+<<<<<<< HEAD:services/axiosClient.js
   baseURL: 'http://192.168.1.9:5000',
+=======
+  baseURL: 'http://192.168.1.9:5000/',
+>>>>>>> a42a981 (updated):src/services/axiosClient.js
 });
 
 axiosClient.interceptors.request.use(

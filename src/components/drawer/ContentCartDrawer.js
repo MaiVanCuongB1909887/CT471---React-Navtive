@@ -10,7 +10,15 @@ import {
   StatusBar,
   FlatList,
 } from 'react-native';
+<<<<<<< HEAD:components/drawer/ContentCartDrawer.js
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
+=======
+import {
+  NavigationContainer,
+  useNavigation,
+  useAlert,
+} from '@react-navigation/native';
+>>>>>>> a42a981 (updated):src/components/drawer/ContentCartDrawer.js
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import {
@@ -23,17 +31,28 @@ import colors from '../../constants/colors';
 import userAPI from '../../services/userAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
+<<<<<<< HEAD:components/drawer/ContentCartDrawer.js
 
 function ContentCartDrawer({navigation}) {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+=======
+import {addItemToCart, removeItemFromCart} from '../../store/cart/CartActions';
+
+function ContentCartDrawer({navigation}) {
+  const cart = useSelector(state => state.cart.cart);
+  const dispatch = useDispatch();
+  const [products, setProducts] = useState([]);
+
+>>>>>>> a42a981 (updated):src/components/drawer/ContentCartDrawer.js
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
   async function cartProducts() {
     return setProducts(cart);
+<<<<<<< HEAD:components/drawer/ContentCartDrawer.js
     // return setProducts(await AsyncStorage.getItem('cart_products'));
   }
 
@@ -54,6 +73,10 @@ function ContentCartDrawer({navigation}) {
   //   getProductfSKU();
   // }, []);
 
+=======
+  }
+
+>>>>>>> a42a981 (updated):src/components/drawer/ContentCartDrawer.js
   useEffect(() => {
     cartProducts();
   }, [cart]);
@@ -102,7 +125,14 @@ function ContentCartDrawer({navigation}) {
                 currency: 'VND',
               })}
             </Text>
+<<<<<<< HEAD:components/drawer/ContentCartDrawer.js
 
+=======
+            <Text style={{color: '#000'}}>
+              <Icon name="cube" />
+              {item.qty} sản phẩm có sẵn
+            </Text>
+>>>>>>> a42a981 (updated):src/components/drawer/ContentCartDrawer.js
             {/* Thêm các thuộc tính khác của sản phẩm tại đây */}
           </View>
         </View>
@@ -142,12 +172,23 @@ function ContentCartDrawer({navigation}) {
         </View>
         <View style={styles.cartBottomRightContainer}>
           {products.length > 0 ? (
+<<<<<<< HEAD:components/drawer/ContentCartDrawer.js
             <Button title={'Checkout'} onPress={() => test()} />
+=======
+            <Button
+              title={'Checkout'}
+              onPress={() => navigation.navigate('Checkout')}
+            />
+>>>>>>> a42a981 (updated):src/components/drawer/ContentCartDrawer.js
           ) : (
             <Button
               title={'Checkout'}
               disabled={true}
+<<<<<<< HEAD:components/drawer/ContentCartDrawer.js
               onPress={() => navigation.navigate('checkout')}
+=======
+              onPress={() => navigation.navigate('Checkout')}
+>>>>>>> a42a981 (updated):src/components/drawer/ContentCartDrawer.js
             />
           )}
         </View>

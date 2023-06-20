@@ -3,7 +3,23 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: 380,
+    marginBottom: '5%',
+    width: '120%',
+  },
+  imageBg: {
+    borderRadius: 10,
+    height: 200,
+    width: '96%',
+    marginHorizontal: '2%',
+    marginVertical: 20,
+    backgroundColor: '#E9EDF4',
+  },
+  imageB: {
+    height: 150,
+    width: '96%',
+    marginHorizontal: '2%',
+    marginVertical: 10,
+    borderRadius: 10,
   },
   containerNews: {
     backgroundColor: '#fff',
@@ -141,13 +157,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   image: {
-    marginHorizontal: 10,
-    width: 350,
+    margin: '5%',
+    width: '90%',
     height: 300,
   },
   imgNew: {
-    marginHorizontal: 10,
-    width: 350,
+    marginHorizontal: '5%',
+    width: '90%',
     height: 300,
   },
   centerText: {
@@ -162,6 +178,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 8,
+  },
+
+  Scroll: {
+    margin: 10,
+    backgroundColor: '#E2E2E2',
   },
 });
 export default styles;

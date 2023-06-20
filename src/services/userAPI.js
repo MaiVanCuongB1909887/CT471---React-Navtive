@@ -1,12 +1,24 @@
 import axiosClient from './axiosClient';
 
 const userAPI = {
+<<<<<<< HEAD:services/userAPI.js
+=======
+  getCart() {
+    const url = '/cart/list';
+    return axiosClient.get(url);
+  },
+>>>>>>> a42a981 (updated):src/services/userAPI.js
   getAllProduct() {
     const url = '/product/list1';
     return axiosClient.get(url);
   },
+<<<<<<< HEAD:services/userAPI.js
   getProduct(id) {
     const url = `/product/${id}`;
+=======
+  getAllCate() {
+    const url = '/category/list';
+>>>>>>> a42a981 (updated):src/services/userAPI.js
     return axiosClient.get(url);
   },
   search(data) {
