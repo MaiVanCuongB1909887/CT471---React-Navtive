@@ -8,6 +8,7 @@ import ContentDrawer from './ContentDrawer';
 import Header from '../header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Home from '../home';
+import Search from '../search';
 
 const LeftDrawer = createDrawerNavigator();
 const RightDrawer = createDrawerNavigator();
@@ -38,6 +39,12 @@ const MenuDrawer = () => {
       <LeftDrawer.Screen
         name="Sản phẩm"
         component={Product}
+        options={{header: props => <Header {...props} title="Home" />}}
+      />
+
+      <LeftDrawer.Screen
+        name="Search"
+        component={Search}
         options={{header: props => <Header {...props} title="Home" />}}
       />
     </LeftDrawer.Navigator>

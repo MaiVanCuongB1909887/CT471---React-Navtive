@@ -1,9 +1,10 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { TextInput } from 'react-native-gesture-handler';
-import Search from './search';
+import {TextInput} from 'react-native-gesture-handler';
+import Search from '../search';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Header = ({navigation}) => {
   const [token, setToken] = useState(false);
@@ -25,9 +26,8 @@ const Header = ({navigation}) => {
     checkLogin();
   }, [isLogin]);
 
-
-
-
+  // input search
+  const [searchText, setSearchText] = useState(null);
 
   return (
     <View>
@@ -54,8 +54,7 @@ const Header = ({navigation}) => {
             <Text style={styles.logoText}>Your company</Text>
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
-           
-           {!token && (
+            {!token && (
               <TouchableOpacity
                 style={styles.loginButton}
                 onPress={() => navigation.navigate('Login')}>
@@ -76,45 +75,48 @@ const Header = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-     
-        {/* <View style={{ flexDirection: 'row',}}>
-          
-       <IonIcon 
-       style={{
-        padding:3,
-        marginLeft:10,
-       }}
-       name='search' size={25} color={'#000000'} />
-      
-      
-       <TextInput
-        style={
-          { 
-            width:'80%',
-            height:35,
-            marginHorizontal:'10%',
-            borderRadius:20,
-            backgroundColor:'#fcfcfc',
-            borderWidth:1,
 
-          }
-        }
-       
-       />
-  
-       </View> */}
-       
-
-        <Search navigation={navigation} />
-
-
+        {/* input search */}
+        <View></View>
+        <View
+          style={{
+            margin: 10,
+            flexDirection: 'row',
+            borderWidth: 1,
+            borderColor: '#c4c7cc',
+            borderRadius: 30,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#ebedf0',
+          }}>
+          <TextInput
+            style={{width: '70%'}}
+            placeholder="Tìm kiếm sản phẩm"
+            onChangeText={text => setSearchText(text)}
+            value={searchText}
+          />
+          <TouchableOpacity
+            key={searchText}
+            onPress={() => navigation.navigate('Search', {searchText})}>
+            <View
+              style={{
+                backgroundColor: '#29B1B0',
+                height: 35,
+                width: 80,
+                borderRadius: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <IonIcon name="search" size={20} color={'#000000'} />
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-
   nav: {
     backgroundColor: 'white',
     borderBottomWidth: 1,
@@ -209,7 +211,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     color: '#fff',
   },
-  
 });
 
 export default Header;

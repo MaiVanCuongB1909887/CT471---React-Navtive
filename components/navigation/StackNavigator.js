@@ -5,7 +5,7 @@ import Login from '../login';
 import Register from '../register';
 import Product from '../product/Product';
 import ProductDetails from '../product/ProductDetails';
-import Search from '../header/search'
+import Search from '../search';
 const Stack = createStackNavigator();
 
 
@@ -36,6 +36,11 @@ const HomeStack = () => {
       <Stack.Screen
         name="ProductDetails"
         component={ProductDetails}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Search"
+        component={Search}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
