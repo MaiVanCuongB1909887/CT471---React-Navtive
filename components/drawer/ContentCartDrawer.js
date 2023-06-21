@@ -31,10 +31,10 @@ import {
 } from '../../store/cart/CartSlice';
 
 function ContentCartDrawer({navigation}) {
-  const products = useSelector(state => state.product.product);
+  const dispatch = useDispatch();
   const cart = useSelector(state => state.cart.cart);
   const loading = useSelector(state => state.cart.isLoading);
-  const dispatch = useDispatch();
+
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
@@ -67,10 +67,12 @@ function ContentCartDrawer({navigation}) {
     const sku = item.sku;
     let qty = 1;
     const item_id = item.item_id;
-
     item.qty - 1 > 0 ? (qty = item.qty - 1) : qty;
     const itemInCart = {sku, qty, item_id};
     dispatch(changeQtyCart(itemInCart));
+  };
+  const checkout = () => {
+    navigation.navigate('Checkout');
   };
 
   const listItem = ({item}) => {
@@ -167,13 +169,9 @@ function ContentCartDrawer({navigation}) {
         </View>
         <View style={styles.cartBottomRightContainer}>
           {cart.length > 0 ? (
-            <Button title={'Checkout'} onPress={() => test()} />
+            <Button title={'Checkout'} onPress={checkout} />
           ) : (
-            <Button
-              title={'Checkout'}
-              disabled={true}
-              onPress={() => navigation.navigate('checkout')}
-            />
+            <Button title={'Checkout'} disabled onPress={checkout} />
           )}
         </View>
       </View>

@@ -10,28 +10,50 @@ import {
 import {ListItem} from '@rneui/themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import style from '../footer/style';
-import {useSelector} from 'react-redux';
-import {dispatch} from 'redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../../store/auth/AuthSlice';
+import cateAPI from '../../services/catetAPI';
 
 export default function ContentMenuDrawer(props) {
-  const [isLogin, setIsLogin] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const dispatch = useDispatch();
 
-  const logoutHandle = async () => {
-    dispatch(logout());
-  };
+  const [callback, setCallback] = useState({});
+  const [isLogin, setIsLogin] = useState(true);
+  const [expanded, setExpanded] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  AsyncStorage.getItem('userToken').then(res => {
+    return setCallback(res);
+  });
+
   const checkToken = async () => {
-    console.log(await AsyncStorage.getItem('userAdmin'), 'islogin o menu');
-    return !!(await AsyncStorage.getItem('userToken')) ||
-      !!(await AsyncStorage.getItem('adminToken'))
+    return !!(await AsyncStorage.getItem('userToken'))
       ? setIsLogin(false)
       : setIsLogin(true);
   };
 
+  const logoutHandle = async () => {
+    if (!isLogin) {
+      props.navigation.navigate('UserLogin');
+    }
+    dispatch(logout());
+  };
+
+  const getAllCate = async () => {
+    try {
+      const response = await cateAPI.getAllCate();
+      if (!!response) {
+        setCategories(response.category);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    getAllCate();
     checkToken();
-  }, [isLogin]);
+  }, [callback]);
 
   return (
     <DrawerContentScrollView {...props}>
@@ -58,34 +80,25 @@ export default function ContentMenuDrawer(props) {
           onPress={() => {
             setExpanded(!expanded);
           }}>
-          <ListItem
-            topDivider
-            bottomDivider
-            style={{color: 'rgb(28, 28, 30)', fontSize: 14, marginLeft: 2}}>
-            <ListItem.Content>
-              <ListItem.Subtitle onPress={() => handle()}>
-                Nấm Trường Sinh
-              </ListItem.Subtitle>
-              <ListItem.Subtitle onPress={() => handle()}>
-                Nấm Đông Cô
-              </ListItem.Subtitle>
-              <ListItem.Subtitle onPress={() => handle()}>
-                Nấm Rơm
-              </ListItem.Subtitle>
-              <ListItem.Subtitle onPress={() => handle()}>
-                Nấm mốc
-              </ListItem.Subtitle>
-              <ListItem.Subtitle onPress={() => handle()}>
-                Nấm mộ
-              </ListItem.Subtitle>
-            </ListItem.Content>
-          </ListItem>
+          {categories?.map(category => (
+            <ListItem
+              key={category.id}
+              topDivider
+              bottomDivider
+              style={{color: 'rgb(28, 28, 30)', fontSize: 14, marginLeft: 2}}>
+              <ListItem.Content>
+                <ListItem.Subtitle onPress={() => handle()}>
+                  {category.name}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+          ))}
         </ListItem.Accordion>
       </View>
 
       <DrawerItem label="Tiếng Hàn sẻng" />
       {!isLogin && (
-        <DrawerItem label="Logout" onPress={() => logoutHandle()}></DrawerItem>
+        <DrawerItem label="Logout" onPress={logoutHandle}></DrawerItem>
       )}
     </DrawerContentScrollView>
   );

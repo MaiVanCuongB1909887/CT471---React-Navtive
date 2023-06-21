@@ -9,7 +9,7 @@ export const getCart = createAsyncThunk('cart/getCart', async () => {
       return response.product_in_cart;
     }
   } catch (error) {
-    throw console.log(error.message, 'day la loi luc lay cart');
+    throw console.log(error.response.data.message, 'day la loi luc lay cart');
   }
 });
 export const addToCart = createAsyncThunk('cart/addToCart', async data => {
@@ -21,7 +21,7 @@ export const addToCart = createAsyncThunk('cart/addToCart', async data => {
       return response.product_in_cart;
     }
   } catch (error) {
-    throw console.log(error.message, 'day la loi luc them cart');
+    throw console.log(error.response.data.message, 'day la loi luc them cart');
   }
 });
 export const changeQtyCart = createAsyncThunk(

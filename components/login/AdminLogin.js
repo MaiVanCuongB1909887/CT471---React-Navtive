@@ -15,17 +15,27 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const AdminLogin = ({navigation}) => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
 
+  const [callback, setCallback] = useState({});
+  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [visible, setvisible] = useState(false);
+
+  AsyncStorage.getItem('adminToken').then(res => {
+    return setCallback(res);
+  });
+  const checkToken = async () => {
+    return !!(await AsyncStorage.getItem('adminToken'))
+      ? setIsLogin(false)
+      : setIsLogin(true);
+  };
   useEffect(() => {
-    console.log(isLoggedIn, 'day la islogged o trang admin');
-    if (isLoggedIn) {
+    checkToken();
+    if (!isLogin) {
       navigation.navigate('Admin');
     }
-  }, [isLoggedIn]);
+  }, [callback]);
 
   const handleAddTask = async () => {
     if (username.length === 0) {
@@ -36,7 +46,10 @@ const AdminLogin = ({navigation}) => {
       alert('Vui long nhap password');
       return false;
     }
-    dispatch(adminLogin({username, password}));
+    const res = await dispatch(adminLogin({username, password}));
+    if (!!res) {
+      await AsyncStorage.setItem('userDetail', res);
+    }
   };
   return (
     <ScrollView>

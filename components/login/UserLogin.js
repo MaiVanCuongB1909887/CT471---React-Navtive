@@ -14,24 +14,35 @@ import styles from './style';
 import {userLogin} from '../../store/auth/AuthSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import authAPI from '../../services/authAPI';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserLogin = ({navigation}) => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
-  const isAdmin = useSelector(state => state.user.isAdmin);
 
+  const [callback, setCallback] = useState({});
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [visible, setvisible] = useState(false);
-  console.log(isAdmin, 'day la isadmin o userlogin');
-  console.log(isLoggedIn, 'day la islogged o userlogin');
+
+  AsyncStorage.getItem('userToken').then(res => {
+    return setCallback(res);
+  });
+
+  const checkToken = async () => {
+    return !!(await AsyncStorage.getItem('userToken'))
+      ? setIsLogin(false)
+      : setIsLogin(true);
+  };
   useEffect(() => {
-    if (isLoggedIn) {
+    checkToken();
+    if (!isLogin) {
+      alert('Dang nhap thanh cong');
       navigation.navigate('Home');
     }
-  }, [isLoggedIn]);
+  }, [callback]);
 
   const handleAddTask = async () => {
     if (email.length === 0) {
@@ -50,7 +61,10 @@ const UserLogin = ({navigation}) => {
       alert('password chưa đúng định dạng vui lòng nhập lại');
       return false;
     }
-    dispatch(userLogin({email, password}));
+    const res = await dispatch(userLogin({email, password}));
+    if (!!res) {
+      await AsyncStorage.setItem('userDetail', res);
+    }
   };
   return (
     <ScrollView>

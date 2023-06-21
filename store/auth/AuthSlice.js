@@ -7,8 +7,7 @@ export const adminLogin = createAsyncThunk('user/adminLogin', async data => {
     const response = await authAPI.adminLogin(data);
     console.log(response, 'admin');
     if (!!response.token) {
-      const adminToken = response.token;
-      AsyncStorage.setItem('adminToken', adminToken);
+      AsyncStorage.setItem('adminToken', response.token);
       return response;
     }
   } catch (error) {
@@ -19,39 +18,39 @@ export const adminLogin = createAsyncThunk('user/adminLogin', async data => {
 export const userLogin = createAsyncThunk('user/userLogin', async data => {
   try {
     const response = await authAPI.userLogin(data);
-    console.log(response, 'user');
     if (!!response.token) {
-      const userToken = response.token;
-      AsyncStorage.setItem('userToken', userToken);
+      // AsyncStorage.setItem(
+      //   'userDetail',
+      //   JSON.stringify(response.customer_info),
+      // );
+      AsyncStorage.setItem('userToken', response.token);
       return response;
     }
   } catch (error) {
-    console.log(error);
     throw console.log(error.response.data.message, 'day la loi user');
   }
 });
 const AuthSlice = createSlice({
   name: 'user',
   initialState: {
-    isLoggedIn: false,
     userToken: null,
     adminToken: null,
     error: null,
   },
   reducers: {
-    logout: state => {
+    logout(state) {
       AsyncStorage.removeItem('userToken');
       AsyncStorage.removeItem('adminToken');
+      AsyncStorage.removeItem('userDetail');
+      AsyncStorage.removeItem('adminDetail');
       state.userToken = null;
       state.adminToken = null;
-      state.isLoggedIn = false;
     },
   },
   extraReducers: builder => {
     builder
       .addCase(userLogin.fulfilled, (state, action) => {
         state.userToken = action.payload;
-        state.isLoggedIn = true;
         state.error = null;
       })
       .addCase(userLogin.rejected, (state, action) => {
@@ -60,7 +59,6 @@ const AuthSlice = createSlice({
       })
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.adminToken = action.payload;
-        state.isLoggedIn = true;
         state.error = null;
       })
       .addCase(adminLogin.rejected, (state, action) => {

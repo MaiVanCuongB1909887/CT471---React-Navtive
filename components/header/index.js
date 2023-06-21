@@ -18,24 +18,32 @@ import {useSelector} from 'react-redux';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
 const Header = ({navigation}) => {
+  const [callback, setCallback] = useState({});
   const [searchText, setSearchText] = useState(null);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+
+  AsyncStorage.getItem('userToken').then(res => {
+    return setCallback(res);
+  });
+
   const checkToken = async () => {
-    return !!(await AsyncStorage.getItem('userToken')) ||
-      !!(await AsyncStorage.getItem('adminToken'))
+    return !!(await AsyncStorage.getItem('userToken'))
       ? setIsLogin(false)
       : setIsLogin(true);
   };
 
-  // async function getUsername() {
-  //   return (username = JSON.parse(
-  //     await AsyncStorage.getItem('user'),
-  //   ).firstname);
-  // }
+  async function getUsername() {
+    if (!isLogin) {
+      return (username = JSON.parse(
+        await AsyncStorage.getItem('userDetail'),
+      ).firstname);
+    } else return (username = null);
+  }
 
   useEffect(() => {
     checkToken();
-  }, [isLogin]);
+    getUsername();
+  }, [callback]);
 
   const thongbao = () => {
     Alert.alert(
@@ -79,7 +87,8 @@ const Header = ({navigation}) => {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.cartButton}
-                  onPress={() => thongbao()}>
+                  // onPress={() => thongbao()}
+                  onPress={() => navigation.navigate('Checkout')}>
                   <Icon name="shopping-cart" size={20} color={'#2052f7'} />
                 </TouchableOpacity>
 
@@ -102,9 +111,12 @@ const Header = ({navigation}) => {
                   <Text
                     style={styles.loginButtonText}
                     onPress={async () => {
-                      navigation.navigate('UserLogin');
+                      console.log(
+                        await AsyncStorage.getItem('userToken'),
+                        'day la check usertoken o header',
+                      );
                     }}>
-                    Checked
+                    {/* {!!username ? username : null} */}
                   </Text>
                 </TouchableOpacity>
               </View>

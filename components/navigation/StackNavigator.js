@@ -8,6 +8,7 @@ import Product from '../product/Product';
 import ProductDetails from '../product/ProductDetails';
 import Admin from '../admin/Admin';
 import Search from '../search/search';
+import Checkout from '../cart/Checkout';
 
 const Stack = createStackNavigator();
 
@@ -52,6 +53,11 @@ const HomeStack = () => {
       <Stack.Screen
         name="Search"
         component={Search}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Checkout"
+        component={Checkout}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
