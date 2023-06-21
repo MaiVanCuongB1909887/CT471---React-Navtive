@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {isValidEmail, isValidPassword} from '../../utilies/Validations';
 import styles from './style';
-import {loginThunk} from '../../store/auth/UserThunk';
+import {loginThunk} from '../../../store/auth/UserThunk';
 import {useDispatch, useSelector} from 'react-redux';
 
 const Login = ({navigation}) => {

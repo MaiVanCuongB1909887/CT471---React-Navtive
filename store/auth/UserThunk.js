@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {login, logout} from '../action';
-import userAPI from '../../services/userAPI';
+import userAPI from '../../src/services/userAPI';
 
 export const loginThunk = (email, password) => async dispatch => {
   try {
