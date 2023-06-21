@@ -1,22 +1,21 @@
 import React from 'react';
 
-import { View, ScrollView } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native';
+import {View, ScrollView} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
 
 import Footer from '../footer';
-import UIHome from '../navigation/UIHome';
-import styles from './styles'
 
+import styles from './styles';
+import HomeStack from '../navigation/StackNavigator';
+import CartDrawer from '../drawer/MenuDrawer';
+import MenuDrawer from '../drawer/MenuDrawer';
 
 const HeaderFooterLayout = () => {
   return (
     <NavigationContainer>
-
-      <UIHome />
-
+      <CartDrawer />
     </NavigationContainer>
-
   );
 };
 
-export default HeaderFooterLayout
+export default HeaderFooterLayout;
