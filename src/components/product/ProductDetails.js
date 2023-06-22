@@ -69,16 +69,15 @@ export default function ProductDetails({route, navigation}) {
                   uri:
                     img +
                     '' +
-                    product.product.custom_attributes.find(
+                    product.product?.custom_attributes.find(
                       attr => attr.attribute_code === 'image',
                     ).value,
                 }}
                 style={styles.image}
               />
 
-              <Text style={styles.name}>{product.product.name}</Text>
+              <Text style={styles.name}>{product.product?.name}</Text>
               <Text style={styles.manuf}>Từ hãng: China wifi</Text>
-
               <View
                 style={{
                   flex: 1,
@@ -127,13 +126,13 @@ export default function ProductDetails({route, navigation}) {
                   </View>
                 </TouchableOpacity>
                 <Text style={styles.qty}>
-                  còn {product.product.qty} sản phẩm
+                  còn {product.product?.qty} sản phẩm
                 </Text>
               </View>
 
               <Text style={styles.price}>
                 Giá:{' '}
-                {product.product.price.toLocaleString('vi-VN', {
+                {product.product?.price.toLocaleString('vi-VN', {
                   style: 'currency',
                   currency: 'VND',
                 })}
@@ -141,7 +140,7 @@ export default function ProductDetails({route, navigation}) {
 
               <Text style={styles.status}>
                 Tình trạng:{' '}
-                {product.product.status == 1 ? 'Còn hàng' : 'Hết hàng'}
+                {product.product?.status == 1 ? 'Còn hàng' : 'Hết hàng'}
               </Text>
               <View
                 style={{
@@ -152,7 +151,7 @@ export default function ProductDetails({route, navigation}) {
                 <Text style={styles.nameh1}>Mô tả Tổng Quan Sản Phẩm</Text>
                 <Text style={styles.description}>
                   Mô tả:{' '}
-                  {product.product.custom_attributes
+                  {product.product?.custom_attributes
                     .find(attr => attr.attribute_code === 'short_description')
                     .value.slice(3, -4)}
                 </Text>
@@ -260,7 +259,7 @@ export default function ProductDetails({route, navigation}) {
                 <Text style={styles.nameh1}>Mô Tả Chi Tiết</Text>
                 <Text style={styles.description}>
                   Mô tả:{' '}
-                  {product.product.custom_attributes
+                  {product.product?.custom_attributes
                     .find(attr => attr.attribute_code === 'short_description')
                     .value.slice(3, -4)}
                 </Text>
@@ -274,7 +273,7 @@ export default function ProductDetails({route, navigation}) {
                 <Text style={styles.nameh1}>Chính Sách Bảo Hành</Text>
                 <Text style={styles.description}>
                   Mô tả:{' '}
-                  {product.product.custom_attributes
+                  {product.product?.custom_attributes
                     .find(attr => attr.attribute_code === 'short_description')
                     .value.slice(3, -4)}
                 </Text>
@@ -359,17 +358,18 @@ export default function ProductDetails({route, navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    padding: 20,
-    color: 'black',
+    borderRadius: 10,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    padding: 10,
+    backgroundColor: '#ffffff',
   },
   image: {
-    width: 110,
-    height: 100,
+    width: '95%',
+    height: 400,
     resizeMode: 'cover',
-    marginBottom: 20,
+    margin: 10,
+    borderRadius: 10,
   },
   name: {
     fontSize: 25,
@@ -387,30 +387,31 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   price: {
-    fontSize: 18,
+    fontSize: 25,
     marginBottom: 10,
+    marginLeft: 10,
     fontWeight: 'bold',
     color: 'red',
+  },
+  manuf: {
+    fontSize: 15,
+    marginLeft: 10,
+    marginBottom: 10,
+  },
+
+  qty: {
+    fontSize: 15,
+    marginBottom: 10,
+    marginLeft: 10,
+    paddingTop: 15,
   },
   status: {
     fontSize: 18,
     marginBottom: 10,
-    color: 'black',
+    marginLeft: 10,
   },
   description: {
     fontSize: 18,
-    color: 'black',
-  },
-  themvaogio: {
-    borderColor: 'green',
-    textDecorationColor: 'green',
-  },
-  datmua: {
-    backgroundColor: 'red',
-    textDecorationColor: 'white',
-  },
-  category: {
-    color: 'green',
-    textDecorationLine: 'underline',
+    marginLeft: 10,
   },
 });
