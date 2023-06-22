@@ -10,48 +10,61 @@ import {
   StatusBar,
   FlatList,
 } from 'react-native';
-import {
-  NavigationContainer,
-  useNavigation,
-  useAlert,
-} from '@react-navigation/native';
+import {TextInput} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import {ListItem} from '@rneui/themed';
 import colors from '../../constants/colors';
-import userAPI from '../../services/userAPI';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {addItemToCart, removeItemFromCart} from '../../store/cart/CartActions';
+import {
+  getCart,
+  changeQtyCart,
+  removeFromCart,
+} from '../store/cart/CartSlice';
 
 function ContentCartDrawer({navigation}) {
-  const cart = useSelector(state => state.cart.cart);
   const dispatch = useDispatch();
-  const [products, setProducts] = useState([]);
+  const cart = useSelector(state => state.cart.cart);
+  const loading = useSelector(state => state.cart.isLoading);
 
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
-  async function cartProducts() {
-    return setProducts(cart);
-  }
-
   useEffect(() => {
-    cartProducts();
-  }, [cart]);
+    try {
+      dispatch(getCart());
+    } catch (error) {
+      console.log(error.message, 'day la loi luc get cart o drawer');
+    }
+  }, [dispatch]);
 
   const totalPrice = () => {
     let totalPrice = 0;
-    products.forEach(product => {
-      totalPrice += product.price;
+    cart.forEach(product => {
+      totalPrice += product.price * product.qty;
     });
     return totalPrice;
   };
+  const removeItemFromCart = item => {
+    dispatch(removeFromCart(item.item_id));
+  };
+  const increaseQty = item => {
+    const sku = item.sku;
+    let qty = item.qty + 1;
+    const item_id = item.item_id;
+    const itemInCart = {sku, qty, item_id};
+    dispatch(changeQtyCart(itemInCart));
+  };
+  const decreaseQty = item => {
+    const sku = item.sku;
+    let qty = 1;
+    const item_id = item.item_id;
+    item.qty - 1 > 0 ? (qty = item.qty - 1) : qty;
+    const itemInCart = {sku, qty, item_id};
+    dispatch(changeQtyCart(itemInCart));
+  };
+  const checkout = () => {
+    navigation.navigate('Checkout');
+  };
+
   const listItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -89,12 +102,23 @@ function ContentCartDrawer({navigation}) {
                 currency: 'VND',
               })}
             </Text>
-            <Text style={{color: '#000'}}>
-              <Icon name="cube" />
-              {item.qty} sản phẩm có sẵn
-            </Text>
-            {/* Thêm các thuộc tính khác của sản phẩm tại đây */}
+
+            <View>
+              <Button title="-" onPress={() => decreaseQty(item)} />
+              <TextInput style={{color: '#000'}}>{item.qty}</TextInput>
+              <Button title="+" onPress={() => increaseQty(item)} />
+            </View>
           </View>
+          <Button
+            title={'x'}
+            onPress={() => removeItemFromCart(item)}
+            style={{
+              borderColor: 'gray',
+              borderWidth: 1,
+              marginVertical: 10,
+              padding: 5,
+            }}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -107,13 +131,16 @@ function ContentCartDrawer({navigation}) {
         <View style={styles.cartInfoContainerTopBar}>
           <View style={styles.cartInfoTopBar}>
             <Text style={{color: '#000'}}>Your Cart</Text>
-            <Text style={{color: '#000'}}>{products.length} Items</Text>
+            <Text style={{color: '#000'}}>{cart.length} Items</Text>
           </View>
         </View>
       </View>
       <View style={styles.cartProductListContiainer}>
-        <FlatList data={products} renderItem={listItem} />
-        <View style={styles.emptyView}></View>
+        {!loading ? (
+          <Text style={{color: '#000'}}>Loading...</Text>
+        ) : (
+          <FlatList data={cart} renderItem={listItem} />
+        )}
       </View>
       <View style={styles.cartBottomContainer}>
         <View style={styles.cartBottomLeftContainer}>
@@ -131,17 +158,10 @@ function ContentCartDrawer({navigation}) {
           </View>
         </View>
         <View style={styles.cartBottomRightContainer}>
-          {products.length > 0 ? (
-            <Button
-              title={'Checkout'}
-              onPress={() => navigation.navigate('Checkout')}
-            />
+          {cart.length > 0 ? (
+            <Button title={'Checkout'} onPress={checkout} />
           ) : (
-            <Button
-              title={'Checkout'}
-              disabled={true}
-              onPress={() => navigation.navigate('Checkout')}
-            />
+            <Button title={'Checkout'} disabled onPress={checkout} />
           )}
         </View>
       </View>

@@ -9,31 +9,42 @@ import {
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import userAPI from '../../services/userAPI';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {isValidEmail, isValidPassword} from '../../utilies/Validations';
 import styles from './style';
-import {loginThunk} from '../../../store/auth/UserThunk';
+import {userLogin} from '../store/auth/AuthSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
-const Login = ({navigation}) => {
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const UserLogin = ({navigation}) => {
+  const dispatch = useDispatch();
+
+  const [callback, setCallback] = useState({});
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [visible, setvisible] = useState(false);
 
+  AsyncStorage.getItem('userToken').then(res => {
+    return setCallback(res);
+  });
+
+  const checkToken = async () => {
+    return !!(await AsyncStorage.getItem('userToken'))
+      ? setIsLogin(false)
+      : setIsLogin(true);
+  };
   useEffect(() => {
-    if (isLoggedIn) {
+    checkToken();
+    if (!isLogin) {
+      alert('Dang nhap thanh cong');
       navigation.navigate('Home');
     }
-  }, [isLoggedIn]);
+  }, [callback]);
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     if (email.length === 0) {
       alert('Vui long nhap email');
       return false;
@@ -50,7 +61,11 @@ const Login = ({navigation}) => {
       alert('password chưa đúng định dạng vui lòng nhập lại');
       return false;
     }
-    dispatch(loginThunk(email, password));
+    const res = await dispatch(userLogin({email, password}));
+    if (!!res) {
+      const username = res.payload.customer_info.firstname;
+      await AsyncStorage.setItem('userDetail', username);
+    }
   };
   return (
     <ScrollView>
@@ -153,6 +168,16 @@ const Login = ({navigation}) => {
           }}>
           Forgot your Password?
         </Text>
+        <Text
+          style={{
+            padding: 10,
+            fontSize: 15,
+            color: '#063a9c',
+            fontWeight: 'bold',
+          }}
+          onPress={() => navigation.navigate('AdminLogin')}>
+          Login as admin?
+        </Text>
         <Text style={{padding: 10, fontSize: 15, color: 'black'}}>
           Or login using
         </Text>
@@ -197,4 +222,4 @@ const Login = ({navigation}) => {
   );
 };
 
-export default Login;
+export default UserLogin;

@@ -354,7 +354,7 @@ const Home = ({navigation}) => {
           />
         </View>
 
-        <Text style={style.h1}>Programs</Text>
+        {/* <Text style={style.h1}>Programs</Text>
         <Text style={style.h4}>
           Here are a few of the developer programs that we support. To see all
           programs, please go to{' '}
@@ -387,7 +387,7 @@ const Home = ({navigation}) => {
             style={style.image}
           />
           <Text style={style.centerText}>Audio Control API</Text>
-        </View>
+        </View> */}
         <View style={style.containerNews}>
           <Text style={style.h1}>News feed and Articles</Text>
           <Text style={style.h4}>

@@ -1,9 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSelector} from 'react-redux';
 import axios from 'axios';
 
 const getUserToken = async () => {
-  token = await AsyncStorage.getItem('sessionToken');
-  return token;
+  if (await AsyncStorage.getItem('userToken')) {
+    return await AsyncStorage.getItem('userToken');
+  }
 };
 
 const axiosClient = axios.create({
@@ -13,8 +15,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
   async config => {
     const token = await getUserToken();
-    // console.log(token);
-    if (token) {
+    if (!!token) {
       config.headers = {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',

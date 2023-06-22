@@ -4,51 +4,35 @@ import {
   View,
   Image,
   TouchableOpacity,
-  ScrollView,
-  FlatList,
-  RefreshControl,
   Button,
+  Alert,
+  FlatList,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Loading from '../Loading';
-import userAPI from '../../services/userAPI';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  addToCart,
-  decrementQuantity,
-  incrementQuantity,
-  removeFromCart,
-} from '../../store/cart/CartReducer';
+import {addToCart} from '../store/cart/CartSlice';
+import {getProduct} from '../store/product/ProductSlice';
+import {CardStyleInterpolators} from '@react-navigation/stack';
+import Loading from '../Loading';
 
-export default function Product({product, navigation}) {
-  const cart = useSelector(state => state.cart.cart);
+export default function Product({navigation}) {
+  const products = useSelector(state => state.product.product);
+  const loading = useSelector(state => state.product.isLoading);
   const dispatch = useDispatch();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
-  const getProduct = async () => {
-    try {
-      const response = await userAPI.getAllProduct();
-      if (!!response) {
-        setProducts(response.product.items);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    getProduct();
+    dispatch(getProduct());
   }, [loading]);
 
   const addItemToCart = item => {
-    dispatch(addToCart(item));
+    const sku = item.sku;
+    const itemInCart = {sku, qty: 1};
+    dispatch(addToCart(itemInCart));
   };
   const removeItemFromCart = item => {
     dispatch(removeFromCart(item));

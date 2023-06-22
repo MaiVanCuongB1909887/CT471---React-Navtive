@@ -1,7 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import Register from '../register';
-import Login from '../login';
 import HomeStack from '../navigation/StackNavigator';
 import Product from '../product/Product';
 import ContentMenuDrawer from './ContentMenuDrawer';

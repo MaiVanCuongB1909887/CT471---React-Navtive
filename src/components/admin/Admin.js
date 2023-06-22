@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {View, Text, TextInput, Button, FlatList} from 'react-native';
-import userAPI from '../../services/userAPI';
 
 const Admin = () => {
   const [articles, setArticles] = useState([]);

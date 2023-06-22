@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Button, FlatList} from 'react-native';
+import {View, Text, Button} from 'react-native';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
@@ -9,28 +9,41 @@ import {
 } from '@react-navigation/drawer';
 import {ListItem} from '@rneui/themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import userAPI from '../../services/userAPI';
 
-export default function ContentDrawer(props) {
-  const [token, setToken] = useState(false);
-  const [isLogout, setIsLogout] = useState({});
+import {useDispatch, useSelector} from 'react-redux';
+import {logout} from '../store/auth/AuthSlice';
+import cateAPI from '../services/catetAPI';
+
+export default function ContentMenuDrawer(props) {
+  const dispatch = useDispatch();
+
+  const [callback, setCallback] = useState({});
+  const [isLogin, setIsLogin] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [categories, setCategories] = useState([]);
 
-  AsyncStorage.getItem('sessionToken').then(res => {
-    return setIsLogout(res);
+  AsyncStorage.getItem('userToken').then(res => {
+    return setCallback(res);
   });
 
-  async function checkLogout() {
-    setToken((await AsyncStorage.getItem('sessionToken')) ? true : false);
-  }
+  const checkToken = async () => {
+    return !!(await AsyncStorage.getItem('userToken'))
+      ? setIsLogin(false)
+      : setIsLogin(true);
+  };
+
+  const logoutHandle = async () => {
+    if (!isLogin) {
+      props.navigation.navigate('UserLogin');
+    }
+    dispatch(logout());
+  };
 
   const getAllCate = async () => {
     try {
-      const response = await userAPI.getAllCate();
+      const response = await cateAPI.getAllCate();
       if (!!response) {
         setCategories(response.category);
-        // AsyncStorage.setItem('catagory', JSON.parse(categories));
       }
     } catch (error) {
       console.log(error);
@@ -38,22 +51,14 @@ export default function ContentDrawer(props) {
   };
 
   useEffect(() => {
-    checkLogout();
     getAllCate();
-  }, [isLogout]);
-
-  const handle = () => {
-    props.navigation.navigate('Login');
-  };
-  const logout = async () => {
-    await AsyncStorage.removeItem('sessionToken');
-    await AsyncStorage.removeItem('user');
-    props.navigation.navigate('Login');
-  };
+    checkToken();
+  }, [callback]);
 
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
+
       <View style={{margin: 0, padding: 0}}>
         <ListItem.Accordion
           content={
@@ -91,9 +96,10 @@ export default function ContentDrawer(props) {
         </ListItem.Accordion>
       </View>
 
-      <DrawerItem label="Tiếng Tung của" />
       <DrawerItem label="Tiếng Hàn sẻng" />
-      {token && <DrawerItem label="Logout" onPress={logout}></DrawerItem>}
+      {!isLogin && (
+        <DrawerItem label="Logout" onPress={logoutHandle}></DrawerItem>
+      )}
     </DrawerContentScrollView>
   );
 }
