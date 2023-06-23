@@ -8,50 +8,44 @@ import {
   Button,
   FlatList,
   ScrollView,
-  ActivityIndicator,
 } from 'react-native';
-import Footer from '../footer';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  addToCart,
-  decrementQuantity,
-  incrementQuantity,
-  removeFromCart,
-} from '../../store/cart/CartReducer';
+import {addToCart} from '../store/cart/CartSlice';
+import Footer from '../footer';
 
-export default function ProductDetails({route}) {
-  const [product, setProduct] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const sku = route.params.productId;
-  const checkProduct = product ? true : false;
+export default function ProductDetails({route, navigation}) {
+  const cart = useSelector(state => state.cart.cart);
+  const dispatch = useDispatch();
+  const [product, setProduct] = useState({});
+  const [cartItems, setCartItems] = useState([]);
   const [quantity, setQuantity] = useState(1);
+  const cartProduct = JSON.stringify(cart);
+
+  const sku = route.params.productId;
+
+  const checkProduct = !!product ? true : false;
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
+
   useEffect(() => {
     axios
       .get(`http://192.168.1.9:5000/product/detail/${sku}`)
       .then(response => {
         const productData = response.data;
         setProduct(productData);
-        setIsLoading(false);
-        // console.log(productData)
+        // console.log(response);
       })
       .catch(error => {
         console.log(error);
       });
   }, []);
 
-  if (isLoading || !product) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
+  const addItemToCart = item => {
+    dispatch(addToCart(item));
+  };
 
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
@@ -63,16 +57,10 @@ export default function ProductDetails({route}) {
     }
   };
 
-  const dispatch = useDispatch();
-
-  const addItemToCart = item => {
-    dispatch(addToCart(item));
-  };
-
   return (
     <ScrollView>
       <View style={{flex: 1, backgroundColor: '#E9EDF4'}}>
-        <Text style={{padding: 15, fontSize: 17}}>chưa Phân Loại</Text>
+        <Text style={{padding: 15, fontSize: 17}}>Chưa Xác Định</Text>
         <View style={styles.container}>
           {checkProduct ? (
             <>
@@ -81,17 +69,15 @@ export default function ProductDetails({route}) {
                   uri:
                     img +
                     '' +
-                    product.product.custom_attributes.find(
+                    product.product?.custom_attributes.find(
                       attr => attr.attribute_code === 'image',
                     ).value,
                 }}
                 style={styles.image}
               />
 
-              <Text style={styles.name}>{product.product.name}</Text>
+              <Text style={styles.name}>{product.product?.name}</Text>
               <Text style={styles.manuf}>Từ hãng: China wifi</Text>
-              {/* bottom qty */}
-
               <View
                 style={{
                   flex: 1,
@@ -140,13 +126,13 @@ export default function ProductDetails({route}) {
                   </View>
                 </TouchableOpacity>
                 <Text style={styles.qty}>
-                  còn {product.product.qty} sản phẩm
+                  còn {product.product?.qty} sản phẩm
                 </Text>
               </View>
 
               <Text style={styles.price}>
                 Giá:{' '}
-                {product.product.price.toLocaleString('vi-VN', {
+                {product.product?.price.toLocaleString('vi-VN', {
                   style: 'currency',
                   currency: 'VND',
                 })}
@@ -154,20 +140,23 @@ export default function ProductDetails({route}) {
 
               <Text style={styles.status}>
                 Tình trạng:{' '}
-                {product.product.status == 1 ? 'Còn hàng' : 'Hết hàng'}
+                {product.product?.status == 1 ? 'Còn hàng' : 'Hết hàng'}
               </Text>
             </>
           ) : (
             <Text>Loading...</Text>
           )}
         </View>
-
         <View
-          style={{marginTop: 20, backgroundColor: '#ffffff', borderRadius: 10}}>
+          style={{
+            marginTop: 20,
+            backgroundColor: '#ffffff',
+            borderRadius: 10,
+          }}>
           <Text style={styles.nameh1}>Mô tả Tổng Quan Sản Phẩm</Text>
           <Text style={styles.description}>
             Mô tả:{' '}
-            {product.product.custom_attributes
+            {product.product?.custom_attributes
               .find(attr => attr.attribute_code === 'short_description')
               .value.slice(3, -4)}
           </Text>
@@ -195,7 +184,7 @@ export default function ProductDetails({route}) {
                   padding: 10,
                   backgroundColor: '#ebebeb',
                 }}>
-                dcmmm lam lau vl
+                Khối lượng
               </Text>
               <Text
                 style={{
@@ -205,35 +194,7 @@ export default function ProductDetails({route}) {
                   borderColor: '#d1d0cd',
                   padding: 10,
                 }}>
-                dcmmm lam lau vl
-              </Text>
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                  backgroundColor: '#ebebeb',
-                }}>
-                dcmmm lam lau vl
-              </Text>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                }}>
-                dcmmm lam lau vl
+                200gr, 500gr, 1kg
               </Text>
             </View>
             <View
@@ -251,7 +212,7 @@ export default function ProductDetails({route}) {
                   padding: 10,
                   backgroundColor: '#ebebeb',
                 }}>
-                dcmmm lam lau vl
+                Xuất xứ
               </Text>
               <Text
                 style={{
@@ -261,27 +222,91 @@ export default function ProductDetails({route}) {
                   borderColor: '#d1d0cd',
                   padding: 10,
                 }}>
-                dcmmm lam lau vl
+                Việt Nam
+              </Text>
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+              }}>
+              <Text
+                style={{
+                  borderWidth: 1,
+                  width: '50%',
+                  fontSize: 15,
+                  borderColor: '#d1d0cd',
+                  padding: 10,
+                  backgroundColor: '#ebebeb',
+                }}>
+                Ngày sản xuất
+              </Text>
+              <Text
+                style={{
+                  borderWidth: 1,
+                  width: '50%',
+                  fontSize: 15,
+                  borderColor: '#d1d0cd',
+                  padding: 10,
+                }}>
+                22/06/2023
+              </Text>
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+              }}>
+              <Text
+                style={{
+                  borderWidth: 1,
+                  width: '50%',
+                  fontSize: 15,
+                  borderColor: '#d1d0cd',
+                  padding: 10,
+                  backgroundColor: '#ebebeb',
+                }}>
+                Hạn sử dụng
+              </Text>
+              <Text
+                style={{
+                  borderWidth: 1,
+                  width: '50%',
+                  fontSize: 15,
+                  borderColor: '#d1d0cd',
+                  padding: 10,
+                }}>
+                7 ngày
               </Text>
             </View>
           </View>
         </View>
         <View
-          style={{marginTop: 20, backgroundColor: '#ffffff', borderRadius: 10}}>
+          style={{
+            marginTop: 20,
+            backgroundColor: '#ffffff',
+            borderRadius: 10,
+          }}>
           <Text style={styles.nameh1}>Mô Tả Chi Tiết</Text>
           <Text style={styles.description}>
             Mô tả:{' '}
-            {product.product.custom_attributes
+            {product.product?.custom_attributes
               .find(attr => attr.attribute_code === 'short_description')
               .value.slice(3, -4)}
           </Text>
         </View>
         <View
-          style={{marginTop: 20, backgroundColor: '#ffffff', borderRadius: 10}}>
+          style={{
+            marginTop: 20,
+            backgroundColor: '#ffffff',
+            borderRadius: 10,
+          }}>
           <Text style={styles.nameh1}>Chính Sách Bảo Hành</Text>
           <Text style={styles.description}>
             Mô tả:{' '}
-            {product.product.custom_attributes
+            {product.product?.custom_attributes
               .find(attr => attr.attribute_code === 'short_description')
               .value.slice(3, -4)}
           </Text>
@@ -305,7 +330,7 @@ export default function ProductDetails({route}) {
               justifyContent: 'center',
               borderRadius: 10,
             }}>
-            <TouchableOpacity onPress={() => addItemToCart(product.product)}>
+            <TouchableOpacity onPress={() => addItemToCart(product?.product)}>
               <Text
                 style={{
                   color: '#29B1B0',
@@ -333,7 +358,11 @@ export default function ProductDetails({route}) {
           </View>
         </View>
         <View
-          style={{marginTop: 20, backgroundColor: '#ffffff', borderRadius: 10}}>
+          style={{
+            marginTop: 20,
+            backgroundColor: '#ffffff',
+            borderRadius: 10,
+          }}>
           <Text style={styles.nameh1}>BÌnh Luận</Text>
           <Text style={styles.description}></Text>
         </View>

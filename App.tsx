@@ -5,7 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {View, ScrollView} from 'react-native';
 import HeaderFooterLayout from './src/components/layouts/HeaderFooterLayout';
 import {Provider} from 'react-redux';
-import store from './src/store/store';
+import store from './src/components/store/store';
 
 export default function App() {
   return (

@@ -12,7 +12,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import SelectDropdown from 'react-native-select-dropdown';
 
 import styles from './style';
-import userAPI from '../../services/userAPI';
+import authAPI from '../services/authAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
@@ -22,75 +22,87 @@ import {
 } from '../../utilies/Validations';
 
 const Register = ({navigation}) => {
-  const countries = ["Buisness Vertical", "AI", "Automotive", "Computer","Education","Entertainment","Iot","Mobile","Robotics","Telecommunication","Orders"]
-    const [email,setEmail] = useState('');
-    const [errorEmail, setErrorEmail] =useState('')
-    const [firstname,setFirstname] = useState('');
-    const [lastname,setLastname] = useState('');
-    const [password,setPassword] = useState('');
-    const [errorPassword, setErrorPassword] =useState('')
-    const [RetypePassword,setRetypePassword] = useState('');
-    const [errorRetypePassword, setErrorRetypePassword] =useState('')
-    const [visible,setVisible] = useState(false)
-    const [repeatVisible,setRepeatVisible] = useState(false)
+  const countries = [
+    'Buisness Vertical',
+    'AI',
+    'Automotive',
+    'Computer',
+    'Education',
+    'Entertainment',
+    'Iot',
+    'Mobile',
+    'Robotics',
+    'Telecommunication',
+    'Orders',
+  ];
+  const [email, setEmail] = useState('');
+  const [errorEmail, setErrorEmail] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
+  const [RetypePassword, setRetypePassword] = useState('');
+  const [errorRetypePassword, setErrorRetypePassword] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [repeatVisible, setRepeatVisible] = useState(false);
 
-    const handleAddTask = async () =>{
-      if(email.length ===0){
-        alert('Vui long nhap Email')
-        return false;
-      }
-      if(firstname.length ===0){
-        alert('Vui long nhap firstname')
-        return false;
-      }
-      if(lastname.length ===0){
-        alert('Vui long nhap Lastname')
-        return false;
-      }
-      if(password.length ===0){
-        alert('Vui long nhap Password')
-        return false;
-      }
-      if(RetypePassword.length ===0){
-        alert('Vui long nhap RetypePassword')
-        return false;
-      }
-      if(password !== RetypePassword){
-        alert('pass khong trung vui long nhap lai')
-        return false;
-      }
-      if(errorEmail.length!==0){
-        alert('Email chưa đúng định dạng vui lòng nhập lại')
-        return false;
-      }
-      if(errorPassword.length!==0){
-        alert('Password chưa đúng định dạng vui lòng nhập lại')
-        return false;
-      }
-      if(errorRetypePassword.length!==0){
-        alert('Password chưa đúng định dạng vui lòng nhập lại')
-        return false;
-      }
-      try {
-        const response = await userAPI.postRegister({
-          email: email,
-          password: password,
-          lastname: lastname,
-          firstname: firstname,
-        });
-        if (!!response) {
-          // await AsyncStorage.setItem('sessionToken', response.token);
-          // await AsyncStorage.setItem(
-          //   'user',
-          //   JSON.stringify(response.customer_info),
-          // );
-          alert('Vui long kiem tra hop thu de kich hoat tai khoan');
-          navigation.navigate('Login');
-        }
-      } catch (error) {
-        return alert(error.response.data.message);
-      }
+  const handleAddTask = async () => {
+    if (email.length === 0) {
+      alert('Vui long nhap Email');
+      return false;
     }
+    if (firstname.length === 0) {
+      alert('Vui long nhap firstname');
+      return false;
+    }
+    if (lastname.length === 0) {
+      alert('Vui long nhap Lastname');
+      return false;
+    }
+    if (password.length === 0) {
+      alert('Vui long nhap Password');
+      return false;
+    }
+    if (RetypePassword.length === 0) {
+      alert('Vui long nhap RetypePassword');
+      return false;
+    }
+    if (password !== RetypePassword) {
+      alert('pass khong trung vui long nhap lai');
+      return false;
+    }
+    if (errorEmail.length !== 0) {
+      alert('Email chưa đúng định dạng vui lòng nhập lại');
+      return false;
+    }
+    if (errorPassword.length !== 0) {
+      alert('Password chưa đúng định dạng vui lòng nhập lại');
+      return false;
+    }
+    if (errorRetypePassword.length !== 0) {
+      alert('Password chưa đúng định dạng vui lòng nhập lại');
+      return false;
+    }
+    try {
+      const response = await authAPI.postRegister({
+        email: email,
+        password: password,
+        lastname: lastname,
+        firstname: firstname,
+      });
+      if (!!response) {
+        // await AsyncStorage.setItem('sessionToken', response.token);
+        // await AsyncStorage.setItem(
+        //   'user',
+        //   JSON.stringify(response.customer_info),
+        // );
+        alert('Vui long kiem tra hop thu de kich hoat tai khoan');
+        navigation.navigate('Login');
+      }
+    } catch (error) {
+      return alert(error.response.data.message);
+    }
+  };
   return (
     <ScrollView>
       <View style={styles.task}>

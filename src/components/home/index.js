@@ -16,9 +16,11 @@ import style from './style';
 import Footer from '../footer';
 import axios from 'axios';
 import TopButton from '../TopButton';
+import Loading from '../Loading';
 
 const Home = ({navigation}) => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
@@ -31,6 +33,7 @@ const Home = ({navigation}) => {
       })
 
       .then(response => {
+        setLoading(true);
         setProducts(response.data.product.items);
       })
       .catch(error => {
@@ -292,13 +295,17 @@ const Home = ({navigation}) => {
               Sản phẩm nổi bật
             </Text>
           </View>
-          <FlatList
-            key={'#'}
-            data={products}
-            renderItem={renderProductItem}
-            keyExtractor={item => item.id.toString()}
-            horizontal
-          />
+          {loading ? (
+            <FlatList
+              key={'#'}
+              data={products}
+              renderItem={renderProductItem}
+              keyExtractor={item => item.id.toString()}
+              horizontal
+            />
+          ) : (
+            <Loading />
+          )}
         </View>
 
         <View>
@@ -313,13 +320,17 @@ const Home = ({navigation}) => {
               Deal Sốc Mỗi Ngày
             </Text>
           </View>
-          <FlatList
-            key={'@'}
-            data={products}
-            renderItem={renderProductItem1}
-            keyExtractor={item => item.id.toString()}
-            horizontal
-          />
+          {loading ? (
+            <FlatList
+              key={'#'}
+              data={products}
+              renderItem={renderProductItem}
+              keyExtractor={item => item.id.toString()}
+              horizontal
+            />
+          ) : (
+            <Loading />
+          )}
         </View>
         <View>
           <Image
@@ -343,15 +354,45 @@ const Home = ({navigation}) => {
               Dành Cho Bạn Hôm Nay
             </Text>
           </View>
-          <FlatList
-            key={'!'}
-            data={products}
-            renderItem={renderProductItem2}
-            keyExtractor={item => item.id.toString()}
-            // horizontal
-            numColumns={2}
-            style={{}}
-          />
+          {loading ? (
+            <FlatList
+              key={'#'}
+              data={products}
+              renderItem={renderProductItem}
+              keyExtractor={item => item.id.toString()}
+              horizontal
+            />
+          ) : (
+            <Loading />
+          )}
+        </View>
+        <View style={style.containerNews}>
+          <Text style={style.h1}>News feed and Articles</Text>
+          <Text style={style.h4}>
+            Read the latest news and articles related to Sony's Developer World.
+          </Text>
+          <TouchableOpacity style={style.container}>
+            <ImageBackground
+              source={require('../../../assets/new1.webp')}
+              resizeMode="contain"
+              style={style.imgNew}>
+              <Text
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'black',
+                  top: 235,
+                  color: 'white',
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                }}>
+                SPRENSENSE
+              </Text>
+            </ImageBackground>
+            <Text style={{marginTop: -30, marginLeft: 10}}>May 10, 2023</Text>
+            <Text style={style.title}>
+              Announcing Spresense Hackathon at The University of Manchester
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <View>

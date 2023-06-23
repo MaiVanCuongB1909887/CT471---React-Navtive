@@ -9,13 +9,16 @@ import {
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import userAPI from '../../services/userAPI';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {isValidEmail, isValidPassword} from '../../utilies/Validations';
 import styles from './style';
+import {userLogin} from '../store/auth/AuthSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
-const Login = ({navigation}) => {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const UserLogin = ({navigation}) => {
+  const dispatch = useDispatch();
+  const userToken = useSelector(state => state.user.userToken);
   const [email, setEmail] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,24 +42,19 @@ const Login = ({navigation}) => {
       alert('password chưa đúng định dạng vui lòng nhập lại');
       return false;
     }
-    try {
-      const response = await userAPI.postLogin({
-        email: email,
-        password: password,
-      });
-      if (!!response) {
-        await AsyncStorage.setItem('sessionToken', response.token);
-        await AsyncStorage.setItem(
-          'user',
-          JSON.stringify(response.customer_info),
-        );
-        alert('Dang nhap thanh cong');
-        navigation.navigate('Home');
-      }
-    } catch (error) {
-      return alert(error.response.data.message);
+    dispatch(userLogin({email, password}));
+  };
+
+  const checkToken = async () => {
+    if (userToken) {
+      alert('Dang nhap thanh cong');
+      navigation.navigate('Home');
     }
   };
+  useEffect(() => {
+    checkToken();
+  }, [userToken]);
+
   return (
     <ScrollView>
       <View style={styles.header}>
@@ -158,6 +156,16 @@ const Login = ({navigation}) => {
           }}>
           Forgot your Password?
         </Text>
+        <Text
+          style={{
+            padding: 10,
+            fontSize: 15,
+            color: '#063a9c',
+            fontWeight: 'bold',
+          }}
+          onPress={() => navigation.navigate('AdminLogin')}>
+          Login as admin?
+        </Text>
         <Text style={{padding: 10, fontSize: 15, color: 'black'}}>
           Or login using
         </Text>
@@ -202,4 +210,4 @@ const Login = ({navigation}) => {
   );
 };
 
-export default Login;
+export default UserLogin;

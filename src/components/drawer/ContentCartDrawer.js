@@ -10,48 +10,60 @@ import {
   StatusBar,
   FlatList,
 } from 'react-native';
-import {
-  NavigationContainer,
-  useNavigation,
-  useAlert,
-} from '@react-navigation/native';
+
+import {TextInput} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import {ListItem} from '@rneui/themed';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import colors from '../../constants/colors';
-import userAPI from '../../services/userAPI';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {addItemToCart, removeItemFromCart} from '../../store/cart/CartActions';
+import {getCart, changeQtyCart, removeFromCart} from '../store/cart/CartSlice';
 
 function ContentCartDrawer({navigation}) {
-  const cart = useSelector(state => state.cart.cart);
   const dispatch = useDispatch();
-  const [products, setProducts] = useState([]);
+
+  const cart = useSelector(state => state.cart.cart);
+  const loading = useSelector(state => state.cart.isLoading);
 
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
-  async function cartProducts() {
-    return setProducts(cart);
-  }
-
   useEffect(() => {
-    cartProducts();
-  }, [cart]);
+    try {
+      dispatch(getCart());
+    } catch (error) {
+      console.log(error.message, 'day la loi luc get cart o drawer');
+    }
+  }, [dispatch]);
 
   const totalPrice = () => {
     let totalPrice = 0;
-    products.forEach(product => {
-      totalPrice += product.price;
+    cart.forEach(product => {
+      totalPrice += product.price * product.qty;
     });
     return totalPrice;
   };
+  const removeItemFromCart = item => {
+    dispatch(removeFromCart(item.item_id));
+  };
+  const increaseQty = item => {
+    const sku = item.sku;
+    let qty = item.qty + 1;
+    const item_id = item.item_id;
+    const itemInCart = {sku, qty, item_id};
+    dispatch(changeQtyCart(itemInCart));
+  };
+  const decreaseQty = item => {
+    const sku = item.sku;
+    let qty = 1;
+    const item_id = item.item_id;
+    item.qty - 1 > 0 ? (qty = item.qty - 1) : qty;
+    const itemInCart = {sku, qty, item_id};
+    dispatch(changeQtyCart(itemInCart));
+  };
+  const checkout = () => {
+    navigation.navigate('Checkout');
+  };
+
   const listItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -64,7 +76,6 @@ function ContentCartDrawer({navigation}) {
         <View
           style={{
             flexDirection: 'row',
-            alignItems: 'center',
             paddingVertical: 10,
           }}
           key={item.id}>
@@ -79,21 +90,74 @@ function ContentCartDrawer({navigation}) {
                 ).value,
             }}
           />
-          <View style={{flex: 1}}>
-            <Text style={{fontSize: 16, color: '#000'}} numberOfLines={1}>
-              {item.name}
-            </Text>
-            <Text style={{fontSize: 14, color: 'green'}} numberOfLines={1}>
-              {item.price?.toLocaleString('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-              })}
-            </Text>
-            <Text style={{color: '#000'}}>
-              <Icon name="cube" />
-              {item.qty} sản phẩm có sẵn
-            </Text>
-            {/* Thêm các thuộc tính khác của sản phẩm tại đây */}
+          <View style={{flex: 1, marginVertical: 20}}>
+            <View style={{flexDirection: 'row'}}>
+              <Text
+                style={{fontSize: 16, color: '#000', width: 120}}
+                numberOfLines={1}>
+                {item.name}
+              </Text>
+              <TouchableOpacity onPress={() => removeItemFromCart(item)}>
+                <View
+                  style={{
+                    height: 20,
+                    width: 20,
+                    backgroundColor: 'red',
+                    borderRadius: 2,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <IonIcon name="close" size={15} color={'#ffffff'} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <Text style={{fontSize: 14, color: 'green'}} numberOfLines={1}>
+                {item.price?.toLocaleString('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
+              </Text>
+            </View>
+
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity onPress={() => decreaseQty(item)}>
+                <View
+                  style={{
+                    height: 35,
+                    width: 40,
+                    backgroundColor: '#E9EDF4',
+                    borderRadius: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Icon name="minus" size={15} color={'#999999'} />
+                </View>
+              </TouchableOpacity>
+              <TextInput
+                style={{
+                  height: 40,
+                  width: 60,
+                  backgroundColor: '#ffffff',
+                  marginHorizontal: 5,
+                  borderRadius: 5,
+                }}>
+                {item.qty}
+              </TextInput>
+              <TouchableOpacity onPress={() => increaseQty(item)}>
+                <View
+                  style={{
+                    height: 35,
+                    width: 40,
+                    backgroundColor: '#E9EDF4',
+                    borderRadius: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Icon name="plus" size={15} color={'#999999'} />
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -107,13 +171,16 @@ function ContentCartDrawer({navigation}) {
         <View style={styles.cartInfoContainerTopBar}>
           <View style={styles.cartInfoTopBar}>
             <Text style={{color: '#000'}}>Your Cart</Text>
-            <Text style={{color: '#000'}}>{products.length} Items</Text>
+            <Text style={{color: '#000'}}>{cart.length} Items</Text>
           </View>
         </View>
       </View>
       <View style={styles.cartProductListContiainer}>
-        <FlatList data={products} renderItem={listItem} />
-        <View style={styles.emptyView}></View>
+        {!loading ? (
+          <Text style={{color: '#000'}}>Loading...</Text>
+        ) : (
+          <FlatList data={cart} renderItem={listItem} />
+        )}
       </View>
       <View style={styles.cartBottomContainer}>
         <View style={styles.cartBottomLeftContainer}>
@@ -131,17 +198,22 @@ function ContentCartDrawer({navigation}) {
           </View>
         </View>
         <View style={styles.cartBottomRightContainer}>
-          {products.length > 0 ? (
-            <Button
-              title={'Checkout'}
-              onPress={() => navigation.navigate('Checkout')}
-            />
+          {cart.length > 0 ? (
+            <TouchableOpacity onPress={checkout}>
+              <View
+                style={{
+                  width: 100,
+                  height: 50,
+                  backgroundColor: '#4fe07a',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 5,
+                }}>
+                <Text style={{color: 'black'}}>CHECKOUT</Text>
+              </View>
+            </TouchableOpacity>
           ) : (
-            <Button
-              title={'Checkout'}
-              disabled={true}
-              onPress={() => navigation.navigate('Checkout')}
-            />
+            <Button title={'Checkout'} disabled onPress={checkout} />
           )}
         </View>
       </View>

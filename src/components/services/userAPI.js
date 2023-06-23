@@ -1,29 +1,9 @@
 import axiosClient from './axiosClient';
 
 const userAPI = {
-  getCart() {
-    const url = '/cart/list';
+  getDetail() {
+    const url = '/user/detail';
     return axiosClient.get(url);
-  },
-  getAllProduct() {
-    const url = '/product/list1';
-    return axiosClient.get(url);
-  },
-  getAllCate() {
-    const url = '/category/list';
-    return axiosClient.get(url);
-  },
-  search(data) {
-    const url = `/product/list/name/${data}`;
-    return axiosClient.get(url);
-  },
-  postRegister(data) {
-    const url = '/account/register';
-    return axiosClient.post(url, data);
-  },
-  postLogin(data) {
-    const url = '/account/login';
-    return axiosClient.post(url, data);
   },
   getAll(params) {
     const url = '/user/all';
