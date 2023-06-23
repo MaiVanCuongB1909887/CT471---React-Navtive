@@ -22,6 +22,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 const Header = ({navigation}) => {
   const cart = useSelector(state => state.cart.cart);
   const userToken = useSelector(state => state.user.userToken);
+  const adminToken = useSelector(state => state.user.adminToken);
 
   const [username, setUsername] = useState('');
   // const [callback, setCallback] = useState({});
@@ -45,7 +46,7 @@ const Header = ({navigation}) => {
   }
 
   useEffect(() => {
-        console.log(userToken, 'day la thu');
+    console.log(adminToken, 'day la thu');
 
     checkToken();
     getUsername();

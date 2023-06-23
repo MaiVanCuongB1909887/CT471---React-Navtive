@@ -3,8 +3,11 @@ import {useSelector} from 'react-redux';
 import axios from 'axios';
 
 const getUserToken = async () => {
-  if (await AsyncStorage.getItem('userToken')) {
-    return await AsyncStorage.getItem('userToken');
+  // if (await AsyncStorage.getItem('userToken')) {
+  //   return await AsyncStorage.getItem('userToken');
+  // }
+  if (await AsyncStorage.getItem('adminToken')) {
+    return await AsyncStorage.getItem('adminToken');
   }
 };
 

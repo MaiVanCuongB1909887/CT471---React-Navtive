@@ -9,6 +9,8 @@ import ProductDetails from '../product/ProductDetails';
 import Admin from '../admin/Admin';
 import Search from '../search/search';
 import Checkout from '../cart/Checkout';
+import Blogs from '../blog/Blogs';
+import BlogDetails from '../blog/BlogDetails';
 
 const Stack = createStackNavigator();
 
@@ -58,6 +60,16 @@ const HomeStack = () => {
       <Stack.Screen
         name="Checkout"
         component={Checkout}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Blogs"
+        component={Blogs}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="BlogDetails"
+        component={BlogDetails}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

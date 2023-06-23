@@ -16,27 +16,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AdminLogin = ({navigation}) => {
   const dispatch = useDispatch();
-
+  const adminToken = useSelector(state => state.user.adminToken);
   const [callback, setCallback] = useState({});
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [visible, setvisible] = useState(false);
-
-  AsyncStorage.getItem('adminToken').then(res => {
-    return setCallback(res);
-  });
-  const checkToken = async () => {
-    return !!(await AsyncStorage.getItem('adminToken'))
-      ? setIsLogin(false)
-      : setIsLogin(true);
-  };
-  useEffect(() => {
-    checkToken();
-    if (!isLogin) {
-      navigation.navigate('Admin');
-    }
-  }, [callback]);
 
   const handleAddTask = async () => {
     if (username.length === 0) {
@@ -47,11 +32,21 @@ const AdminLogin = ({navigation}) => {
       alert('Vui long nhap password');
       return false;
     }
-    const res = await dispatch(adminLogin({username, password}));
-    if (!!res) {
-      await AsyncStorage.setItem('userDetail', res);
-    }
+    dispatch(adminLogin({username, password}));
   };
+  // const checkToken = async () => {
+  //   return !!(await AsyncStorage.getItem('adminToken'))
+  //     ? setIsLogin(false)
+  //     : setIsLogin(true);
+  // };
+
+  useEffect(() => {
+    // checkToken();
+    if (adminToken) {
+      navigation.navigate('Blogs');
+    }
+  }, [adminToken]);
+
   return (
     <ScrollView>
       <View style={styles.header}>

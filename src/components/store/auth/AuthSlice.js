@@ -8,7 +8,7 @@ export const adminLogin = createAsyncThunk('user/adminLogin', async data => {
     console.log(response, 'admin');
     if (!!response.token) {
       AsyncStorage.setItem('adminToken', response.token);
-      return response;
+      return response.token;
     }
   } catch (error) {
     throw console.log(error.response.data.message, 'day la loi admin');
@@ -24,7 +24,7 @@ export const userLogin = createAsyncThunk('user/userLogin', async data => {
         'userDetail',
         JSON.stringify(response.customer_info),
       );
-    await  AsyncStorage.setItem('userToken', response.token);
+      await AsyncStorage.setItem('userToken', response.token);
       return response.token;
     }
   } catch (error) {
