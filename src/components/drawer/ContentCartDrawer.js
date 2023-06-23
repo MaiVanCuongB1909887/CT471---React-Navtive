@@ -14,14 +14,11 @@ import {TextInput} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../../constants/colors';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  getCart,
-  changeQtyCart,
-  removeFromCart,
-} from '../store/cart/CartSlice';
+import {getCart, changeQtyCart, removeFromCart} from '../store/cart/CartSlice';
 
 function ContentCartDrawer({navigation}) {
   const dispatch = useDispatch();
+
   const cart = useSelector(state => state.cart.cart);
   const loading = useSelector(state => state.cart.isLoading);
 

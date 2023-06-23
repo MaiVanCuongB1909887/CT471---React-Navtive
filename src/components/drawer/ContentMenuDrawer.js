@@ -88,7 +88,7 @@ export default function ContentMenuDrawer(props) {
               style={{color: 'rgb(28, 28, 30)', fontSize: 14, marginLeft: 2}}>
               <ListItem.Content>
                 <ListItem.Subtitle onPress={() => handle()}>
-                  {category.name}
+                  {/* {category.name} */}
                 </ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>

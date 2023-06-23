@@ -71,9 +71,10 @@ export default function Search({product, navigation, route}) {
                   currency: 'VND',
                 })}
               </Text>
-              <Text>
-                <Icon name="cube" /> {item.qty} sản phẩm có sẵn
-              </Text>
+              {/* <Text>
+                <Icon name="cube" /> 
+                {item.qty} sản phẩm có sẵn
+              </Text> */}
 
               {/*Thêm các thuộc tính khác của sản phẩm tại đây*/}
             </View>

@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import {Avatar, Badge, Icon as Abc, withBadge} from '@rneui/themed';
-
+3;
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SearchBar} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,15 +21,14 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 
 const Header = ({navigation}) => {
   const cart = useSelector(state => state.cart.cart);
-  const [callback, setCallback] = useState({});
+  const userToken = useSelector(state => state.user.userToken);
+
+  const [username, setUsername] = useState('');
+  // const [callback, setCallback] = useState({});
   const [searchText, setSearchText] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
 
   const BadgedIcon = withBadge(cart.length)(Abc);
-
-  AsyncStorage.getItem('userToken').then(res => {
-    return setCallback(res);
-  });
 
   const checkToken = async () => {
     return !!(await AsyncStorage.getItem('userToken'))
@@ -39,14 +38,18 @@ const Header = ({navigation}) => {
 
   async function getUsername() {
     if (!isLogin) {
-      return (username = await AsyncStorage.getItem('userDetail'));
-    } else return (username = null);
+      setUsername(
+        JSON.parse(await AsyncStorage.getItem('userDetail'))?.firstname,
+      );
+    }
   }
 
   useEffect(() => {
+        console.log(userToken, 'day la thu');
+
     checkToken();
     getUsername();
-  }, [callback]);
+  }, [userToken]);
 
   const thongbao = () => {
     Alert.alert(

@@ -19,17 +19,23 @@ export const userLogin = createAsyncThunk('user/userLogin', async data => {
   try {
     const response = await authAPI.userLogin(data);
     if (!!response.token) {
-      AsyncStorage.setItem('userToken', response.token);
-      return response;
+      // console.log(response, 'day la respone userLogin');
+      AsyncStorage.setItem(
+        'userDetail',
+        JSON.stringify(response.customer_info),
+      );
+    await  AsyncStorage.setItem('userToken', response.token);
+      return response.token;
     }
   } catch (error) {
     throw console.log(error.response.data.message, 'day la loi user');
   }
 });
+
 const AuthSlice = createSlice({
   name: 'user',
   initialState: {
-    userToken: null,
+    userToken: AsyncStorage.getItem('userToken')._j || null,
     adminToken: null,
     error: null,
   },

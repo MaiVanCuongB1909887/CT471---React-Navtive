@@ -18,31 +18,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserLogin = ({navigation}) => {
   const dispatch = useDispatch();
-
-  const [callback, setCallback] = useState({});
-  const [isLogin, setIsLogin] = useState(true);
+  const userToken = useSelector(state => state.user.userToken);
   const [email, setEmail] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [visible, setvisible] = useState(false);
-
-  AsyncStorage.getItem('userToken').then(res => {
-    return setCallback(res);
-  });
-
-  const checkToken = async () => {
-    return !!(await AsyncStorage.getItem('userToken'))
-      ? setIsLogin(false)
-      : setIsLogin(true);
-  };
-  useEffect(() => {
-    checkToken();
-    if (!isLogin) {
-      alert('Dang nhap thanh cong');
-      navigation.navigate('Home');
-    }
-  }, [callback]);
 
   const handleAddTask = async () => {
     if (email.length === 0) {
@@ -61,12 +42,19 @@ const UserLogin = ({navigation}) => {
       alert('password chưa đúng định dạng vui lòng nhập lại');
       return false;
     }
-    const res = await dispatch(userLogin({email, password}));
-    if (!!res) {
-      const username = res.payload.customer_info.firstname;
-      await AsyncStorage.setItem('userDetail', username);
+    dispatch(userLogin({email, password}));
+  };
+
+  const checkToken = async () => {
+    if (userToken) {
+      alert('Dang nhap thanh cong');
+      navigation.navigate('Home');
     }
   };
+  useEffect(() => {
+    checkToken();
+  }, [userToken]);
+
   return (
     <ScrollView>
       <View style={styles.header}>

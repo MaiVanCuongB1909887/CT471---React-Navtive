@@ -34,9 +34,6 @@ export default function Product({navigation}) {
     const itemInCart = {sku, qty: 1};
     dispatch(addToCart(itemInCart));
   };
-  const removeItemFromCart = item => {
-    dispatch(removeFromCart(item));
-  };
 
   const listItem = ({item}) => {
     return (
@@ -82,26 +79,18 @@ export default function Product({navigation}) {
             </Text>
             {/* Thêm các thuộc tính khác của sản phẩm tại đây */}
           </View>
-          {cart.some(value => value.id == item.id) ? (
-            <Icon
-              name="close"
-              size={40}
-              onPress={() => removeItemFromCart(item)}
-            />
-          ) : (
-            <Icon
-              name="cart-plus"
-              size={40}
-              onPress={() => addItemToCart(item)}
-            />
-          )}
+          <Icon
+            name="cart-plus"
+            size={40}
+            onPress={() => addItemToCart(item)}
+          />
         </View>
       </TouchableOpacity>
     );
   };
   return (
     <View style={{flex: 1, paddingHorizontal: 16}}>
-      {loading ? (
+      {!loading ? (
         <Loading />
       ) : (
         <View style={{flex: 1}}>

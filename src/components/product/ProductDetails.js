@@ -60,7 +60,7 @@ export default function ProductDetails({route, navigation}) {
   return (
     <ScrollView>
       <View style={{flex: 1, backgroundColor: '#E9EDF4'}}>
-        <Text style={{padding: 15, fontSize: 17}}>chưa Phân Loại</Text>
+        <Text style={{padding: 15, fontSize: 17}}>Chưa Xác Định</Text>
         <View style={styles.container}>
           {checkProduct ? (
             <>
@@ -164,7 +164,7 @@ export default function ProductDetails({route, navigation}) {
                 }}>
                 <Text style={styles.nameh1}>Chi Tiết Sản Phẩm </Text>
                 <View>
-                  <View
+                <View
                     style={{
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -179,7 +179,7 @@ export default function ProductDetails({route, navigation}) {
                         padding: 10,
                         backgroundColor: '#ebebeb',
                       }}>
-                      dcmmm lam lau vl
+                      Khối lượng
                     </Text>
                     <Text
                       style={{
@@ -189,7 +189,7 @@ export default function ProductDetails({route, navigation}) {
                         borderColor: '#d1d0cd',
                         padding: 10,
                       }}>
-                      dcmmm lam lau vl
+                      200gr, 500gr, 1kg
                     </Text>
                   </View>
                   <View
@@ -207,7 +207,7 @@ export default function ProductDetails({route, navigation}) {
                         padding: 10,
                         backgroundColor: '#ebebeb',
                       }}>
-                      dcmmm lam lau vl
+                      Xuất xứ
                     </Text>
                     <Text
                       style={{
@@ -217,7 +217,7 @@ export default function ProductDetails({route, navigation}) {
                         borderColor: '#d1d0cd',
                         padding: 10,
                       }}>
-                      dcmmm lam lau vl
+                      Việt Nam
                     </Text>
                   </View>
                   <View
@@ -235,7 +235,7 @@ export default function ProductDetails({route, navigation}) {
                         padding: 10,
                         backgroundColor: '#ebebeb',
                       }}>
-                      dcmmm lam lau vl
+                      Ngày sản xuất
                     </Text>
                     <Text
                       style={{
@@ -245,7 +245,35 @@ export default function ProductDetails({route, navigation}) {
                         borderColor: '#d1d0cd',
                         padding: 10,
                       }}>
-                      dcmmm lam lau vl
+                      22/06/2023
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <Text
+                      style={{
+                        borderWidth: 1,
+                        width: '50%',
+                        fontSize: 15,
+                        borderColor: '#d1d0cd',
+                        padding: 10,
+                        backgroundColor: '#ebebeb',
+                      }}>
+                      Hạn sử dụng
+                    </Text>
+                    <Text
+                      style={{
+                        borderWidth: 1,
+                        width: '50%',
+                        fontSize: 15,
+                        borderColor: '#d1d0cd',
+                        padding: 10,
+                      }}>
+                      7 ngày
                     </Text>
                   </View>
                 </View>
@@ -298,7 +326,7 @@ export default function ProductDetails({route, navigation}) {
                     borderRadius: 10,
                   }}>
                   <TouchableOpacity
-                    onPress={() => addItemToCart(product.product)}>
+                    onPress={() => addItemToCart(product?.product)}>
                     <Text
                       style={{
                         color: '#29B1B0',
