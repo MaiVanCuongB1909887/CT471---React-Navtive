@@ -1,44 +1,48 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import axios from 'axios';
+import moment from 'moment';
+import {useRoute} from '@react-navigation/native';
 
-export default function BlogDetails({route}) {
-  const {id} = route.params;
-  const [post, setPost] = useState(null);
+export default function BlogDetails() {
+  const route = useRoute();
+  const [blog, setBlog] = useState({});
+
+  const getBlogDetail = async id => {
+    try {
+      const response = await axios.get(
+        `http://192.168.1.9:5000/blog/detail/${id}`,
+      );
+      setBlog(JSON.parse(response.request._response).result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    axios
-      .get(`http://192.168.1.9:5000/blog/detail/${id}`)
-      .then(response => setPost(response.data.result))
-      .catch(error => console.log(error));
+    const id = route.params.id;
+    getBlogDetail(id);
   }, []);
 
-  if (!post) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
+  if (!blog) {
+    return null;
   }
-
-  const {title, img, content, created_at} = post;
+  const createdAtGMT = moment(blog.created_at).format('DD/MM/YYYY');
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.dateContainer}>
-          <Text style={styles.date}>{created_at.slice(0, 10)}</Text>
-          <Text style={styles.time}>{created_at.slice(11, 16)}</Text>
-        </View>
-      </View>
-      <View style={styles.body}>
-        <Image
-          style={styles.image}
-          source={{uri: `http://192.168.1.9:5000/images/${img}`}}
-        />
-        <Text style={styles.content}>{content}</Text>
-      </View>
+      {/* <Text style={styles.title}>{blog[route.params.id].title}</Text> */}
+      <Text style={styles.title}>{route.params.id}</Text>
+      <Text style={styles.date}>{createdAtGMT}</Text>
+      {/* <Image
+        source={{
+          uri:
+            'http://192.168.1.9/magento2/pub/media/catalog/blog/' +
+            blog[route.params.id].img,
+        }}
+        style={styles.image}
+      />
+      <Text style={styles.content}>{blog[route.params.id].content}</Text> */}
     </View>
   );
 }
@@ -46,42 +50,24 @@ export default function BlogDetails({route}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10,
-  },
-  header: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  body: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  dateContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  date: {
-    fontSize: 16,
-    marginRight: 10,
-  },
-  time: {
-    fontSize: 16,
+    padding: 10,
   },
   image: {
     width: '100%',
     height: 200,
+    resizeMode: 'cover',
+    marginBottom: 10,
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    marginBottom: 10,
+  },
+  date: {
+    color: 'gray',
     marginBottom: 10,
   },
   content: {
-    fontSize: 16,
-    textAlign: 'center',
+    fontSize: 18,
   },
 });

@@ -10,33 +10,9 @@ import {
 } from 'react-native';
 import blogAPI from '../services/blogAPI';
 import axios from 'axios';
+import moment from 'moment';
+
 function Blogs({navigation}) {
-  //   const posts = [
-  //     {
-  //       id: 1,
-  //       title: 'Bài viết số 1',
-  //       content: 'Nội dung bài viết số 1',
-  //       image: require('../../../assets/post1.jpg'),
-  //     },
-  //     {
-  //       id: 2,
-  //       title: 'Bài viết số 2',
-  //       content: 'Nội dung bài viết số 2',
-  //       image: require('../../../assets/post2.jpg'),
-  //     },
-  //     {
-  //       id: 3,
-  //       title: 'Bài viết số 3',
-  //       content: 'Nội dung bài viết số 3',
-  //       image: require('../../../assets/post3.jpg'),
-  //     },
-  //     {
-  //       id: 4,
-  //       title: 'Bài viết số 4',
-  //       content: 'Nội dung bài viết số 4',
-  //       image: require('../../../assets/post4.webp'),
-  //     },
-  //   ];
   const [posts, setPosts] = useState([]);
   const [numColumns, setNumColumns] = useState(1);
   const [itemWidth, setItemWidth] = useState(0);
@@ -61,14 +37,14 @@ function Blogs({navigation}) {
   }, []);
 
   function renderItem({item}) {
+    const createdAtGMT = moment(item.created_at).format('DD/MM/YYYY');
+
     return (
       <TouchableOpacity
         style={[styles.postContainer, {width: itemWidth}]}
         key={item.id}
         onPress={() =>
-          navigation.navigate('BlogDetails', {
-            blogId: item.id,
-          })
+          navigation.navigate('BlogDetails', {blogId: item.blog_id})
         }>
         <Image
           style={styles.postImage}
@@ -78,16 +54,14 @@ function Blogs({navigation}) {
           }}
         />
         <Text style={styles.postTitle}>{item.title}</Text>
+        <Text style={styles.date}>{createdAtGMT}</Text>
       </TouchableOpacity>
     );
   }
 
   return (
     <>
-      <Text
-        style={{textAlign: 'center', justifyContent: 'center', fontSize: 18}}>
-        Tất cả bài viết
-      </Text>
+      <Text style={styles.h1}>Tất cả bài viết</Text>
       <FlatList
         data={posts}
         keyExtractor={item => item.blog_id.toString()}
@@ -101,6 +75,13 @@ function Blogs({navigation}) {
 }
 
 const styles = StyleSheet.create({
+  h1: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    fontSize: 18,
+    color: 'black',
+    margin: 10,
+  },
   postContainer: {
     marginRight: 10,
   },

@@ -95,57 +95,8 @@ export default function Product({navigation}) {
       ) : (
         <View style={{flex: 1}}>
           <Text>Sản phẩm nổi bật</Text>
-
           <FlatList data={products} renderItem={listItem} />
         </View>
-        // <View style={{flex: 1}}>
-        //   {products.map(product => (
-        //     <TouchableOpacity
-        //       key={product.id}
-        //       onPress={() =>
-        //         navigation.navigate('ProductDetails', {
-        //           productId: product.sku,
-        //         })
-        //       }>
-        //       <View
-        //         style={{
-        //           flexDirection: 'row',
-        //           alignItems: 'center',
-        //           paddingVertical: 10,
-        //         }}
-        //         key={product.id}>
-        //         <Image
-        //           style={{width: 80, height: 80, marginRight: 16}}
-        //           source={{
-        //             uri:
-        //               img +
-        //               '' +
-        //               product.custom_attributes.find(
-        //                 attr => attr.attribute_code === 'image',
-        //               ).value,
-        //           }}
-        //         />
-        //         <View style={{flex: 1}}>
-        //           <Text style={{fontSize: 16}} numberOfLines={1}>
-        //             {product.name}
-        //           </Text>
-        //           <Text
-        //             style={{fontSize: 14, color: 'green'}}
-        //             numberOfLines={1}>
-        //             {product.price.toLocaleString('vi-VN', {
-        //               style: 'currency',
-        //               currency: 'VND',
-        //             })}
-        //           </Text>
-        //           <Text>
-        //             <Icon name="cube" /> {product.qty} sản phẩm có sẵn
-        //           </Text>
-        //           {/*Thêm các thuộc tính khác của sản phẩm tại đây*/}
-        //         </View>
-        //       </View>
-        //     </TouchableOpacity>
-        //   ))}
-        // </View>
       )}
     </View>
   );
