@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import axios from 'axios';
 import moment from 'moment';
 import {useRoute} from '@react-navigation/native';
@@ -7,21 +7,17 @@ import {useRoute} from '@react-navigation/native';
 export default function BlogDetails() {
   const route = useRoute();
   const [blog, setBlog] = useState({});
-
-  const getBlogDetail = async id => {
-    try {
-      const response = await axios.get(
-        `http://192.168.1.9:5000/blog/detail/${id}`,
-      );
-      setBlog(JSON.parse(response.request._response).result);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const id = route.params.blogId;
 
   useEffect(() => {
-    const id = route.params.id;
-    getBlogDetail(id);
+    axios
+      .get(`http://192.168.1.9:5000/blog/detail/${id}`)
+      .then(response => {
+        setBlog(JSON.parse(response.request._response).result);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }, []);
 
   if (!blog) {
@@ -30,20 +26,22 @@ export default function BlogDetails() {
   const createdAtGMT = moment(blog.created_at).format('DD/MM/YYYY');
 
   return (
-    <View style={styles.container}>
-      {/* <Text style={styles.title}>{blog[route.params.id].title}</Text> */}
-      <Text style={styles.title}>{route.params.id}</Text>
-      <Text style={styles.date}>{createdAtGMT}</Text>
-      {/* <Image
-        source={{
-          uri:
-            'http://192.168.1.9/magento2/pub/media/catalog/blog/' +
-            blog[route.params.id].img,
-        }}
-        style={styles.image}
-      />
-      <Text style={styles.content}>{blog[route.params.id].content}</Text> */}
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <Text style={styles.title}>{blog[route.params.id].title}</Text> */}
+        <Text style={styles.title}>{blog[0]?.title}</Text>
+        <Text style={styles.date}>{createdAtGMT}</Text>
+        <Image
+          source={{
+            uri:
+              'http://192.168.1.9/magento2/pub/media/catalog/blog/' +
+              blog[0]?.img,
+          }}
+          style={styles.image}
+        />
+        <Text style={styles.content}>{blog[0]?.content}</Text>
+      </View>
+    </ScrollView>
   );
 }
 

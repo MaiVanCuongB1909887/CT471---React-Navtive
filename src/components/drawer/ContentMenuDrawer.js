@@ -82,7 +82,7 @@ export default function ContentMenuDrawer(props) {
           }}>
           {categories?.map(category => (
             <ListItem
-              key={category.id}
+              key={category?.id}
               topDivider
               bottomDivider
               style={{color: 'rgb(28, 28, 30)', fontSize: 14, marginLeft: 2}}>

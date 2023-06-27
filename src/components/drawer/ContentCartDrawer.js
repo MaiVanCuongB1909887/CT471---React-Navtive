@@ -156,7 +156,19 @@ function ContentCartDrawer({navigation}) {
         </View>
         <View style={styles.cartBottomRightContainer}>
           {cart.length > 0 ? (
-            <Button title={'Checkout'} onPress={checkout} />
+            <TouchableOpacity onPress={checkout}>
+              <View
+                style={{
+                  width: 100,
+                  height: 50,
+                  backgroundColor: '#4fe07a',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 5,
+                }}>
+                <Text style={{color: 'black'}}>CHECKOUT</Text>
+              </View>
+            </TouchableOpacity>
           ) : (
             <Button title={'Checkout'} disabled onPress={checkout} />
           )}
