@@ -9,30 +9,27 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Loading from '../Loading';
 
 const img =
   'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
 export default function Search({product, navigation, route}) {
   const searchText = route.params.searchText;
-  // const [searchText,setSearchText] = useState(null); cuong
   const URL = `http://192.168.1.9:5000/product/list/name?name=${searchText}`;
   const [search, setSearch] = useState([]);
-  // const [totalResults, setTotalResults] = useState(0); cuong
+  const loading = useSelector(state => state.product.isLoading);
   const searchUrl = async () => {
     const res = await axios.get(URL);
-    // console.log('cmn =', res.data);
     setSearch(res.data.product.items);
-    // setTotalResults(res.data.product); cuong
   };
   useEffect(() => {
     searchUrl();
   }, [searchText]);
-
-  // console.log( 'cmn lam hoai deo dc =', {searchText})
 
   const listItem = ({item}) => {
     return (
@@ -71,8 +68,9 @@ export default function Search({product, navigation, route}) {
                   currency: 'VND',
                 })}
               </Text>
-              {/* <Text>
-                <Icon name="cube" /> 
+              {/* 
+              <Text>
+                <Icon name="cube" />
                 {item.qty} sản phẩm có sẵn
               </Text> */}
 
@@ -85,12 +83,14 @@ export default function Search({product, navigation, route}) {
   };
 
   return (
-    <View>
-      {/* <Text>co {totalResults} ket qua tim kiem</Text> cuong */}
-      <Text>
-        Hiển thị {search.length} kết quả phù hợp cho tìm kiếm ' {searchText} '
-      </Text>
-      <FlatList data={search} renderItem={listItem} />
+    <View style={{flex: 1, paddingHorizontal: 16}}>
+      <View>
+        {/* <Text>co {totalResults} ket qua tim kiem</Text> cuong */}
+        <Text>
+          Hiển thị {search.length} kết quả phù hợp cho tìm kiếm ' {searchText} '
+        </Text>
+        <FlatList data={search} renderItem={listItem} />
+      </View>
     </View>
   );
 }

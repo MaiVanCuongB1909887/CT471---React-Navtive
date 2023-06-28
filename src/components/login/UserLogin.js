@@ -2,23 +2,24 @@ import {
   ScrollView,
   Text,
   View,
-  SafeAreaView,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {isValidEmail, isValidPassword} from '../../utilies/Validations';
-import styles from './style';
-import {userLogin} from '../store/auth/AuthSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {isValidEmail, isValidPassword} from '../../utilies/Validations';
+import {userLogin} from '../store/auth/AuthSlice';
+import styles from './style';
 
 const UserLogin = ({navigation}) => {
   const dispatch = useDispatch();
-  const userToken = useSelector(state => state.user.userToken);
+  const isAdmin = useSelector(state => state.auth.isAdmin);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
   const [email, setEmail] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,15 +46,13 @@ const UserLogin = ({navigation}) => {
     dispatch(userLogin({email, password}));
   };
 
-  const checkToken = async () => {
-    if (userToken) {
-      alert('Dang nhap thanh cong');
-      navigation.navigate('Home');
-    }
-  };
   useEffect(() => {
-    checkToken();
-  }, [userToken]);
+    if (isLoggedIn && !isAdmin) {
+      Alert.alert('Dang nhap thanh cong', 'Ban da co the truy cap gio hang', [
+        {text: 'OK', onPress: () => navigation.navigate('Home')},
+      ]);
+    }
+  }, [isLoggedIn]);
 
   return (
     <ScrollView>

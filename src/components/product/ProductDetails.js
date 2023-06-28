@@ -34,7 +34,7 @@ export default function ProductDetails({route, navigation}) {
     axios
       .get(`http://192.168.1.9:5000/product/detail/${sku}`)
       .then(response => {
-        const productData = response.data;
+        const productData = response.data.product;
         setProduct(productData);
         console.log(response);
       })
@@ -44,7 +44,9 @@ export default function ProductDetails({route, navigation}) {
   }, []);
 
   const addItemToCart = item => {
-    dispatch(addToCart(item));
+    const sku = item.sku;
+    const itemInCart = {sku, qty: 1};
+    dispatch(addToCart(itemInCart));
   };
 
   const increaseQuantity = () => {
@@ -69,14 +71,14 @@ export default function ProductDetails({route, navigation}) {
                   uri:
                     img +
                     '' +
-                    product.product?.custom_attributes.find(
+                    product.custom_attributes?.find(
                       attr => attr.attribute_code === 'image',
                     ).value,
                 }}
                 style={styles.image}
               />
 
-              <Text style={styles.name}>{product.product?.name}</Text>
+              <Text style={styles.name}>{product.name}</Text>
               <Text style={styles.manuf}>Từ hãng: China wifi</Text>
               <View
                 style={{
@@ -125,22 +127,19 @@ export default function ProductDetails({route, navigation}) {
                     <Icon name="plus" size={15} color={'#999999'} />
                   </View>
                 </TouchableOpacity>
-                <Text style={styles.qty}>
-                  còn {product.product?.qty} sản phẩm
-                </Text>
+                <Text style={styles.qty}>còn {product.qty} sản phẩm</Text>
               </View>
 
               <Text style={styles.price}>
                 Giá:{' '}
-                {product.product?.price.toLocaleString('vi-VN', {
+                {product.price?.toLocaleString('vi-VN', {
                   style: 'currency',
                   currency: 'VND',
                 })}
               </Text>
 
               <Text style={styles.status}>
-                Tình trạng:{' '}
-                {product.product?.status == 1 ? 'Còn hàng' : 'Hết hàng'}
+                Tình trạng: {product.status == 1 ? 'Còn hàng' : 'Hết hàng'}
               </Text>
               <View
                 style={{
@@ -150,9 +149,8 @@ export default function ProductDetails({route, navigation}) {
                 }}>
                 <Text style={styles.nameh1}>Mô tả Tổng Quan Sản Phẩm</Text>
                 <Text style={styles.description}>
-                  Mô tả:{' '}
-                  {product.product?.custom_attributes
-                    .find(attr => attr.attribute_code === 'short_description')
+                  {product.custom_attributes
+                    ?.find(attr => attr.attribute_code === 'short_description')
                     .value.slice(3, -4)}
                 </Text>
               </View>
@@ -164,7 +162,7 @@ export default function ProductDetails({route, navigation}) {
                 }}>
                 <Text style={styles.nameh1}>Chi Tiết Sản Phẩm </Text>
                 <View>
-                <View
+                  <View
                     style={{
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -286,9 +284,8 @@ export default function ProductDetails({route, navigation}) {
                 }}>
                 <Text style={styles.nameh1}>Mô Tả Chi Tiết</Text>
                 <Text style={styles.description}>
-                  Mô tả:{' '}
-                  {product.product?.custom_attributes
-                    .find(attr => attr.attribute_code === 'short_description')
+                  {product.custom_attributes
+                    ?.find(attr => attr.attribute_code === 'short_description')
                     .value.slice(3, -4)}
                 </Text>
               </View>
@@ -300,9 +297,8 @@ export default function ProductDetails({route, navigation}) {
                 }}>
                 <Text style={styles.nameh1}>Chính Sách Bảo Hành</Text>
                 <Text style={styles.description}>
-                  Mô tả:{' '}
-                  {product.product?.custom_attributes
-                    .find(attr => attr.attribute_code === 'short_description')
+                  {product.custom_attributes
+                    ?.find(attr => attr.attribute_code === 'short_description')
                     .value.slice(3, -4)}
                 </Text>
               </View>
@@ -325,8 +321,7 @@ export default function ProductDetails({route, navigation}) {
                     justifyContent: 'center',
                     borderRadius: 10,
                   }}>
-                  <TouchableOpacity
-                    onPress={() => addItemToCart(product?.product)}>
+                  <TouchableOpacity onPress={() => addItemToCart(product)}>
                     <Text
                       style={{
                         color: '#29B1B0',
@@ -359,7 +354,7 @@ export default function ProductDetails({route, navigation}) {
                   backgroundColor: '#ffffff',
                   borderRadius: 10,
                 }}>
-                <Text style={styles.nameh1}>BÌnh Luận</Text>
+                <Text style={styles.nameh1}>Bình Luận</Text>
                 <Text style={styles.description}></Text>
               </View>
               <View

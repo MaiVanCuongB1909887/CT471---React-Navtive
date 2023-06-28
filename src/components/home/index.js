@@ -395,7 +395,7 @@ const Home = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
-        <View>
+        <View style={{backgroundColor: 'white', marginBottom: 20}}>
           <View style={{flexDirection: 'row'}}>
             <View
               style={{

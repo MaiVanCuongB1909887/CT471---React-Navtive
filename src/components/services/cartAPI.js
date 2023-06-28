@@ -25,5 +25,9 @@ const cartAPI = {
     const url = 'cart/check_out';
     return axiosClient.post(url, data);
   },
+  getorder() {
+    const url = 'order/list/';
+    return axiosClient.get(url);
+  },
 };
 export default cartAPI;

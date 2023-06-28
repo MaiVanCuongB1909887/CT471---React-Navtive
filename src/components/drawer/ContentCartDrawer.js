@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import colors from '../../constants/colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {getCart, changeQtyCart, removeFromCart} from '../store/cart/CartSlice';
@@ -74,7 +75,6 @@ function ContentCartDrawer({navigation}) {
         <View
           style={{
             flexDirection: 'row',
-            alignItems: 'center',
             paddingVertical: 10,
           }}
           key={item.id}>
@@ -89,33 +89,75 @@ function ContentCartDrawer({navigation}) {
                 ).value,
             }}
           />
-          <View style={{flex: 1}}>
-            <Text style={{fontSize: 16, color: '#000'}} numberOfLines={1}>
-              {item.name}
-            </Text>
-            <Text style={{fontSize: 14, color: 'green'}} numberOfLines={1}>
-              {item.price?.toLocaleString('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-              })}
-            </Text>
-
+          <View style={{flex: 1, marginVertical: 20}}>
+            <View style={{flexDirection: 'row'}}>
+              <Text
+                style={{fontSize: 16, color: '#000', width: 120}}
+                numberOfLines={1}>
+                {item.name}
+              </Text>
+              <TouchableOpacity onPress={() => removeItemFromCart(item)}>
+                <View
+                  style={{
+                    height: 20,
+                    width: 20,
+                    backgroundColor: 'red',
+                    borderRadius: 2,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <IonIcon name="close" size={15} color={'#ffffff'} />
+                </View>
+              </TouchableOpacity>
+            </View>
             <View>
-              <Button title="-" onPress={() => decreaseQty(item)} />
-              <TextInput style={{color: '#000'}}>{item.qty}</TextInput>
-              <Button title="+" onPress={() => increaseQty(item)} />
+              <Text style={{fontSize: 14, color: 'green'}} numberOfLines={1}>
+                {item.price?.toLocaleString('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
+              </Text>
+            </View>
+
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity onPress={() => decreaseQty(item)}>
+                <View
+                  style={{
+                    height: 35,
+                    width: 40,
+                    backgroundColor: '#E9EDF4',
+                    borderRadius: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Icon name="minus" size={15} color={'#999999'} />
+                </View>
+              </TouchableOpacity>
+              <TextInput
+                style={{
+                  height: 40,
+                  width: 60,
+                  backgroundColor: '#ffffff',
+                  marginHorizontal: 5,
+                  borderRadius: 5,
+                }}>
+                {item.qty}
+              </TextInput>
+              <TouchableOpacity onPress={() => increaseQty(item)}>
+                <View
+                  style={{
+                    height: 35,
+                    width: 40,
+                    backgroundColor: '#E9EDF4',
+                    borderRadius: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Icon name="plus" size={15} color={'#999999'} />
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
-          <Button
-            title={'x'}
-            onPress={() => removeItemFromCart(item)}
-            style={{
-              borderColor: 'gray',
-              borderWidth: 1,
-              marginVertical: 10,
-              padding: 5,
-            }}
-          />
         </View>
       </TouchableOpacity>
     );

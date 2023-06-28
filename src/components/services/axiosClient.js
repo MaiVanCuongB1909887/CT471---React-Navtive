@@ -3,13 +3,11 @@ import {useSelector} from 'react-redux';
 import axios from 'axios';
 
 const getUserToken = async () => {
-  // if (await AsyncStorage.getItem('userToken')) {
-  //   return await AsyncStorage.getItem('userToken');
-  // }
-  if (await AsyncStorage.getItem('adminToken')) {
-    return await AsyncStorage.getItem('adminToken');
-  }
+  if (await AsyncStorage.getItem('userToken')) {
+    return await AsyncStorage.getItem('userToken');
+  } else return null;
 };
+console.log(getUserToken(), 'console o axiosClient');
 
 const axiosClient = axios.create({
   baseURL: 'http://192.168.1.9:5000/',

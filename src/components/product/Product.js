@@ -16,15 +16,16 @@ import {addToCart} from '../store/cart/CartSlice';
 import {getProduct} from '../store/product/ProductSlice';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 import Loading from '../Loading';
+import axios from 'axios';
+import Pagination from 'react-native-pagination';
+import {ActivityIndicator} from 'react-native-paper';
 
 export default function Product({navigation}) {
   const products = useSelector(state => state.product.product);
   const loading = useSelector(state => state.product.isLoading);
   const dispatch = useDispatch();
-
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
-
   useEffect(() => {
     dispatch(getProduct());
   }, [loading]);
@@ -36,6 +37,13 @@ export default function Product({navigation}) {
   };
 
   const listItem = ({item}) => {
+    renderFooter = () => {
+      return (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    };
     return (
       <TouchableOpacity
         key={item.id}
@@ -102,4 +110,9 @@ export default function Product({navigation}) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  loader: {
+    marginTop: 10,
+    alignItems: 'center',
+  },
+});
