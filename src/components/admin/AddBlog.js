@@ -2,13 +2,19 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, Button, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {addBlog} from '../../store/blog/BlogSlice';
+import {CommonActions} from '@react-navigation/native';
 
-const AddBlog = () => {
+const AddBlog = ({navigation}) => {
   const dispatch = useDispatch();
-  const [newBlog, setNewBlog] = useState({title: '', content: ''});
+  const [newBlog, setNewBlog] = useState({
+    title: '',
+    content: '',
+    user_id: '',
+  });
 
   const handleCreateBlog = async data => {
     await dispatch(addBlog(data));
+    navigation.dispatch(CommonActions.goBack());
   };
 
   return (
@@ -26,7 +32,13 @@ const AddBlog = () => {
         value={newBlog.content}
         onChangeText={text => setNewBlog(prev => ({...prev, content: text}))}
       />
-      <Button title="Create" onPress={handleCreateBlog(newBlog)} />
+      <TextInput
+        style={{color: '#000'}}
+        placeholder="Content"
+        value={newBlog.user_id}
+        onChangeText={text => setNewBlog(prev => ({...prev, user_id: text}))}
+      />
+      <Button title="Create" onPress={() => handleCreateBlog(newBlog)} />
     </View>
   );
 };
