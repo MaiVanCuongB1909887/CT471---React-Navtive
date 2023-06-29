@@ -5,6 +5,7 @@ import Product from '../product/Product';
 import ContentMenuDrawer from './ContentMenuDrawer';
 import ContentCartDrawer from './ContentCartDrawer';
 import Header from '../header';
+import Blogs from '../blog/Blogs';
 // import Blogs from '../blog/Blogs';
 
 const LeftDrawer = createDrawerNavigator();
@@ -35,11 +36,11 @@ const MenuDrawer = () => {
         component={Product}
         options={{header: props => <Header {...props} title="Home" />}}
       />
-      {/* <LeftDrawer.Screen
+      <LeftDrawer.Screen
         name="Bài viết"
         component={Blogs}
         options={{header: props => <Header {...props} title="Home" />}}
-      /> */}
+      />
     </LeftDrawer.Navigator>
   );
 };

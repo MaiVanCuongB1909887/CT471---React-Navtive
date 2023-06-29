@@ -18,10 +18,10 @@ const img =
 
 export default function Search({product, navigation, route}) {
   const searchText = route.params.searchText;
-  // const [searchText,setSearchText] = useState(null); cuong
+
   const URL = `http://192.168.1.9:5000/product/list/name?name=${searchText}`;
   const [search, setSearch] = useState([]);
-  // const [totalResults, setTotalResults] = useState(0); cuong
+
   const searchUrl = async () => {
     const res = await axios.get(URL);
     // console.log('cmn =', res.data);

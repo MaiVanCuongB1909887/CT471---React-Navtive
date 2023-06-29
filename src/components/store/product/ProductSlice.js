@@ -1,11 +1,14 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import React, {useState, useEffect} from 'react';
 import productAPI from '../../services/productAPI';
 
-export const getProduct = createAsyncThunk('product/getProduct', async () => {
+export const getProduct = createAsyncThunk('product/getProduct', async data => {
   try {
-    const response = await productAPI.getAllProduct();
+    // const response = await productAPI.getAllProduct();
+
+    const response = await productAPI.getPerPage(data);
+
     if (!!response) {
       return response.product.items;
     }

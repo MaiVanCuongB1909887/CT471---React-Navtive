@@ -13,6 +13,11 @@ const productAPI = {
     const url = `/product/list/name/${data}`;
     return axiosClient.get(url);
   },
+
+  getPerPage(page) {
+    const url = `/product/list?currentPage=${page}`;
+    return axiosClient.get(url);
+  },
 };
 
 export default productAPI;
