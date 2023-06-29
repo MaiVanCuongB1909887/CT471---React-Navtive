@@ -13,13 +13,17 @@ import axios from 'axios';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
+import {CommonActions} from '@react-navigation/native';
 
 const img =
   'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
 export default function Search({navigation}) {
   const products = useSelector(state => state.search.products);
-
+  const keyword = useSelector(state => state.search.keyword);
+  // if (keyword == '') {
+  //   navigation.dispatch(CommonActions.goBack());
+  // }
   const listItem = ({item}) => {
     return (
       <View>
@@ -48,7 +52,7 @@ export default function Search({navigation}) {
               }}
             />
             <View style={{flex: 1}}>
-              <Text style={{fontSize: 16}} numberOfLines={1}>
+              <Text style={{fontSize: 16, color: '#000'}} numberOfLines={1}>
                 {item.name}
               </Text>
               <Text style={{fontSize: 14, color: 'green'}} numberOfLines={1}>
@@ -57,7 +61,7 @@ export default function Search({navigation}) {
                   currency: 'VND',
                 })}
               </Text>
-              <Text>
+              <Text style={{color: '#000'}}>
                 <Icon name="cube" /> {item.qty} sản phẩm có sẵn
               </Text>
 
@@ -68,13 +72,13 @@ export default function Search({navigation}) {
       </View>
     );
   };
-
   return (
     <View>
-      <Text>
-        Hiển thị {products.length} kết quả phù hợp cho tìm kiếm ' gi iiiii '
+      <Text style={{color: '#000'}}>search/{keyword}</Text>
+      <Text style={{color: '#000'}}>
+        Hiển thị {products.total_count} kết quả phù hợp cho tìm kiếm '{keyword}'
       </Text>
-      <FlatList data={products} renderItem={listItem} />
+      <FlatList data={products.items} renderItem={listItem} />
     </View>
   );
 }

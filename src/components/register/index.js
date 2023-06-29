@@ -97,7 +97,7 @@ const Register = ({navigation}) => {
       );
       if (!!response) {
         alert('Vui long kiem tra hop thu de kich hoat tai khoan');
-        navigation.navigate('Login');
+        navigation.navigate('UserLogin');
       }
     } catch (error) {
       return alert(error.response.data.message);

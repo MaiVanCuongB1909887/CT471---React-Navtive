@@ -2,11 +2,11 @@ import axiosClient from './axiosClient';
 
 const blogAPI = {
   getAllBlog() {
-    const url = '/product/list1';
+    const url = '/blog/list1';
     return axiosClient.get(url);
   },
   getBlog(id) {
-    const url = `/product/${id}`;
+    const url = `/blog/${id}`;
     return axiosClient.get(url);
   },
   updateBlog(data) {

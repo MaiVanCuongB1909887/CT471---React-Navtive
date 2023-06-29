@@ -1,5 +1,10 @@
 import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import {setUser} from '../../store/auth/AuthSlice';
+import {setDetailUser} from '../../store/user/UserSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import Home from '../home';
 import UserLogin from '../login/UserLogin';
 import AdminLogin from '../login/AdminLogin';
@@ -10,16 +15,15 @@ import Admin from '../admin/Admin';
 import Search from '../search/search';
 import Checkout from '../cart/Checkout';
 import User from '../user/User';
-import {setUser} from '../../store/auth/AuthSlice';
-import {setDetailUser} from '../../store/user/UserSlice';
-import {useDispatch, useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddBlog from '../admin/AddBlog';
+import EditBlog from '../admin/EditBlog';
 
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.auth.userToken);
+  const adminToken = useSelector(state => state.auth.adminToken);
 
   async function isSignedIn() {
     await AsyncStorage.getItem('userToken').then(token => {
@@ -85,20 +89,33 @@ const HomeStack = () => {
             component={Register}
             options={{headerShown: false}}
           />
+          <Stack.Screen
+            name="AdminLogin"
+            component={AdminLogin}
+            options={{headerShown: false}}
+          />
         </>
       )}
 
-      <Stack.Screen
-        name="AdminLogin"
-        component={AdminLogin}
-        options={{headerShown: false}}
-      />
-
-      <Stack.Screen
-        name="Admin"
-        component={Admin}
-        options={{headerShown: false}}
-      />
+      {adminToken && (
+        <>
+          <Stack.Screen
+            name="Admin"
+            component={Admin}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditBlog"
+            component={EditBlog}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AddBlog"
+            component={AddBlog}
+            options={{headerShown: false}}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 };

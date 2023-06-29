@@ -24,11 +24,10 @@ const Checkout = ({navigation}) => {
   const [phone, setPhone] = useState('');
   const [postcode, setPostcode] = useState('');
   const [city, setCity] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('authorizenet_directpost');
 
   const dispatch = useDispatch();
   const detail = useSelector(state => state.user.userDetail);
-  const order = useSelector(state => state.cart.order);
 
   function setDetailUser() {
     if (!!detail) {
@@ -57,9 +56,8 @@ const Checkout = ({navigation}) => {
       };
       await dispatch(address(data));
       const response = await dispatch(checkout({method: paymentMethod}));
-      if (order) {
+      if (response) {
         navigation.navigate('Home');
-        return response;
       } else {
         alert('Thanh toan that bai');
       }

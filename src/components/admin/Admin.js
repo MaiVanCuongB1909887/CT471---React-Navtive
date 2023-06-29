@@ -1,80 +1,43 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, Button, FlatList} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, Button, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  addBlog,
-  deleteBlog,
-  getBlog,
-  updateBlog,
-} from '../../store/blog/BlogSlice';
+import {deleteBlog, getBlog} from '../../store/blog/BlogSlice';
 
-const Admin = () => {
+const Admin = ({navigation}) => {
   const dispatch = useDispatch();
   const blogs = useSelector(state => state.blog.blogs);
-  const [currentBlog, setCurrentBlog] = useState({title: '', content: ''});
-  const [newBlog, setNewBlog] = useState({title: '', content: ''});
   console.log(blogs);
+
   useEffect(() => {
     dispatch(getBlog());
   }, [dispatch]);
 
-  // const handleCreateBlog = async data => {
-  //   await dispatch(addBlog(data));
-  // };
-  // const handleUpdateBlog = async data => {
-  //   await dispatch(updateBlog(data));
-  // };
+  const handleAddBlog = () => {
+    navigation.navigate('AddBlog');
+  };
+  const handleEditBlog = () => {
+    navigation.navigate('EditBlog');
+  };
   const handleDeleteBlog = async id => {
     await dispatch(deleteBlog(id));
   };
 
   return (
     <View>
-      <Text>Current Blog</Text>
+      <Text style={{color: '#000'}}>Quan li bai viet</Text>
+      <Button title="Add" onPress={() => handleAddBlog()} />
       <FlatList
         data={blogs}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         renderItem={({item}) => (
           <View>
-            <TextInput
-              style={{color: '#000'}}
-              placeholder="Title"
-              value={item.title}
-              onChangeText={text =>
-                setCurrentBlog(prev => ({...prev, title: text}))
-              }
-            />
-            <TextInput
-              style={{color: '#000'}}
-              placeholder="Content"
-              value={item.content}
-              onChangeText={text =>
-                setCurrentBlog(prev => ({...prev, content: text}))
-              }
-            />
-            <Button
-              title="Update"
-              // onPress={() => handleUpdateBlog(currentBlog)}
-            />
+            <Text style={{color: '#000'}}>{item.title}</Text>
+            <Text style={{color: '#000'}}>{item.content}</Text>
+            <Button title="Update" onPress={() => handleEditBlog()} />
             <Button title="Delete" onPress={() => handleDeleteBlog(item.id)} />
           </View>
         )}
       />
-
-      <Text style={{color: '#000'}}>Create Article</Text>
-      <TextInput
-        style={{color: '#000'}}
-        placeholder="Title"
-        value={newBlog.title}
-        onChangeText={text => setNewBlog(prev => ({...prev, title: text}))}
-      />
-      <TextInput
-        style={{color: '#000'}}
-        placeholder="Content"
-        value={newBlog.content}
-        onChangeText={text => setNewBlog(prev => ({...prev, content: text}))}
-      />
-      {/* <Button title="Create" onPress={handleCreateBlog(newBlog)} /> */}
     </View>
   );
 };

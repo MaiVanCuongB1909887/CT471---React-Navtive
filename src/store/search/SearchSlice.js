@@ -8,7 +8,7 @@ export const searchByName = createAsyncThunk(
     try {
       const response = await productAPI.searchByName(data);
       if (!!response) {
-        return response.product.items;
+        return response;
       }
     } catch (error) {
       console.log(error.response.data, 'day la loi searchByName');
@@ -21,6 +21,7 @@ export const searchByCategory = createAsyncThunk(
   async id => {
     try {
       const response = await productAPI.searchByCategory(id);
+      console.log(response);
       if (!!response) {
         return response;
       }
@@ -39,13 +40,18 @@ const SearchSlice = createSlice({
     isLoading: false,
     error: null,
   },
-  reducer: {},
+  reducer: {
+    getCategoryName(state, action) {
+      state.keyword = action.payload;
+      state.error = null;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(searchByName.fulfilled, (state, action) => {
         state.isLoading = true;
-        state.products = action.payload.product.items;
-        state.keyword = action.payload.data;
+        state.products = action.payload.product;
+        state.keyword = action.meta.arg;
         state.error = null;
       })
       .addCase(searchByName.rejected, (state, action) => {
@@ -54,7 +60,7 @@ const SearchSlice = createSlice({
       })
       .addCase(searchByCategory.fulfilled, (state, action) => {
         state.isLoading = true;
-        state.products = action.payload;
+        state.products = action.payload.product;
         state.error = null;
       })
       .addCase(searchByCategory.rejected, (state, action) => {
@@ -64,4 +70,5 @@ const SearchSlice = createSlice({
   },
 });
 
+export const getCategoryName = SearchSlice.actions;
 export default SearchSlice.reducer;

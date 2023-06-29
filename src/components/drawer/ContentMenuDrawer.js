@@ -14,12 +14,12 @@ import {logoutA} from '../../store/auth/AuthSlice';
 import {logoutU} from '../../store/user/UserSlice';
 import cateAPI from '../services/cateAPI';
 import {searchByCategory} from '../../store/search/SearchSlice';
+import {getCategoryName} from '../../store/search/SearchSlice';
 
 export default function ContentMenuDrawer(props) {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
-  const [stop, setStop] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [categories, setCategories] = useState([]);
 
@@ -30,39 +30,35 @@ export default function ContentMenuDrawer(props) {
       props.navigation.navigate('UserLogin');
     }
   };
-  const handleCategory = async id => {
-    const response = await dispatch(searchByCategory(id));
+  const handleCategory = async data => {
+    dispatch(getCategoryName(data.name));
+    const response = await dispatch(searchByCategory(data.id));
     if (!!response) {
       props.navigation.navigate('Search');
     }
   };
-
-  const getAllCate = async () => {
-    try {
-      console.log('1 lan');
-      const response = await cateAPI.getAllCate();
-      console.log(response);
-      if (!!response) {
-        setCategories(response.category);
-        console.log('Da vao day');
-        return setStop(true);
+  const getAllCate = async (delay = 1000, maxAttempts = 20) => {
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+      try {
+        const response = await cateAPI.getAllCate();
+        if (response) {
+          console.log('may vao day chua');
+          setCategories(response.category);
+          console.log(categories);
+        }
+      } catch (error) {
+        console.log(`Error calling API: ${error}`);
       }
-    } catch (error) {
-      throw console.log(error, ' loi category');
+      attempts++;
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
+    throw new Error(`API call failed after ${maxAttempts} attempts`);
   };
+
   useEffect(() => {
-    // const interval = setInterval(async () => {
-    //   console.log('o tren');
-    //   getAllCate();
-    //   if (stop) {
-    //     console.log('o duoi');
-    //     clearInterval(interval);
-    //   }
-    // }, 2500);
-    // return () => {
-    //   clearInterval(interval);
-    // };
+    const response = getAllCate();
+    console.log(response);
   }, []);
 
   return (
@@ -97,7 +93,7 @@ export default function ContentMenuDrawer(props) {
               bottomDivider
               style={{color: 'rgb(28, 28, 30)', fontSize: 14, marginLeft: 2}}>
               <ListItem.Content>
-                <ListItem.Subtitle onPress={() => handleCategory(category.id)}>
+                <ListItem.Subtitle onPress={() => handleCategory(category)}>
                   {category?.name}
                 </ListItem.Subtitle>
               </ListItem.Content>

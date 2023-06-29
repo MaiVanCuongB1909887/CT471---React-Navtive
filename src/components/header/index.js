@@ -10,11 +10,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Icon as Abc, withBadge} from '@rneui/themed';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
-import {setUser} from '../../store/auth/AuthSlice';
-import {setDetailUser} from '../../store/user/UserSlice';
 import {searchByName} from '../../store/search/SearchSlice';
 
 const Header = ({navigation}) => {
@@ -30,10 +27,9 @@ const Header = ({navigation}) => {
   const handleSearch = async text => {
     setSearchText(text);
     const response = await dispatch(searchByName(text));
-    if (response) {
+    if (response && !!searchText) {
       navigation.navigate('Search');
     }
-    console.log(navigation);
   };
 
   const thongbao = () => {
@@ -118,7 +114,7 @@ const Header = ({navigation}) => {
             backgroundColor: '#ebedf0',
           }}>
           <TextInput
-            style={{width: '70%'}}
+            style={{width: '70%', color: '#000'}}
             placeholder="Tìm kiếm sản phẩm"
             onChangeText={text => handleSearch(text)}
             value={searchText}

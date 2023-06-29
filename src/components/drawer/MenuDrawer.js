@@ -6,11 +6,14 @@ import ContentMenuDrawer from './ContentMenuDrawer';
 import ContentCartDrawer from './ContentCartDrawer';
 import Header from '../header';
 import {createStackNavigator} from '@react-navigation/stack';
+import {useSelector} from 'react-redux';
 
 const LeftDrawer = createDrawerNavigator();
 const RightDrawer = createDrawerNavigator();
 
 const CartDrawer = () => {
+  const userToken = useSelector(state => state.auth.userToken);
+
   return (
     <RightDrawer.Navigator
       screenOptions={{
@@ -18,7 +21,13 @@ const CartDrawer = () => {
         headerShown: false,
         swipeEnabled: false,
       }}
-      drawerContent={props => <ContentCartDrawer {...props} />}>
+      drawerContent={props =>
+        userToken && (
+          <>
+            <ContentCartDrawer {...props} />
+          </>
+        )
+      }>
       <RightDrawer.Screen name="Cart" component={MenuDrawer} />
     </RightDrawer.Navigator>
   );

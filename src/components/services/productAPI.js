@@ -10,11 +10,11 @@ const productAPI = {
     return axiosClient.get(url);
   },
   searchByName(data) {
-    const url = `/product/list/name/${data}`;
+    const url = `/product/list/name/?name=${data}`;
     return axiosClient.get(url);
   },
   searchByCategory(id) {
-    const url = `/product/list/category_id/${id}`;
+    const url = `/product/search/category_id/${id}`;
     return axiosClient.get(url);
   },
   // searchByPrice(data) {

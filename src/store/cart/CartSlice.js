@@ -68,11 +68,10 @@ export const address = createAsyncThunk('cart/address', async data => {
 });
 export const checkout = createAsyncThunk('cart/checkout', async data => {
   try {
-    await cartAPI.checkout(data);
-    const response = await cartAPI.getCart();
+    const response = await cartAPI.checkout(data);
     if (!!response) {
       alert('Thanh toan thanh cong');
-      return response.product_in_cart;
+      return response;
     }
   } catch (error) {
     throw console.log(error, 'day la loi luc thanh toan');
