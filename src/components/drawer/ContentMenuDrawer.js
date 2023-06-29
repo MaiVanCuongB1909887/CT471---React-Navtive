@@ -37,15 +37,13 @@ export default function ContentMenuDrawer(props) {
       props.navigation.navigate('Search');
     }
   };
-  const getAllCate = async (delay = 1000, maxAttempts = 20) => {
+  const getAllCate = async (delay = 3000, maxAttempts = 10) => {
     let attempts = 0;
     while (attempts < maxAttempts) {
       try {
         const response = await cateAPI.getAllCate();
         if (response) {
-          console.log('may vao day chua');
           setCategories(response.category);
-          console.log(categories);
         }
       } catch (error) {
         console.log(`Error calling API: ${error}`);
@@ -57,9 +55,8 @@ export default function ContentMenuDrawer(props) {
   };
 
   useEffect(() => {
-    const response = getAllCate();
-    console.log(response);
-  }, []);
+    getAllCate();
+  }, [expanded]);
 
   return (
     <DrawerContentScrollView {...props}>

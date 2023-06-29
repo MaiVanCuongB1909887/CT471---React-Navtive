@@ -4,14 +4,11 @@ import blogAPI from '../../components/services/blogAPI';
 export const addBlog = createAsyncThunk('blog/addBlog', async data => {
   try {
     await blogAPI.addBlog(data);
+    alert('Them blog thanh cong');
     const res = await blogAPI.getAllBlog();
     return res.result;
   } catch (error) {
-    if (error.response.status === 401) {
-      throw console.log(error, 'day la loi o them blog');
-    } else {
-      console.log(error, 'day la loi o them blog');
-    }
+    console.log(error, 'day la loi o them blog');
   }
 });
 export const getBlog = createAsyncThunk('blog/getBlog', async () => {
@@ -19,11 +16,7 @@ export const getBlog = createAsyncThunk('blog/getBlog', async () => {
     const response = await blogAPI.getAllBlog();
     return response.result;
   } catch (error) {
-    if (error.response.status === 401) {
-      throw console.log(error, 'day la loi o lay blog');
-    } else {
-      console.log(error, 'day la loi o lay blog');
-    }
+    console.log(error, 'day la loi o lay blog');
   }
 });
 export const getBlogById = createAsyncThunk('blog/getIdBlog', async id => {
@@ -31,38 +24,27 @@ export const getBlogById = createAsyncThunk('blog/getIdBlog', async id => {
     const res = await blogAPI.getBlog(id);
     return res.result;
   } catch (error) {
-    if (error.response.status === 401) {
-      throw new Error(' Cần phải Đăng Nhập ');
-    } else {
-      console.log(error);
-    }
+    console.log(error);
   }
 });
 export const updateBlog = createAsyncThunk('blog/updateBlog', async data => {
   try {
     await blogAPI.updateBlog(data);
+    alert('Update blog thanh cong');
     const res = await blogAPI.getAllBlog();
     return res.result;
   } catch (error) {
-    if (error.response.status === 401) {
-      throw new Error(' Cần phải Đăng Nhập ');
-    } else {
-      console.log(error);
-    }
+    console.log(error, 'loi update');
   }
 });
 export const deleteBlog = createAsyncThunk('blog/deleteBlog', async id => {
   try {
     await blogAPI.deleteBlog(id);
+    alert('Xoa blog thanh cong');
     const res = await blogAPI.getAllBlog();
     return res.result;
   } catch (error) {
-    if (error.response.status === 401) {
-      console.log(error.response);
-      throw new Error(' Cần phải Đăng Nhập mới xóa được');
-    } else {
-      console.log(error);
-    }
+    console.log(error);
   }
 });
 

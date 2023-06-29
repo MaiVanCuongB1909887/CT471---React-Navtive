@@ -1,12 +1,11 @@
 import React, {useEffect} from 'react';
 import {View, Text, Button, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {deleteBlog, getBlog} from '../../store/blog/BlogSlice';
+import {deleteBlog, getBlogById, getBlog} from '../../store/blog/BlogSlice';
 
 const Admin = ({navigation}) => {
   const dispatch = useDispatch();
   const blogs = useSelector(state => state.blog.blogs);
-  console.log(blogs);
 
   useEffect(() => {
     dispatch(getBlog());
@@ -15,7 +14,8 @@ const Admin = ({navigation}) => {
   const handleAddBlog = () => {
     navigation.navigate('AddBlog');
   };
-  const handleEditBlog = () => {
+  const handleEditBlog = async id => {
+    await dispatch(getBlogById(id));
     navigation.navigate('EditBlog');
   };
   const handleDeleteBlog = async id => {
@@ -28,13 +28,19 @@ const Admin = ({navigation}) => {
       <Button title="Add" onPress={() => handleAddBlog()} />
       <FlatList
         data={blogs}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.blog_id}
         renderItem={({item}) => (
           <View>
             <Text style={{color: '#000'}}>{item.title}</Text>
             <Text style={{color: '#000'}}>{item.content}</Text>
-            <Button title="Update" onPress={() => handleEditBlog()} />
-            <Button title="Delete" onPress={() => handleDeleteBlog(item.id)} />
+            <Button
+              title="Update"
+              onPress={() => handleEditBlog(item.blog_id)}
+            />
+            <Button
+              title="Delete"
+              onPress={() => handleDeleteBlog(item.blog_id)}
+            />
           </View>
         )}
       />
