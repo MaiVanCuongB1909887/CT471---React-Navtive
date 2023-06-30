@@ -1,65 +1,77 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {View, Text, TextInput, Button, FlatList} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, Button, FlatList} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {deleteBlog, getBlogById, getBlog} from '../../store/blog/BlogSlice';
+import {SpeedDial} from '@rneui/themed';
 
-const Admin = () => {
-  const [articles, setArticles] = useState([]);
-  const [newArticle, setNewArticle] = useState({title: '', content: ''});
+const Admin = ({navigation}) => {
+  const dispatch = useDispatch();
+  const blogs = useSelector(state => state.blog.blogs);
+  const [open, setOpen] = React.useState(false);
 
-  // const getArticles = useCallback(async () => {
-  //   const response = await userAPI.getArticles({});
-  //   setArticles(response);
-  // }, []);
+  const handleAddBlog = () => {
+    navigation.navigate('AddBlog');
+    setOpen(false);
+  };
 
-  // useEffect(() => {
-  //   getArticles();
-  // }, [getArticles]);
+  const handleEditBlog = async id => {
+    await dispatch(getBlogById(id));
+    navigation.navigate('EditBlog');
+  };
 
-  // const handleCreateArticle = useCallback(async () => {
-  //   const response = await userAPI.postArticles({title, content});
-  //   setArticles([...articles, response]);
-  //   setNewArticle({title: '', content: ''});
-  // }, [newArticle, articles]);
+  const handleDeleteBlog = async id => {
+    await dispatch(deleteBlog(id));
+  };
 
-  // const handleDeleteArticle = useCallback(
-  //   async id => {
-  //     await userAPI.getArticles();
-  //     setArticles(articles.filter(article => article.id !== id));
-  //   },
-  //   [articles],
-  // );
+  useEffect(() => {
+    dispatch(getBlog());
+  }, [dispatch]);
 
   return (
-    <View>
-      <Text style={{color: '#000'}}>Create Article</Text>
-      <TextInput
-        placeholder="Title"
-        value={newArticle.title}
-        onChangeText={text => setNewArticle(prev => ({...prev, title: text}))}
-      />
-      <TextInput
-        placeholder="Content"
-        value={newArticle.content}
-        onChangeText={text => setNewArticle(prev => ({...prev, content: text}))}
-      />
-      <Button
-        title="Create"
-        // onPress={handleCreateArticle}
-      />
-      <FlatList
-        data={articles}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => (
-          <View style={{color: '#000'}}>
-            <Text>{item.title}</Text>
-            <Text>{item.content}</Text>
-            <Button
-              title="Delete"
-              // onPress={() => handleDeleteArticle(item.id)}
-            />
-          </View>
-        )}
-      />
-    </View>
+    <>
+      <View>
+        <FlatList
+          data={blogs}
+          keyExtractor={item => item.blog_id}
+          renderItem={({item}) => (
+            <View>
+              <Text style={{color: '#000'}}>Title: {item.title}</Text>
+              <Text style={{color: '#000'}}>Content: {item.content}</Text>
+              <TouchableOpacity onPress={() => handleEditBlog(item.blog_id)}>
+                <Text
+                  style={{
+                    color: '#29B1B0',
+                    fontWeight: 'bold',
+                  }}>
+                  <Icon name="pencil-square-o" size={18} /> Update
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDeleteBlog(item.blog_id)}>
+                <Text
+                  style={{
+                    color: '#29B1B0',
+                    fontWeight: 'bold',
+                  }}>
+                  <Icon name="trash" size={18} /> Update
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      </View>
+      <SpeedDial
+        isOpen={open}
+        icon={{name: 'edit', color: '#fff'}}
+        openIcon={{name: 'close', color: '#fff'}}
+        onOpen={() => setOpen(!open)}
+        onClose={() => setOpen(!open)}>
+        <SpeedDial.Action
+          icon={{name: 'add', color: '#fff'}}
+          title="Add"
+          onPress={() => handleAddBlog()}
+        />
+      </SpeedDial>
+    </>
   );
 };
 

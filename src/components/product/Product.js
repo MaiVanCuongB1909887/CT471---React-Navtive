@@ -24,16 +24,23 @@ export default function Product({navigation}) {
   const products = useSelector(state => state.product.product);
   const loading = useSelector(state => state.product.isLoading);
   const dispatch = useDispatch();
+
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
-  useEffect(() => {
-    dispatch(getProduct());
-  }, [loading]);
 
   const addItemToCart = item => {
     const sku = item.sku;
     const itemInCart = {sku, qty: 1};
     dispatch(addToCart(itemInCart));
+  };
+
+  const [page, setPage] = useState(1);
+  const handleIncrement = () => {
+    setPage(page + 1);
+  };
+
+  const handleDecrement = () => {
+    setPage(page - 1);
   };
 
   const listItem = ({item}) => {
@@ -96,6 +103,9 @@ export default function Product({navigation}) {
       </TouchableOpacity>
     );
   };
+  useEffect(() => {
+    dispatch(getProduct(page));
+  }, [loading, page]);
   return (
     <View style={{flex: 1, paddingHorizontal: 16}}>
       {!loading ? (
@@ -104,6 +114,49 @@ export default function Product({navigation}) {
         <View style={{flex: 1}}>
           <Text>Sản phẩm nổi bật</Text>
           <FlatList data={products} renderItem={listItem} />
+
+          {/* pageURL */}
+          <View style={{flexDirection: 'row', backgroundColor: '#e0e0e0'}}>
+            <TouchableOpacity onPress={handleDecrement} disabled={page === 1}>
+              <View
+                style={{
+                  height: 30,
+                  width: 140,
+                  backgroundColor: '#c7c7c7',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Icon name="angle-double-left" size={15} color={'#999999'} />
+              </View>
+            </TouchableOpacity>
+            <View
+              style={{
+                height: 30,
+                width: 100,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 18,
+                }}>
+                {page}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={handleIncrement}>
+              <View
+                style={{
+                  height: 30,
+                  width: 140,
+                  backgroundColor: '#c7c7c7',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Icon name="angle-double-right" size={15} color={'#999999'} />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
     </View>

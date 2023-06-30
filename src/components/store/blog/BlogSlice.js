@@ -17,6 +17,7 @@ export const addBlog = createAsyncThunk('blog/addBlog', async data => {
 export const getBlog = createAsyncThunk('blog/getBlog', async () => {
   try {
     const response = await blogAPI.getAllBlog();
+    console.log(response);
     return response.result;
   } catch (error) {
     if (error.response.status === 401) {
@@ -26,7 +27,7 @@ export const getBlog = createAsyncThunk('blog/getBlog', async () => {
     }
   }
 });
-export const getIdBlog = createAsyncThunk('blog/getIdBlog', async id => {
+export const getBlogById = createAsyncThunk('blog/getIdBlog', async id => {
   try {
     const res = await blogAPI.getBlog(id);
     return res.result;
@@ -94,12 +95,12 @@ const BlogSlice = createSlice({
         state.blogs = [];
         state.err = action.error;
       })
-      .addCase(getIdBlog.fulfilled, (state, action) => {
+      .addCase(getBlogById.fulfilled, (state, action) => {
         state.blog = action.payload;
         state.isLoadingBlog = false;
         state.err = null;
       })
-      .addCase(getIdBlog.rejected, (state, action) => {
+      .addCase(getBlogById.rejected, (state, action) => {
         state.blog = [];
         state.err = action.error;
       })

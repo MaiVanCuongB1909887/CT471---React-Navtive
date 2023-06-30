@@ -14,6 +14,8 @@ import {setUser} from '../store/auth/AuthSlice';
 import {setDetailUser} from '../store/user/UserSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import EditBlog from '../admin/EditBlog';
+import AddBlog from '../admin/AddBlog';
 
 const Stack = createStackNavigator();
 
@@ -97,6 +99,16 @@ const HomeStack = () => {
       <Stack.Screen
         name="Admin"
         component={Admin}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EditBlog"
+        component={EditBlog}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AddBlog"
+        component={AddBlog}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

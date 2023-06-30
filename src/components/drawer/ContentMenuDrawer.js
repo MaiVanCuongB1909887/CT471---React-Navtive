@@ -36,32 +36,27 @@ export default function ContentMenuDrawer(props) {
     }
   };
 
-  const getAllCate = async () => {
-    try {
-      console.log('1 lan');
-      const response = await cateAPI.getAllCate();
-      console.log(response);
-      if (!!response) {
-        setCategories(response.category);
-        console.log('Da vao day');
-        return setStop(true);
+  const getAllCate = async (delay = 1000, maxAttempts = 20) => {
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+      try {
+        const response = await cateAPI.getAllCate();
+        if (response) {
+          console.log('may vao day chua');
+          setCategories(response.category);
+          console.log(categories);
+        }
+      } catch (error) {
+        console.log(`Error calling API: ${error}`);
       }
-    } catch (error) {
-      throw console.log(error, ' loi category');
+      attempts++;
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
+    throw new Error(`API call failed after ${maxAttempts} attempts`);
   };
+
   useEffect(() => {
-    // const interval = setInterval(async () => {
-    //   console.log('o tren');
-    //   getAllCate();
-    //   if (stop) {
-    //     console.log('o duoi');
-    //     clearInterval(interval);
-    //   }
-    // }, 2500);
-    // return () => {
-    //   clearInterval(interval);
-    // };
+    const response = getAllCate();
   }, []);
 
   return (

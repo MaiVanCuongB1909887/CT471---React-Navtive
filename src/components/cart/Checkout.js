@@ -13,7 +13,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
-import {address, checkout} from '../../store/cart/CartSlice';
+import {address, checkout} from '../store/cart/CartSlice';
 
 const Checkout = ({navigation}) => {
   const [firstName, setFirstName] = useState('');
@@ -29,6 +29,7 @@ const Checkout = ({navigation}) => {
   const dispatch = useDispatch();
   const detail = useSelector(state => state.user.userDetail);
   const order = useSelector(state => state.cart.order);
+  const cart = useSelector(state => state.cart.cart);
 
   function setDetailUser() {
     if (!!detail) {
@@ -57,9 +58,8 @@ const Checkout = ({navigation}) => {
       };
       await dispatch(address(data));
       const response = await dispatch(checkout({method: paymentMethod}));
-      if (order) {
+      if (response) {
         navigation.navigate('Home');
-        return response;
       } else {
         alert('Thanh toan that bai');
       }
@@ -67,7 +67,6 @@ const Checkout = ({navigation}) => {
       console.log(error);
     }
   };
-
   useEffect(() => {
     setDetailUser();
   }, []);

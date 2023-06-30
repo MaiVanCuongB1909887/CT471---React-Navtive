@@ -19,24 +19,17 @@ import {getCart, changeQtyCart, removeFromCart} from '../store/cart/CartSlice';
 
 function ContentCartDrawer({navigation}) {
   const dispatch = useDispatch();
-
+  const userToken = useSelector(state => state.auth.userToken);
   const cart = useSelector(state => state.cart.cart);
   const loading = useSelector(state => state.cart.isLoading);
+  const order = useSelector(state => state.cart.order);
 
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
-  useEffect(() => {
-    try {
-      dispatch(getCart());
-    } catch (error) {
-      console.log(error.message, 'day la loi luc get cart o drawer');
-    }
-  }, [dispatch]);
-
   const totalPrice = () => {
     let totalPrice = 0;
-    cart.forEach(product => {
+    cart?.forEach(product => {
       totalPrice += product.price * product.qty;
     });
     return totalPrice;
@@ -162,7 +155,16 @@ function ContentCartDrawer({navigation}) {
       </TouchableOpacity>
     );
   };
-
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        dispatch(getCart());
+      } catch (error) {
+        console.log(error.message, 'day la loi luc get cart o drawer');
+      }
+    };
+    fetchCart();
+  }, [dispatch, userToken, order]);
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -175,10 +177,16 @@ function ContentCartDrawer({navigation}) {
         </View>
       </View>
       <View style={styles.cartProductListContiainer}>
-        {!loading ? (
-          <Text style={{color: '#000'}}>Loading...</Text>
+        {cart?.length == 0 ? (
+          <Text style={{color: '#000'}}>Gio hang rong</Text>
         ) : (
-          <FlatList data={cart} renderItem={listItem} />
+          <View>
+            {!loading ? (
+              <Text style={{color: '#000'}}>Loading...</Text>
+            ) : (
+              <FlatList data={cart} renderItem={listItem} />
+            )}
+          </View>
         )}
       </View>
       <View style={styles.cartBottomContainer}>
