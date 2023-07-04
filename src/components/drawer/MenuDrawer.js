@@ -16,6 +16,7 @@ const CartDrawer = () => {
 
   return (
     <RightDrawer.Navigator
+      id="RightDrawer"
       screenOptions={{
         drawerPosition: 'right',
         headerShown: false,
@@ -36,6 +37,7 @@ const CartDrawer = () => {
 const MenuDrawer = () => {
   return (
     <LeftDrawer.Navigator
+      id="LeftDrawer"
       screenOptions={{drawerPosition: 'left', swipeEnabled: false}}
       drawerContent={props => <ContentMenuDrawer {...props} />}>
       <LeftDrawer.Screen

@@ -88,7 +88,9 @@ const Header = ({navigation}) => {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.cartButton}
-                  onPress={() => navigation.getParent().openDrawer()}>
+                  onPress={() =>
+                    navigation.getParent('RightDrawer').openDrawer()
+                  }>
                   <BadgedIcon type="fontawesome" name="shopping-cart" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.loginButton}>
