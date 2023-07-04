@@ -10,43 +10,23 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
+
 import {addToCart} from '../store/cart/CartSlice';
 import {getProduct} from '../store/product/ProductSlice';
-import {CardStyleInterpolators} from '@react-navigation/stack';
-import Loading from '../Loading';
-import {TextInput} from 'react-native-gesture-handler';
 
 export default function Product({navigation}) {
+  const dispatch = useDispatch();
   const products = useSelector(state => state.product.product);
   const loading = useSelector(state => state.product.isLoading);
-  const dispatch = useDispatch();
-
-  // pageURL
-  // const URL = `http://192.168.1.9:5000/product/list/name?name=2`;
-
-  const [page, setPage] = useState(1);
-  const handleIncrement = () => {
-    setPage(page + 1);
-  };
-
-  const handleDecrement = () => {
-    setPage(page - 1);
-  };
 
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
-  useEffect(() => {
-    dispatch(getProduct(page));
-  }, [loading, page]);
 
-  const searchUrl = async () => {
-    const res = await axios.get(URL);
-    console.log('cmn =', res.data);
-    setSearch(res.data.product.items);
-  };
+  useEffect(() => {
+    dispatch(getProduct());
+  }, [loading]);
 
   const addItemToCart = item => {
     const sku = item.sku;
@@ -81,7 +61,6 @@ export default function Product({navigation}) {
                 ).value,
             }}
           />
-
           <View style={{flex: 1}}>
             <Text style={{fontSize: 16, color: '#000'}} numberOfLines={1}>
               {item.name}
@@ -98,66 +77,29 @@ export default function Product({navigation}) {
             </Text>
             {/* Thêm các thuộc tính khác của sản phẩm tại đây */}
           </View>
-          <Icon
-            name="cart-plus"
-            size={40}
+          <Button
+            title={'+'}
+            style={{
+              borderColor: 'gray',
+              borderWidth: 1,
+              marginVertical: 10,
+              padding: 5,
+            }}
             onPress={() => addItemToCart(item)}
           />
         </View>
       </TouchableOpacity>
     );
   };
+
   return (
     <View style={{flex: 1, paddingHorizontal: 16}}>
       {!loading ? (
-        <Loading />
+        <Text style={{color: '#000'}}>Loading...</Text>
       ) : (
         <View style={{flex: 1}}>
           <Text>Sản phẩm nổi bật</Text>
           <FlatList data={products} renderItem={listItem} />
-
-          {/* pageURL */}
-          <View style={{flexDirection: 'row', backgroundColor: '#e0e0e0'}}>
-            <TouchableOpacity onPress={handleDecrement} disabled={page === 1}>
-              <View
-                style={{
-                  height: 30,
-                  width: 140,
-                  backgroundColor: '#c7c7c7',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Icon name="angle-double-left" size={15} color={'#999999'} />
-              </View>
-            </TouchableOpacity>
-            <View
-              style={{
-                height: 30,
-                width: 100,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 18,
-                }}>
-                {page}
-              </Text>
-            </View>
-            <TouchableOpacity onPress={handleIncrement}>
-              <View
-                style={{
-                  height: 30,
-                  width: 140,
-                  backgroundColor: '#c7c7c7',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Icon name="angle-double-right" size={15} color={'#999999'} />
-              </View>
-            </TouchableOpacity>
-          </View>
         </View>
       )}
     </View>

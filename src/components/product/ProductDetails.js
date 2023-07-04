@@ -6,45 +6,43 @@ import {
   TouchableOpacity,
   TextInput,
   Button,
-  FlatList,
-  ScrollView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useDispatch, useSelector} from 'react-redux';
-import {addToCart} from '../store/cart/CartSlice';
-import Footer from '../footer';
 
 export default function ProductDetails({route, navigation}) {
-  const cart = useSelector(state => state.cart.cart);
-  const dispatch = useDispatch();
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [quantity, setQuantity] = useState(1);
-  const cartProduct = JSON.stringify(cart);
 
   const sku = route.params.productId;
+  const checkProduct = product ? true : false;
 
-  const checkProduct = !!product ? true : false;
-  const img =
-    'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
-
+  // const img =
+  //   'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
   useEffect(() => {
     axios
-      .get(`http://192.168.1.9:5000/product/detail/${sku}`)
+      .get(`http://192.168.1.9:5000/product/${sku}`)
       .then(response => {
         const productData = response.data;
         setProduct(productData);
-        // console.log(response);
+        // console.log(productData);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error, 'day la loi product detail');
       });
   }, []);
 
-  const addItemToCart = item => {
-    dispatch(addToCart(item));
+  const addToCart = () => {
+    const newCartItems = [...cartItems];
+    const existingItem = newCartItems.find(item => item.id === product.id);
+    if (existingItem) {
+      existingItem.quantity += quantity;
+    } else {
+      newCartItems.push({...product, quantity});
+    }
+    setCartItems(newCartItems);
   };
 
   const increaseQuantity = () => {
@@ -58,387 +56,168 @@ export default function ProductDetails({route, navigation}) {
   };
 
   return (
-    <ScrollView>
-      <View style={{flex: 1, backgroundColor: '#E9EDF4'}}>
-        <Text style={{padding: 15, fontSize: 17}}>Chưa Xác Định</Text>
-        <View style={styles.container}>
-          {checkProduct ? (
-            <>
-              <Image
-                source={{
-                  uri:
-                    img +
-                    '' +
-                    product.product?.custom_attributes.find(
-                      attr => attr.attribute_code === 'image',
-                    ).value,
+    <View style={styles.container}>
+      {checkProduct ? (
+        <>
+          {/* <Image
+            source={{
+              uri:
+                img +
+                '' +
+                product.product.custom_attributes.find(
+                  attr => attr.attribute_code === 'image',
+                ).value,
+            }}
+            style={styles.image}
+          /> */}
+          <Image
+            style={{width: 200, height: 300, marginRight: 16}}
+            src={'https://static.alphacoders.com/alpha_system_360.png'}
+          />
+          <Text style={styles.name}>{product.product.name}</Text>
+          <Text style={styles.price}>
+            Giá:{' '}
+            {product.product.price.toLocaleString('vi-VN', {
+              style: 'currency',
+              currency: 'VND',
+            })}
+          </Text>
+
+          <Text style={styles.status}>
+            Tình trạng:{' '}
+            {product.product.stock_status == 0 ? 'Hết hàng' : 'Còn hàng'}
+          </Text>
+          <Text style={styles.description}>
+            Mô tả:{' '}
+            {product.product.custom_attributes
+              .find(attr => attr.attribute_code === 'short_description')
+              .value.slice(3, -4)}
+          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text>Số lượng: </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                height: 35,
+                width: 80,
+                color: '#000',
+              }}>
+              <Button title="-" onPress={decreaseQuantity} />
+              <TextInput
+                maxLength={2}
+                style={{
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  paddingHorizontal: 10,
+                  marginHorizontal: 10,
+                  color: '#000',
                 }}
-                style={styles.image}
+                keyboardType="numeric"
+                value={quantity.toString()}
+                onChangeText={text => setQuantity(parseInt(text))}
               />
-
-              <Text style={styles.name}>{product.product?.name}</Text>
-              <Text style={styles.manuf}>Từ hãng: China wifi</Text>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginLeft: 10,
-                }}>
-                <Text>Số Lượng : </Text>
-                <TouchableOpacity onPress={decreaseQuantity}>
-                  <View
-                    style={{
-                      height: 35,
-                      width: 40,
-                      backgroundColor: '#E9EDF4',
-                      borderRadius: 5,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Icon name="minus" size={15} color={'#999999'} />
-                  </View>
-                </TouchableOpacity>
-                <TextInput
-                  style={{
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    borderColor: 'black',
-                    height: 40,
-                    width: 70,
-                    marginHorizontal: 5,
-                  }}
-                  keyboardType="numeric"
-                  value={quantity.toString()}
-                  onChangeText={text => setQuantity(parseInt(text))}
-                />
-                <TouchableOpacity onPress={increaseQuantity}>
-                  <View
-                    style={{
-                      height: 35,
-                      width: 40,
-                      backgroundColor: '#E9EDF4',
-                      borderRadius: 5,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Icon name="plus" size={15} color={'#999999'} />
-                  </View>
-                </TouchableOpacity>
-                <Text style={styles.qty}>
-                  còn {product.product?.qty} sản phẩm
-                </Text>
-              </View>
-
-              <Text style={styles.price}>
-                Giá:{' '}
-                {product.product?.price.toLocaleString('vi-VN', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
-              </Text>
-
-              <Text style={styles.status}>
-                Tình trạng:{' '}
-                {product.product?.status == 1 ? 'Còn hàng' : 'Hết hàng'}
-              </Text>
-            </>
-          ) : (
-            <Text>Loading...</Text>
-          )}
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-            backgroundColor: '#ffffff',
-            borderRadius: 10,
-          }}>
-          <Text style={styles.nameh1}>Mô tả Tổng Quan Sản Phẩm</Text>
-          <Text style={styles.description}>
-            Mô tả:{' '}
-            {product.product?.custom_attributes
-              .find(attr => attr.attribute_code === 'short_description')
-              .value.slice(3, -4)}
-          </Text>
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-            backgroundColor: '#ffffff',
-            borderRadius: 10,
-          }}>
-          <Text style={styles.nameh1}>Chi Tiết Sản Phẩm </Text>
-          <View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                  backgroundColor: '#ebebeb',
-                }}>
-                Khối lượng
-              </Text>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                }}>
-                200gr, 500gr, 1kg
-              </Text>
+              <Button title="+" onPress={increaseQuantity} />
             </View>
-            <View
+            {/* <TouchableOpacity onPress={decreaseQuantity}>
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>-</Text>
+            </TouchableOpacity>
+            <TextInput
               style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                  backgroundColor: '#ebebeb',
-                }}>
-                Xuất xứ
-              </Text>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                }}>
-                Việt Nam
-              </Text>
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                  backgroundColor: '#ebebeb',
-                }}>
-                Ngày sản xuất
-              </Text>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                }}>
-                22/06/2023
-              </Text>
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                  backgroundColor: '#ebebeb',
-                }}>
-                Hạn sử dụng
-              </Text>
-              <Text
-                style={{
-                  borderWidth: 1,
-                  width: '50%',
-                  fontSize: 15,
-                  borderColor: '#d1d0cd',
-                  padding: 10,
-                }}>
-                7 ngày
-              </Text>
-            </View>
+                height: 40,
+                borderColor: 'gray',
+                borderWidth: 1,
+                marginHorizontal: 10,
+              }}
+              onChangeText={text => setQuantity(parseInt(text))}
+              value={quantity.toString()}
+              keyboardType="numeric"
+            />
+            <TouchableOpacity onPress={increaseQuantity}>
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>+</Text>
+            </TouchableOpacity> */}
           </View>
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-            backgroundColor: '#ffffff',
-            borderRadius: 10,
-          }}>
-          <Text style={styles.nameh1}>Mô Tả Chi Tiết</Text>
-          <Text style={styles.description}>
-            Mô tả:{' '}
-            {product.product?.custom_attributes
-              .find(attr => attr.attribute_code === 'short_description')
-              .value.slice(3, -4)}
-          </Text>
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-            backgroundColor: '#ffffff',
-            borderRadius: 10,
-          }}>
-          <Text style={styles.nameh1}>Chính Sách Bảo Hành</Text>
-          <Text style={styles.description}>
-            Mô tả:{' '}
-            {product.product?.custom_attributes
-              .find(attr => attr.attribute_code === 'short_description')
-              .value.slice(3, -4)}
-          </Text>
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-            backgroundColor: '#ffffff',
-            borderRadius: 10,
-            flexDirection: 'row',
-          }}>
           <View
             style={{
-              margin: 20,
-              height: 60,
-              width: 200,
-              backgroundColor: 'white',
-              borderColor: '#29B1B0',
-              borderWidth: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 10,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 8,
             }}>
-            <TouchableOpacity onPress={() => addItemToCart(product?.product)}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'white',
+                padding: 10,
+                borderRadius: 5,
+
+                marginRight: 10,
+                borderColor: 'green',
+                borderWidth: 1,
+              }}
+              onPress={addToCart}>
               <Text
                 style={{
-                  color: '#29B1B0',
+                  color: 'green',
                   fontWeight: 'bold',
                 }}>
                 <Icon name="cart-plus" size={18} /> Thêm Vào Giỏ
               </Text>
             </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              margin: 20,
-              height: 60,
-              width: 120,
-              backgroundColor: '#F4374C',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 10,
-            }}>
-            <TouchableOpacity onPress={() => console.log('Đặt mua')}>
-              <Text style={{color: '#ffffff', fontWeight: 'bold'}}>
-                Đặt Mua
-              </Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'red',
+                padding: 10,
+                borderRadius: 5,
+              }}
+              onPress={() => console.log('Đặt mua')}>
+              <Text style={{color: 'white', fontWeight: 'bold'}}>Đặt Mua</Text>
             </TouchableOpacity>
           </View>
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-            backgroundColor: '#ffffff',
-            borderRadius: 10,
-          }}>
-          <Text style={styles.nameh1}>BÌnh Luận</Text>
-          <Text style={styles.description}></Text>
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-            backgroundColor: '#ffffff',
-            borderRadius: 10,
-            marginBottom: 10,
-          }}>
-          <Text style={styles.nameh1}>Sản Phẩm Đã Xem</Text>
-          <Text style={styles.description}></Text>
-        </View>
-      </View>
-
-      <Footer />
-    </ScrollView>
+        </>
+      ) : (
+        <Text>Loading...</Text>
+      )}
+      <TouchableOpacity onPress={() => navigation.getParent().goBack()}>
+        <Text style={{fontSize: 16, color: 'blue', marginTop: 10}}>Trở Về</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    padding: 10,
-    backgroundColor: '#ffffff',
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    padding: 20,
   },
   image: {
-    width: '95%',
-    height: 400,
+    width: 110,
+    height: 100,
     resizeMode: 'cover',
-    margin: 10,
-    borderRadius: 10,
+    marginBottom: 20,
   },
   name: {
-    fontSize: 25,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 10,
-    marginLeft: 10,
-    color: 'black',
-  },
-  nameh1: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginLeft: 10,
-    color: 'black',
     marginBottom: 10,
   },
   price: {
-    fontSize: 25,
+    fontSize: 18,
     marginBottom: 10,
-    marginLeft: 10,
     fontWeight: 'bold',
-    color: 'red',
-  },
-  manuf: {
-    fontSize: 15,
-    marginLeft: 10,
-    marginBottom: 10,
-  },
-
-  qty: {
-    fontSize: 15,
-    marginBottom: 10,
-    marginLeft: 10,
-    paddingTop: 15,
   },
   status: {
     fontSize: 18,
     marginBottom: 10,
-    marginLeft: 10,
   },
   description: {
-    fontSize: 18,
-    marginLeft: 10,
+    fontSize: 16,
+  },
+  themvaogio: {
+    borderColor: 'green',
+    textDecorationColor: 'green',
+  },
+  datmua: {
+    backgroundColor: 'red',
+    textDecorationColor: 'white',
   },
 });

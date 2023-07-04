@@ -2,23 +2,23 @@ import axiosClient from './axiosClient';
 
 const blogAPI = {
   getAllBlog() {
-    const url = '/product/list1';
+    const url = '/blog/list';
     return axiosClient.get(url);
   },
   getBlog(id) {
-    const url = `/product/${id}`;
+    const url = `/blog/detail/${id}`;
     return axiosClient.get(url);
   },
   updateBlog(data) {
-    const url = `/blog/update/${data}`;
+    const url = `blog/update`;
     return axiosClient.put(url, data);
   },
   deleteBlog(id) {
-    const url = `/blog/delete/${id}`;
-    return axiosClient.post(url, id);
+    const url = `blog/delete/${id}`;
+    return axiosClient.delete(url);
   },
   addBlog(data) {
-    const url = `/blog/add/${data}`;
+    const url = 'blog/create/';
     return axiosClient.post(url, data);
   },
 };

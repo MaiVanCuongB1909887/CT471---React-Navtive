@@ -6,50 +6,31 @@ import {
   Image,
   StyleSheet,
   TextInput,
-  Button,
-  FlatList,
   Alert,
 } from 'react-native';
-
-import {Avatar, Badge, Icon as Abc, withBadge} from '@rneui/themed';
-3;
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {SearchBar} from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useSelector} from 'react-redux';
+import {Icon as Abc, withBadge} from '@rneui/themed';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import {useDispatch, useSelector} from 'react-redux';
+import {searchByName} from '../store/search/SearchSlice';
 
 const Header = ({navigation}) => {
+  const dispatch = useDispatch();
+
   const cart = useSelector(state => state.cart.cart);
-  const userToken = useSelector(state => state.user.userToken);
-
-  const [username, setUsername] = useState('');
-  // const [callback, setCallback] = useState({});
+  const userToken = useSelector(state => state.auth.userToken);
+  const userDetail = useSelector(state => state.user.userDetail);
   const [searchText, setSearchText] = useState(null);
-  const [isLogin, setIsLogin] = useState(true);
 
-  const BadgedIcon = withBadge(cart.length)(Abc);
+  const BadgedIcon = withBadge(cart ? cart.length : 0)(Abc);
 
-  const checkToken = async () => {
-    return !!(await AsyncStorage.getItem('userToken'))
-      ? setIsLogin(false)
-      : setIsLogin(true);
-  };
-
-  async function getUsername() {
-    if (!isLogin) {
-      setUsername(
-        JSON.parse(await AsyncStorage.getItem('userDetail'))?.firstname,
-      );
+  const handleSearch = async text => {
+    setSearchText(text);
+    const response = await dispatch(searchByName(text));
+    if (response && !!searchText) {
+      navigation.navigate('Search');
     }
-  }
-
-  useEffect(() => {
-        console.log(userToken, 'day la thu');
-
-    checkToken();
-    getUsername();
-  }, [userToken]);
+  };
 
   const thongbao = () => {
     Alert.alert(
@@ -89,14 +70,13 @@ const Header = ({navigation}) => {
             <Text style={styles.logoText}>Your company</Text>
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
-            {isLogin && (
+            {!userToken && (
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.cartButton}
                   onPress={() => thongbao()}>
                   <Icon name="shopping-cart" size={20} color={'#2052f7'} />
                 </TouchableOpacity>
-
                 <TouchableOpacity
                   style={styles.loginButton}
                   onPress={() => navigation.navigate('UserLogin')}>
@@ -104,8 +84,7 @@ const Header = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             )}
-
-            {!isLogin && (
+            {userToken && (
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.cartButton}
@@ -115,17 +94,14 @@ const Header = ({navigation}) => {
                 <TouchableOpacity style={styles.loginButton}>
                   <Text
                     style={styles.loginButtonText}
-                    onPress={async () => {
-                      console.log(username);
-                    }}>
-                    {username}
+                    onPress={() => navigation.navigate('User')}>
+                    {userDetail?.firstname}
                   </Text>
                 </TouchableOpacity>
               </View>
             )}
           </View>
         </View>
-
         <View
           style={{
             margin: 10,
@@ -138,14 +114,14 @@ const Header = ({navigation}) => {
             backgroundColor: '#ebedf0',
           }}>
           <TextInput
-            style={{width: '70%'}}
+            style={{width: '70%', color: '#000'}}
             placeholder="Tìm kiếm sản phẩm"
-            onChangeText={text => setSearchText(text)}
+            onChangeText={text => handleSearch(text)}
             value={searchText}
           />
           <TouchableOpacity
             key={searchText}
-            onPress={() => navigation.navigate('Search', {searchText})}>
+            onPress={() => navigation.navigate('Search')}>
             <View
               style={{
                 backgroundColor: '#29B1B0',
@@ -169,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    // paddingVertical: 10,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     minHeight: 90,
   },
@@ -188,8 +164,8 @@ const styles = StyleSheet.create({
   logo: {
     marginRight: 5,
     marginTop: 5,
-    height: 60,
-    width: 60,
+    height: 30,
+    width: 30,
   },
   logoText: {
     fontSize: 18,
@@ -201,10 +177,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginButton: {
-    // backgroundColor: 'white',
-    // borderRadius: 20,
-    // borderWidth: 1,
-    // borderColor: '#ccc',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
     paddingVertical: 5,
     paddingHorizontal: 10,
     marginLeft: 15,
@@ -274,11 +250,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginLeft: 15,
     marginRight: 5,
-  },
-  badgeContainer: {
-    position: 'absolute',
-    top: -8,
-    right: -8,
   },
 });
 

@@ -1,58 +1,95 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authAPI from '../../services/authAPI';
+import {setDetailUser} from '../user/UserSlice';
+import {Dispatch} from 'redux';
+import {useDispatch} from 'react-redux';
 
-export const adminLogin = createAsyncThunk('user/adminLogin', async data => {
+export const adminLogin = createAsyncThunk('auth/adminLogin', async data => {
   try {
     const response = await authAPI.adminLogin(data);
-    console.log(response, 'admin');
     if (!!response.token) {
+      console.log('Da lay duoc token Admin');
       AsyncStorage.setItem('adminToken', response.token);
-      return response;
+      return response.token;
     }
   } catch (error) {
     throw console.log(error.response.data.message, 'day la loi admin');
   }
 });
 
-export const userLogin = createAsyncThunk('user/userLogin', async data => {
+export const userLogin = createAsyncThunk('auth/userLogin', async data => {
   try {
     const response = await authAPI.userLogin(data);
     if (!!response.token) {
-      // console.log(response, 'day la respone userLogin');
-      AsyncStorage.setItem(
-        'userDetail',
-        JSON.stringify(response.customer_info),
-      );
-    await  AsyncStorage.setItem('userToken', response.token);
-      return response.token;
+      console.log('Da lay duoc token User');
+      await AsyncStorage.setItem('userToken', JSON.stringify(response));
+      return response;
     }
   } catch (error) {
     throw console.log(error.response.data.message, 'day la loi user');
   }
 });
 
+export const checkAuthStatus = createAsyncThunk(
+  'auth/checkAuthStatus',
+  async ({dispatch}) => {
+    try {
+      await AsyncStorage.getItem('userToken').then(token => {
+        if (!!token) {
+          dispatch(setUser(JSON.parse(token).token));
+          dispatch(setDetailUser(JSON.parse(token).customer_info));
+        }
+      });
+    } catch (error) {
+      console.log('Loi khi co lay token tu local', error);
+    }
+  },
+);
+export const userRegister = createAsyncThunk(async data => {
+  try {
+    const response = await authAPI.userRegister(data);
+    if (!!response) {
+      return response;
+    }
+  } catch (error) {
+    throw console.log(error);
+  }
+});
+
 const AuthSlice = createSlice({
-  name: 'user',
+  name: 'auth',
   initialState: {
-    userToken: AsyncStorage.getItem('userToken')._j || null,
+    userToken: null,
     adminToken: null,
+    isLoggedIn: false,
+    isAdmin: false,
     error: null,
   },
   reducers: {
-    logout(state) {
+    logoutA(state) {
       AsyncStorage.removeItem('userToken');
       AsyncStorage.removeItem('adminToken');
-      AsyncStorage.removeItem('userDetail');
-      AsyncStorage.removeItem('adminDetail');
       state.userToken = null;
       state.adminToken = null;
+      state.isLoggedIn = false;
+      state.isAdmin = false;
+    },
+    setUser(state, action) {
+      state.userToken = action.payload;
+      state.isLoggedIn = true;
+    },
+    setAdmin(state, action) {
+      state.adminToken = action.payload;
+      state.isLoggedIn = true;
+      state.isAdmin = true;
     },
   },
   extraReducers: builder => {
     builder
       .addCase(userLogin.fulfilled, (state, action) => {
         state.userToken = action.payload;
+        state.isLoggedIn = true;
         state.error = null;
       })
       .addCase(userLogin.rejected, (state, action) => {
@@ -61,13 +98,22 @@ const AuthSlice = createSlice({
       })
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.adminToken = action.payload;
+        state.isLoggedIn = true;
+        state.isAdmin = true;
         state.error = null;
       })
       .addCase(adminLogin.rejected, (state, action) => {
         state.adminToken = null;
         state.error = action.error.message;
+      })
+      .addCase(userRegister.fulfilled, (state, action) => {
+        state.error = null;
+      })
+      .addCase(userRegister.rejected, (state, action) => {
+        state.userToken = null;
+        state.error = action.error.message;
       });
   },
 });
-export const {logout} = AuthSlice.actions;
+export const {logoutA, setAdmin, setUser} = AuthSlice.actions;
 export default AuthSlice.reducer;

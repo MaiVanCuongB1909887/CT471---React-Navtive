@@ -9,15 +9,18 @@ const productAPI = {
     const url = `/product/${id}`;
     return axiosClient.get(url);
   },
-  search(data) {
-    const url = `/product/list/name/${data}`;
+  searchByName(data) {
+    const url = `/product/list/name/?name=${data}`;
     return axiosClient.get(url);
   },
-
-  getPerPage(page) {
-    const url = `/product/list?currentPage=${page}`;
+  searchByCategory(id) {
+    const url = `/product/search/category_id/${id}`;
     return axiosClient.get(url);
   },
+  // searchByPrice(data) {
+  //   const url = `/product/list/name/${data}`;
+  //   return axiosClient.get(url);
+  // },
 };
 
 export default productAPI;

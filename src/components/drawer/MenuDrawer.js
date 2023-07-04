@@ -1,22 +1,34 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import HomeStack from '../navigation/StackNavigator';
 import Product from '../product/Product';
 import ContentMenuDrawer from './ContentMenuDrawer';
 import ContentCartDrawer from './ContentCartDrawer';
 import Header from '../header';
-import Blogs from '../blog/Blogs';
-// import Blogs from '../blog/Blogs';
+import {createStackNavigator} from '@react-navigation/stack';
+import {useSelector} from 'react-redux';
 
 const LeftDrawer = createDrawerNavigator();
 const RightDrawer = createDrawerNavigator();
 
 const CartDrawer = () => {
+  const userToken = useSelector(state => state.auth.userToken);
+
   return (
     <RightDrawer.Navigator
-      screenOptions={{drawerPosition: 'right', headerShown: false}}
-      drawerContent={props => <ContentCartDrawer {...props} />}>
-      <RightDrawer.Screen name="Giỏ hàng" component={MenuDrawer} />
+      screenOptions={{
+        drawerPosition: 'right',
+        headerShown: false,
+        swipeEnabled: false,
+      }}
+      drawerContent={props =>
+        userToken && (
+          <>
+            <ContentCartDrawer {...props} />
+          </>
+        )
+      }>
+      <RightDrawer.Screen name="Cart" component={MenuDrawer} />
     </RightDrawer.Navigator>
   );
 };
@@ -24,22 +36,17 @@ const CartDrawer = () => {
 const MenuDrawer = () => {
   return (
     <LeftDrawer.Navigator
-      screenOptions={{drawerPosition: 'left'}}
+      screenOptions={{drawerPosition: 'left', swipeEnabled: false}}
       drawerContent={props => <ContentMenuDrawer {...props} />}>
       <LeftDrawer.Screen
         name="Trang chủ"
         component={HomeStack}
-        options={{header: props => <Header {...props} title="Home" />}}
+        options={{headerShown: false}}
       />
       <LeftDrawer.Screen
         name="Sản phẩm"
         component={Product}
-        options={{header: props => <Header {...props} title="Home" />}}
-      />
-      <LeftDrawer.Screen
-        name="Bài viết"
-        component={Blogs}
-        options={{header: props => <Header {...props} title="Home" />}}
+        options={{header: props => <Header {...props} title="Product" />}}
       />
     </LeftDrawer.Navigator>
   );

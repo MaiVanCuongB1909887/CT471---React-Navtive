@@ -9,9 +9,10 @@ export const getCart = createAsyncThunk('cart/getCart', async () => {
       return response.product_in_cart;
     }
   } catch (error) {
-    throw console.log(error.response.data.message, 'day la loi luc lay cart');
+    console.log(error.response.data.message, 'day la loi luc lay cart');
   }
 });
+
 export const addToCart = createAsyncThunk('cart/addToCart', async data => {
   try {
     await cartAPI.addCart(data);
@@ -54,20 +55,35 @@ export const removeFromCart = createAsyncThunk(
     }
   },
 );
-// export const checkout = createAsyncThunk('cart/checkout', async data => {
-//   try {
-//     const response = await cartAPI.getCart();
-//     const res = await cartAPI.checkout(response);
-//   } catch (error) {
-//     console.log(error, 'day la loi cartslice');
-//   }
-// });
-export const cartSlice = createSlice({
+export const address = createAsyncThunk('cart/address', async data => {
+  try {
+    await cartAPI.address(data);
+    const response = await cartAPI.getCart();
+    if (!!response) {
+      return response.product_in_cart;
+    }
+  } catch (error) {
+    throw console.log(error, 'day la loi luc fetch dia chi');
+  }
+});
+export const checkout = createAsyncThunk('cart/checkout', async data => {
+  try {
+    const response = await cartAPI.checkout(data);
+    if (!!response) {
+      alert('Thanh toan thanh cong');
+      return response;
+    }
+  } catch (error) {
+    throw console.log(error, 'day la loi luc thanh toan');
+  }
+});
+export const CartSlice = createSlice({
   name: 'cart',
   initialState: {
     cart: [],
     isLoading: false,
     error: null,
+    order: false,
   },
   reducers: {},
   extraReducers: builder => {
@@ -77,6 +93,7 @@ export const cartSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getCart.rejected, (state, action) => {
+        state.cart = [];
         state.error = action.error;
       })
       .addCase(addToCart.fulfilled, (state, action) => {
@@ -101,8 +118,23 @@ export const cartSlice = createSlice({
       })
       .addCase(removeFromCart.rejected, (state, action) => {
         state.error = action.error;
+      })
+      .addCase(address.fulfilled, (state, action) => {
+        state.cart = action.payload;
+        state.err = null;
+      })
+      .addCase(address.rejected, (state, action) => {
+        state.err = action.error;
+      })
+      .addCase(checkout.fulfilled, state => {
+        state.cart = [];
+        state.order = true;
+        state.err = null;
+      })
+      .addCase(checkout.rejected, (state, action) => {
+        state.err = action.error;
       });
   },
 });
 
-export default cartSlice.reducer;
+export default CartSlice.reducer;

@@ -5,38 +5,31 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import {useDispatch, useSelector} from 'react-redux';
 import styles from './style';
 import {adminLogin} from '../store/auth/AuthSlice';
-import {useDispatch, useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AdminLogin = ({navigation}) => {
   const dispatch = useDispatch();
+  const isAdmin = useSelector(state => state.auth.isAdmin);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
-  const [callback, setCallback] = useState({});
-  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [visible, setvisible] = useState(false);
 
-  AsyncStorage.getItem('adminToken').then(res => {
-    return setCallback(res);
-  });
-  const checkToken = async () => {
-    return !!(await AsyncStorage.getItem('adminToken'))
-      ? setIsLogin(false)
-      : setIsLogin(true);
-  };
   useEffect(() => {
-    checkToken();
-    if (!isLogin) {
-      navigation.navigate('Admin');
+    if (isAdmin && isLoggedIn) {
+      Alert.alert('Dang nhap thanh cong', 'Ban co the chinh sua bai viet', [
+        {text: 'OK', onPress: () => navigation.navigate('Admin')},
+      ]);
     }
-  }, [callback]);
+  }, [isLoggedIn]);
 
   const handleAddTask = async () => {
     if (username.length === 0) {
@@ -47,10 +40,7 @@ const AdminLogin = ({navigation}) => {
       alert('Vui long nhap password');
       return false;
     }
-    const res = await dispatch(adminLogin({username, password}));
-    if (!!res) {
-      await AsyncStorage.setItem('userDetail', res);
-    }
+    dispatch(adminLogin({username, password}));
   };
   return (
     <ScrollView>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,34 +10,27 @@ import {
   StatusBar,
   FlatList,
 } from 'react-native';
-
 import {TextInput} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import colors from '../../constants/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
+
+import colors from '../../constants/colors';
 import {getCart, changeQtyCart, removeFromCart} from '../store/cart/CartSlice';
 
 function ContentCartDrawer({navigation}) {
   const dispatch = useDispatch();
-
+  const userToken = useSelector(state => state.auth.userToken);
   const cart = useSelector(state => state.cart.cart);
   const loading = useSelector(state => state.cart.isLoading);
+  const order = useSelector(state => state.cart.order);
 
   const img =
     'http://192.168.1.9/magento2/pub/media/catalog/product/cache/80c6d82db34957c21ffe417663cf2776//';
 
-  useEffect(() => {
-    try {
-      dispatch(getCart());
-    } catch (error) {
-      console.log(error.message, 'day la loi luc get cart o drawer');
-    }
-  }, [dispatch]);
-
   const totalPrice = () => {
     let totalPrice = 0;
-    cart.forEach(product => {
+    cart?.forEach(product => {
       totalPrice += product.price * product.qty;
     });
     return totalPrice;
@@ -63,7 +56,6 @@ function ContentCartDrawer({navigation}) {
   const checkout = () => {
     navigation.navigate('Checkout');
   };
-
   const listItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -76,6 +68,7 @@ function ContentCartDrawer({navigation}) {
         <View
           style={{
             flexDirection: 'row',
+            alignItems: 'center',
             paddingVertical: 10,
           }}
           key={item.id}>
@@ -90,80 +83,48 @@ function ContentCartDrawer({navigation}) {
                 ).value,
             }}
           />
-          <View style={{flex: 1, marginVertical: 20}}>
-            <View style={{flexDirection: 'row'}}>
-              <Text
-                style={{fontSize: 16, color: '#000', width: 120}}
-                numberOfLines={1}>
-                {item.name}
-              </Text>
-              <TouchableOpacity onPress={() => removeItemFromCart(item)}>
-                <View
-                  style={{
-                    height: 20,
-                    width: 20,
-                    backgroundColor: 'red',
-                    borderRadius: 2,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <IonIcon name="close" size={15} color={'#ffffff'} />
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <Text style={{fontSize: 14, color: 'green'}} numberOfLines={1}>
-                {item.price?.toLocaleString('vi-VN', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
-              </Text>
-            </View>
+          <View style={{flex: 1}}>
+            <Text style={{fontSize: 16, color: '#000'}} numberOfLines={1}>
+              {item.name}
+            </Text>
+            <Text style={{fontSize: 14, color: 'green'}} numberOfLines={1}>
+              {item.price?.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </Text>
 
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity onPress={() => decreaseQty(item)}>
-                <View
-                  style={{
-                    height: 35,
-                    width: 40,
-                    backgroundColor: '#E9EDF4',
-                    borderRadius: 5,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Icon name="minus" size={15} color={'#999999'} />
-                </View>
-              </TouchableOpacity>
-              <TextInput
-                style={{
-                  height: 40,
-                  width: 60,
-                  backgroundColor: '#ffffff',
-                  marginHorizontal: 5,
-                  borderRadius: 5,
-                }}>
-                {item.qty}
-              </TextInput>
-              <TouchableOpacity onPress={() => increaseQty(item)}>
-                <View
-                  style={{
-                    height: 35,
-                    width: 40,
-                    backgroundColor: '#E9EDF4',
-                    borderRadius: 5,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Icon name="plus" size={15} color={'#999999'} />
-                </View>
-              </TouchableOpacity>
+            <View>
+              <Button title="-" onPress={() => decreaseQty(item)} />
+              <TextInput style={{color: '#000'}}>{item.qty}</TextInput>
+              <Button title="+" onPress={() => increaseQty(item)} />
             </View>
           </View>
+          <Button
+            title={'x'}
+            onPress={() => removeItemFromCart(item)}
+            style={{
+              borderColor: 'gray',
+              borderWidth: 1,
+              marginVertical: 10,
+              padding: 5,
+            }}
+          />
         </View>
       </TouchableOpacity>
     );
   };
 
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        dispatch(getCart());
+      } catch (error) {
+        console.log(error.message, 'day la loi luc get cart o drawer');
+      }
+    };
+    fetchCart();
+  }, [dispatch, userToken, order]);
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -171,7 +132,7 @@ function ContentCartDrawer({navigation}) {
         <View style={styles.cartInfoContainerTopBar}>
           <View style={styles.cartInfoTopBar}>
             <Text style={{color: '#000'}}>Your Cart</Text>
-            <Text style={{color: '#000'}}>{cart.length} Items</Text>
+            <Text style={{color: '#000'}}>{cart ? cart.length : 0} Items</Text>
           </View>
         </View>
       </View>
@@ -179,7 +140,13 @@ function ContentCartDrawer({navigation}) {
         {!loading ? (
           <Text style={{color: '#000'}}>Loading...</Text>
         ) : (
-          <FlatList data={cart} renderItem={listItem} />
+          <View>
+            {cart?.length == 0 ? (
+              <Text style={{color: '#000'}}>Gio hang rong</Text>
+            ) : (
+              <FlatList data={cart} renderItem={listItem} />
+            )}
+          </View>
         )}
       </View>
       <View style={styles.cartBottomContainer}>
@@ -198,20 +165,8 @@ function ContentCartDrawer({navigation}) {
           </View>
         </View>
         <View style={styles.cartBottomRightContainer}>
-          {cart.length > 0 ? (
-            <TouchableOpacity onPress={checkout}>
-              <View
-                style={{
-                  width: 100,
-                  height: 50,
-                  backgroundColor: '#4fe07a',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 5,
-                }}>
-                <Text style={{color: 'black'}}>CHECKOUT</Text>
-              </View>
-            </TouchableOpacity>
+          {cart?.length > 0 ? (
+            <Button title={'Checkout'} onPress={checkout} />
           ) : (
             <Button title={'Checkout'} disabled onPress={checkout} />
           )}

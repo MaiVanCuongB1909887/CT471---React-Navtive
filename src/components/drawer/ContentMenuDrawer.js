@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Button} from 'react-native';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   DrawerContentScrollView,
@@ -8,52 +7,48 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import {ListItem} from '@rneui/themed';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {useDispatch, useSelector} from 'react-redux';
-import {logout} from '../store/auth/AuthSlice';
-import cateAPI from '../services/catetAPI';
+import {logoutA} from '../store/auth/AuthSlice';
+import {logoutU} from '../store/user/UserSlice';
+import {getCategory, searchByCategory} from '../store/search/SearchSlice';
+import {getCategoryName} from '../store/search/SearchSlice';
 
 export default function ContentMenuDrawer(props) {
   const dispatch = useDispatch();
-
-  const [callback, setCallback] = useState({});
-  const [isLogin, setIsLogin] = useState(true);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const categories = useSelector(state => state.search.category);
+  const loading = useSelector(state => state.product.isLoading);
   const [expanded, setExpanded] = useState(false);
-  const [categories, setCategories] = useState([]);
-
-  AsyncStorage.getItem('userToken').then(res => {
-    return setCallback(res);
-  });
-
-  const checkToken = async () => {
-    return !!(await AsyncStorage.getItem('userToken'))
-      ? setIsLogin(false)
-      : setIsLogin(true);
-  };
 
   const logoutHandle = async () => {
-    if (!isLogin) {
+    await dispatch(logoutA());
+    await dispatch(logoutU());
+    if (isLoggedIn) {
       props.navigation.navigate('UserLogin');
     }
-    dispatch(logout());
   };
-
-  const getAllCate = async () => {
+  const handleCategory = async data => {
     try {
-      const response = await cateAPI.getAllCate();
+      await dispatch(getCategoryName(data.name));
+      const response = await dispatch(searchByCategory(data.id));
       if (!!response) {
-        setCategories(response.category);
+        props.navigation.closeDrawer();
+        props.navigation.navigate('Search');
       }
     } catch (error) {
-      console.log(error);
+      throw console.log(error);
     }
+  };
+  const getCateWithRetry = () => {
+    dispatch(getCategory());
   };
 
   useEffect(() => {
-    getAllCate();
-    checkToken();
-  }, [callback]);
+    const timer = setTimeout(getCateWithRetry, 4000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [dispatch, expanded]);
 
   return (
     <DrawerContentScrollView {...props}>
@@ -87,8 +82,8 @@ export default function ContentMenuDrawer(props) {
               bottomDivider
               style={{color: 'rgb(28, 28, 30)', fontSize: 14, marginLeft: 2}}>
               <ListItem.Content>
-                <ListItem.Subtitle onPress={() => handle()}>
-                  {/* {category.name} */}
+                <ListItem.Subtitle onPress={() => handleCategory(category)}>
+                  {category?.name}
                 </ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
@@ -96,8 +91,7 @@ export default function ContentMenuDrawer(props) {
         </ListItem.Accordion>
       </View>
 
-      <DrawerItem label="Tiếng Hàn sẻng" />
-      {!isLogin && (
+      {isLoggedIn && (
         <DrawerItem label="Logout" onPress={logoutHandle}></DrawerItem>
       )}
     </DrawerContentScrollView>

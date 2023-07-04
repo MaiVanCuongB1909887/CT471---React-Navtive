@@ -13,13 +13,14 @@ import SelectDropdown from 'react-native-select-dropdown';
 
 import styles from './style';
 import authAPI from '../services/authAPI';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {
   isValidEmail,
   isValidPassword,
   isValidRetypePassword,
 } from '../../utilies/Validations';
+import {useDerivedValue} from 'react-native-reanimated';
+import {useDispatch} from 'react-redux';
+import {userRegister} from '../store/auth/AuthSlice';
 
 const Register = ({navigation}) => {
   const countries = [
@@ -35,6 +36,8 @@ const Register = ({navigation}) => {
     'Telecommunication',
     'Orders',
   ];
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [firstname, setFirstname] = useState('');
@@ -84,20 +87,17 @@ const Register = ({navigation}) => {
       return false;
     }
     try {
-      const response = await authAPI.postRegister({
-        email: email,
-        password: password,
-        lastname: lastname,
-        firstname: firstname,
-      });
+      const response = await dispatch(
+        userRegister({
+          email: email,
+          password: password,
+          lastname: lastname,
+          firstname: firstname,
+        }),
+      );
       if (!!response) {
-        // await AsyncStorage.setItem('sessionToken', response.token);
-        // await AsyncStorage.setItem(
-        //   'user',
-        //   JSON.stringify(response.customer_info),
-        // );
         alert('Vui long kiem tra hop thu de kich hoat tai khoan');
-        navigation.navigate('Login');
+        navigation.navigate('UserLogin');
       }
     } catch (error) {
       return alert(error.response.data.message);
