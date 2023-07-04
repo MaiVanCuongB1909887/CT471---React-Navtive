@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {Icon as Abc, withBadge} from '@rneui/themed';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
-import {searchByName} from '../../store/search/SearchSlice';
+import {searchByName} from '../store/search/SearchSlice';
 
 const Header = ({navigation}) => {
   const dispatch = useDispatch();

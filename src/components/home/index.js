@@ -17,7 +17,7 @@ import style from './style';
 import Footer from '../footer';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {getProduct} from '../../store/product/ProductSlice';
+import {getProduct} from '../store/product/ProductSlice';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();

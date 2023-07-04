@@ -16,11 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 
 import colors from '../../constants/colors';
-import {
-  getCart,
-  changeQtyCart,
-  removeFromCart,
-} from '../../store/cart/CartSlice';
+import {getCart, changeQtyCart, removeFromCart} from '../store/cart/CartSlice';
 
 function ContentCartDrawer({navigation}) {
   const dispatch = useDispatch();

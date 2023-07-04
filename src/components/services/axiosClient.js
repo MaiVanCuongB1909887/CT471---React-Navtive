@@ -3,23 +3,11 @@ import {useSelector} from 'react-redux';
 import axios from 'axios';
 
 const checkToken = async () => {
-  switch (
-    (await AsyncStorage.getItem('userToken')) ||
-    (await AsyncStorage.getItem('adminToken'))
-  ) {
-    case await AsyncStorage.getItem('userToken'):
-      return await AsyncStorage.getItem('userToken');
-    case await AsyncStorage.getItem('adminToken'):
-      return await AsyncStorage.getItem('adminToken');
-    default:
-      return null;
-  }
-  // if (await AsyncStorage.getItem('userToken')) {
-  //   return await AsyncStorage.getItem('userToken');
-  // }
-  // if (await AsyncStorage.getItem('adminToken')) {
-  //   return await AsyncStorage.getItem('adminToken');
-  // } else return null;
+  if (await AsyncStorage.getItem('adminToken')) {
+    return await AsyncStorage.getItem('adminToken');
+  } else if (await AsyncStorage.getItem('userToken')) {
+    return JSON.parse(await AsyncStorage.getItem('userToken')).token;
+  } else return null;
 };
 
 const axiosClient = axios.create({

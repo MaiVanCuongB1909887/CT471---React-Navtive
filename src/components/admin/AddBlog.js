@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, Button, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {addBlog} from '../../store/blog/BlogSlice';
+import {addBlog} from '../store/blog/BlogSlice';
 import {CommonActions} from '@react-navigation/native';
 
 const AddBlog = ({navigation}) => {

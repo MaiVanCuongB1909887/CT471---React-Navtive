@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from './style';
-import {adminLogin} from '../../store/auth/AuthSlice';
+import {adminLogin} from '../store/auth/AuthSlice';
 
 const AdminLogin = ({navigation}) => {
   const dispatch = useDispatch();

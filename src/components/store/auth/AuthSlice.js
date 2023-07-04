@@ -1,8 +1,9 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import authAPI from '../../components/services/authAPI';
+import authAPI from '../../services/authAPI';
 import {setDetailUser} from '../user/UserSlice';
-import {create} from 'react-test-renderer';
+import {Dispatch} from 'redux';
+import {useDispatch} from 'react-redux';
 
 export const adminLogin = createAsyncThunk('auth/adminLogin', async data => {
   try {
@@ -22,11 +23,7 @@ export const userLogin = createAsyncThunk('auth/userLogin', async data => {
     const response = await authAPI.userLogin(data);
     if (!!response.token) {
       console.log('Da lay duoc token User');
-      await AsyncStorage.setItem(
-        'userDetail',
-        JSON.stringify(response.customer_info),
-      );
-      await AsyncStorage.setItem('userToken', response.token);
+      await AsyncStorage.setItem('userToken', JSON.stringify(response));
       return response;
     }
   } catch (error) {
@@ -36,16 +33,12 @@ export const userLogin = createAsyncThunk('auth/userLogin', async data => {
 
 export const checkAuthStatus = createAsyncThunk(
   'auth/checkAuthStatus',
-  async () => {
+  async ({dispatch}) => {
     try {
       await AsyncStorage.getItem('userToken').then(token => {
         if (!!token) {
-          dispatch(setUser(token));
-        }
-      });
-      await AsyncStorage.getItem('userDetail').then(detail => {
-        if (!!detail) {
-          dispatch(setDetailUser(detail));
+          dispatch(setUser(JSON.parse(token).token));
+          dispatch(setDetailUser(JSON.parse(token).customer_info));
         }
       });
     } catch (error) {

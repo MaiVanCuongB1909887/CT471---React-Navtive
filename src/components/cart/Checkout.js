@@ -13,7 +13,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
-import {address, checkout} from '../../store/cart/CartSlice';
+import {address, checkout} from '../store/cart/CartSlice';
 
 const Checkout = ({navigation}) => {
   const [firstName, setFirstName] = useState('');

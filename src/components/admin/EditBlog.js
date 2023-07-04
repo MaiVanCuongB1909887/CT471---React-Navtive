@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, Button, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {updateBlog} from '../../store/blog/BlogSlice';
+import {updateBlog} from '../store/blog/BlogSlice';
 import {Input} from 'react-native-elements';
 
 const EditBlog = () => {

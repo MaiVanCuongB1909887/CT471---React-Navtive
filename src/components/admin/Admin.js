@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, Text, Button, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {deleteBlog, getBlogById, getBlog} from '../../store/blog/BlogSlice';
+import {deleteBlog, getBlogById, getBlog} from '../store/blog/BlogSlice';
 import {SpeedDial} from '@rneui/themed';
 
 const Admin = ({navigation}) => {

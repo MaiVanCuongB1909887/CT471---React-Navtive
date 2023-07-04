@@ -12,7 +12,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {isValidEmail, isValidPassword} from '../../utilies/Validations';
-import {userLogin} from '../../store/auth/AuthSlice';
+import {userLogin} from '../store/auth/AuthSlice';
 import styles from './style';
 
 const UserLogin = ({navigation}) => {

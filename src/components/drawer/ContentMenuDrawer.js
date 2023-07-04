@@ -7,21 +7,18 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import {ListItem} from '@rneui/themed';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-
-import {logoutA} from '../../store/auth/AuthSlice';
-import {logoutU} from '../../store/user/UserSlice';
-import cateAPI from '../services/cateAPI';
-import {searchByCategory} from '../../store/search/SearchSlice';
-import {getCategoryName} from '../../store/search/SearchSlice';
+import {logoutA} from '../store/auth/AuthSlice';
+import {logoutU} from '../store/user/UserSlice';
+import {getCategory, searchByCategory} from '../store/search/SearchSlice';
+import {getCategoryName} from '../store/search/SearchSlice';
 
 export default function ContentMenuDrawer(props) {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
-
+  const categories = useSelector(state => state.search.category);
+  const loading = useSelector(state => state.product.isLoading);
   const [expanded, setExpanded] = useState(false);
-  const [categories, setCategories] = useState([]);
 
   const logoutHandle = async () => {
     await dispatch(logoutA());
@@ -31,32 +28,27 @@ export default function ContentMenuDrawer(props) {
     }
   };
   const handleCategory = async data => {
-    dispatch(getCategoryName(data.name));
-    const response = await dispatch(searchByCategory(data.id));
-    if (!!response) {
-      props.navigation.navigate('Search');
+    try {
+      await dispatch(getCategoryName(data.name));
+      const response = await dispatch(searchByCategory(data.id));
+      if (!!response) {
+        props.navigation.closeDrawer();
+        props.navigation.navigate('Search');
+      }
+    } catch (error) {
+      throw console.log(error);
     }
   };
-  const getAllCate = async (delay = 3000, maxAttempts = 10) => {
-    let attempts = 0;
-    while (attempts < maxAttempts) {
-      try {
-        const response = await cateAPI.getAllCate();
-        if (response) {
-          setCategories(response.category);
-        }
-      } catch (error) {
-        console.log(`Error calling API: ${error}`);
-      }
-      attempts++;
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-    throw new Error(`API call failed after ${maxAttempts} attempts`);
+  const getCateWithRetry = () => {
+    dispatch(getCategory());
   };
 
   useEffect(() => {
-    getAllCate();
-  }, [expanded]);
+    const timer = setTimeout(getCateWithRetry, 4000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [dispatch, expanded]);
 
   return (
     <DrawerContentScrollView {...props}>

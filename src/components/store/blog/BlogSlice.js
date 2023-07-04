@@ -1,5 +1,5 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import blogAPI from '../../components/services/blogAPI';
+import blogAPI from '../../services/blogAPI';
 
 export const addBlog = createAsyncThunk('blog/addBlog', async data => {
   try {

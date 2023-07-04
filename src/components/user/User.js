@@ -12,7 +12,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {Avatar, Tab, TabView} from '@rneui/themed';
 import {ListItem} from '@rneui/themed';
-import {getOrder} from '../../store/order/OrderSlice';
+import {getOrder} from '../store/order/OrderSlice';
 
 const User = () => {
   const dispatch = useDispatch();
@@ -115,7 +115,7 @@ const User = () => {
       )}
 
       {pick == 1 &&
-        order.map((item, index) => (
+        order?.map((item, index) => (
           <View>
             <ListItem.Accordion
               content={

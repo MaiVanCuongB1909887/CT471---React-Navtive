@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import cartAPI from '../../components/services/cartAPI';
+import cartAPI from '../../services/cartAPI';
 
 export const getCart = createAsyncThunk('cart/getCart', async () => {
   try {

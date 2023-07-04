@@ -20,7 +20,7 @@ import {
 } from '../../utilies/Validations';
 import {useDerivedValue} from 'react-native-reanimated';
 import {useDispatch} from 'react-redux';
-import {userRegister} from '../../store/auth/AuthSlice';
+import {userRegister} from '../store/auth/AuthSlice';
 
 const Register = ({navigation}) => {
   const countries = [

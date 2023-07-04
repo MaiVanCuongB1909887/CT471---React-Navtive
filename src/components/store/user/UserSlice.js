@@ -1,5 +1,5 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import userAPI from '../../components/services/userAPI';
+import userAPI from '../../services/userAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const updateUser = createAsyncThunk('user/updateUser', async data => {

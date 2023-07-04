@@ -13,8 +13,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {addToCart} from '../../store/cart/CartSlice';
-import {getProduct} from '../../store/product/ProductSlice';
+import {addToCart} from '../store/cart/CartSlice';
+import {getProduct} from '../store/product/ProductSlice';
 
 export default function Product({navigation}) {
   const dispatch = useDispatch();

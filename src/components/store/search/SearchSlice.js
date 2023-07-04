@@ -1,6 +1,19 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import productAPI from '../../components/services/productAPI';
+import productAPI from '../../services/productAPI';
+import cateAPI from '../../services/cateAPI';
+
+export const getCategory = createAsyncThunk('search/getCategory', async () => {
+  try {
+    const response = await cateAPI.getAllCate();
+    console.log('lay catetgory');
+    if (!!response) {
+      return response.category;
+    }
+  } catch (error) {
+    throw console.log(error.response.data, 'day la loi get Category');
+  }
+});
 
 export const searchByName = createAsyncThunk(
   'search/searchByName',
@@ -21,7 +34,7 @@ export const searchByCategory = createAsyncThunk(
   async id => {
     try {
       const response = await productAPI.searchByCategory(id);
-      console.log(response);
+
       if (!!response) {
         return response;
       }
@@ -35,13 +48,14 @@ export const searchByCategory = createAsyncThunk(
 const SearchSlice = createSlice({
   name: 'search',
   initialState: {
+    category: [],
     products: [],
     keyword: null,
     isLoading: false,
     error: null,
   },
-  reducer: {
-    getCategoryName(state, action) {
+  reducers: {
+    getCategoryName: (state, action) => {
       state.keyword = action.payload;
       state.error = null;
     },
@@ -66,9 +80,16 @@ const SearchSlice = createSlice({
       .addCase(searchByCategory.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
+      })
+      .addCase(getCategory.fulfilled, (state, action) => {
+        state.category = action.payload;
+        state.error = null;
+      })
+      .addCase(getCategory.rejected, (state, action) => {
+        state.error = action.error;
       });
   },
 });
 
-export const getCategoryName = SearchSlice.actions;
+export const {getCategoryName} = SearchSlice.actions;
 export default SearchSlice.reducer;

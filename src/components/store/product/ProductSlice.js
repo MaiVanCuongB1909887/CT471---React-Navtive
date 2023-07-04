@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import productAPI from '../../components/services/productAPI';
+import productAPI from '../../services/productAPI';
 
 export const getProduct = createAsyncThunk('product/getProduct', async () => {
   try {

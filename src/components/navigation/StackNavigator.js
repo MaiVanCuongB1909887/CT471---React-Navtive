@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {setUser} from '../../store/auth/AuthSlice';
-import {setDetailUser} from '../../store/user/UserSlice';
+import {checkAuthStatus} from '../store/auth/AuthSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Icon} from 'react-native-elements';
 
 import Home from '../home';
 import UserLogin from '../login/UserLogin';
@@ -17,25 +17,27 @@ import Checkout from '../cart/Checkout';
 import User from '../user/User';
 import AddBlog from '../admin/AddBlog';
 import EditBlog from '../admin/EditBlog';
+import Header from '../header';
+import {logoutA} from '../store/auth/AuthSlice';
+import {logoutU} from '../store/user/UserSlice';
 
 const Stack = createStackNavigator();
 
-const HomeStack = () => {
+const HomeStack = ({navigation}) => {
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.auth.userToken);
   const adminToken = useSelector(state => state.auth.adminToken);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
+  const logoutHandle = async () => {
+    await dispatch(logoutA());
+    await dispatch(logoutU());
+    if (isLoggedIn) {
+      navigation.navigate('UserLogin');
+    }
+  };
   async function isSignedIn() {
-    await AsyncStorage.getItem('userToken').then(token => {
-      if (!!token) {
-        dispatch(setUser(token));
-      }
-    });
-    await AsyncStorage.getItem('userDetail').then(detail => {
-      if (!!detail) {
-        dispatch(setDetailUser(JSON.parse(detail)));
-      }
-    });
+    await dispatch(checkAuthStatus({dispatch}));
   }
 
   useEffect(() => {
@@ -47,34 +49,38 @@ const HomeStack = () => {
       <Stack.Screen
         name="Home"
         component={Home}
-        options={{headerShown: false}}
+        options={{header: props => <Header {...props} title="Home" />}}
       />
       <Stack.Screen
         name="Product"
         component={Product}
-        options={{headerShown: false}}
+        options={{header: props => <Header {...props} title="San pham" />}}
       />
       <Stack.Screen
         name="ProductDetails"
         component={ProductDetails}
-        options={{headerShown: false}}
+        options={{
+          header: props => <Header {...props} title="Chi tiet san pham" />,
+        }}
       />
       <Stack.Screen
         name="Search"
         component={Search}
-        options={{headerShown: false}}
+        options={{header: props => <Header {...props} title="Search" />}}
       />
-      {userToken ? (
+      {userToken && !adminToken ? (
         <>
           <Stack.Screen
             name="Checkout"
             component={Checkout}
-            options={{headerShown: false}}
+            options={{
+              header: props => <Header {...props} title="Thanh toan" />,
+            }}
           />
           <Stack.Screen
             name="User"
             component={User}
-            options={{headerShown: false}}
+            options={{header: props => <Header {...props} title="User" />}}
           />
         </>
       ) : (
@@ -82,17 +88,17 @@ const HomeStack = () => {
           <Stack.Screen
             name="UserLogin"
             component={UserLogin}
-            options={{headerShown: false}}
+            options={{header: props => <Header {...props} title="Dang nhap" />}}
           />
           <Stack.Screen
             name="Register"
             component={Register}
-            options={{headerShown: false}}
+            options={{header: props => <Header {...props} title="Dang ki" />}}
           />
           <Stack.Screen
             name="AdminLogin"
             component={AdminLogin}
-            options={{headerShown: false}}
+            options={{header: props => <Header {...props} title="Admin" />}}
           />
         </>
       )}
@@ -102,18 +108,28 @@ const HomeStack = () => {
           <Stack.Screen
             name="Admin"
             component={Admin}
-            options={{headerShown: false}}
+            options={{
+              headerTitle: 'Admin',
+              headerLeft: () => (
+                <Icon
+                  name="logout"
+                  size={20}
+                  color={'#2052f7'}
+                  onPress={logoutHandle}
+                />
+              ),
+              headerLeftContainerStyle: {
+                margin: 10,
+                paddingRight: 30,
+                paddingLeft: 20,
+              },
+              headerBackTitle: 'dang xuat',
+              headerBackTitleVisible: true,
+              headerTruncatedBackTitle: 'Return',
+            }}
           />
-          <Stack.Screen
-            name="EditBlog"
-            component={EditBlog}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AddBlog"
-            component={AddBlog}
-            options={{headerShown: false}}
-          />
+          <Stack.Screen name="EditBlog" component={EditBlog} />
+          <Stack.Screen name="AddBlog" component={AddBlog} />
         </>
       )}
     </Stack.Navigator>

@@ -41,7 +41,7 @@ const MenuDrawer = () => {
       <LeftDrawer.Screen
         name="Trang chủ"
         component={HomeStack}
-        options={{header: props => <Header {...props} title="Home" />}}
+        options={{headerShown: false}}
       />
       <LeftDrawer.Screen
         name="Sản phẩm"
